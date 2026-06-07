@@ -1,14 +1,14 @@
-=== PageCraft — Elementor Workflow Companion ===
-Contributors: gsplugins
-Tags: elementor, workflow, page builder, design tool, section planner
+=== PageCraft — Workflow Toolkit & Section Planner for Elementor ===
+Contributors: thereadscope
+Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
-Tested up to: 7.0
+Tested up to: 7
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-The ultimate workflow companion for Elementor — section planner, design checklist, color palette, font pairs, CSS generator & project notes.
+Elementor workflow toolkit — plan sections, run a design checklist, save color palettes & font pairs, and generate CSS, right beside your canvas.
 
 == Description ==
 
@@ -95,6 +95,17 @@ PageCraft is designed for Elementor workflows, but the standalone tool (Admin �
 
 == Changelog ==
 
+= 1.0.1 =
+* Security: Added origin validation to postMessage event listener in Elementor editor integration
+* Security: Replaced wildcard '*' postMessage target-origin with explicit window.location.origin
+* Code: Removed redundant Settings API registration (dual form-processing conflict)
+* Code: Moved inline admin JavaScript to external file (itspc-admin.js) via wp_enqueue_script
+* Code: Moved all inline CSS blocks to external stylesheets via wp_enqueue_style
+* Code: Refactored settings POST handler to use sanitize_settings() — eliminates duplicated sanitization logic
+* Fix: Email field now uses sanitize_email() instead of sanitize_text_field()
+* Fix: wp_get_theme() result cached to avoid duplicate calls
+* Improvement: Dashboard widget CSS conditionally loaded only when widget is active
+
 = 1.0.0 =
 * Initial release
 * Section Planner with drag-and-drop and quick templates
@@ -111,5 +122,45 @@ PageCraft is designed for Elementor workflows, but the standalone tool (Admin �
 
 == Upgrade Notice ==
 
+= 1.0.1 =
+Security and code quality improvements. Recommended update for all users.
+
 = 1.0.0 =
 Initial release of PageCraft — the Elementor Workflow Companion.
+
+== Third-Party Libraries ==
+
+PageCraft uses the following third-party libraries, included in the plugin package:
+
+= Tabler Icons =
+* Version: Latest stable
+* License: MIT License
+* License URI: https://opensource.org/licenses/MIT
+* Source: https://tabler.io/icons
+* Location: assets/vendor/tabler-icons/
+* Purpose: Icon set used inside the standalone tool interface (assets/tool/index.html)
+
+= Syne (Font) =
+* Version: Latest stable
+* License: SIL Open Font License 1.1
+* License URI: https://scripts.sil.org/OFL
+* Source: https://fonts.google.com/specimen/Syne
+* Location: assets/vendor/fonts/syne-700.woff2, syne-800.woff2
+* Purpose: Display/heading font in the standalone tool interface
+
+= DM Sans (Font) =
+* Version: Latest stable
+* License: SIL Open Font License 1.1
+* License URI: https://scripts.sil.org/OFL
+* Source: https://fonts.google.com/specimen/DM+Sans
+* Location: assets/vendor/fonts/dm-sans-400.woff2, dm-sans-500.woff2
+* Purpose: UI body font in the standalone tool interface
+
+= DM Mono (Font) =
+* Version: Latest stable
+* License: SIL Open Font License 1.1
+* License URI: https://scripts.sil.org/OFL
+* Source: https://fonts.google.com/specimen/DM+Mono
+* Location: assets/vendor/fonts/dm-mono-400.woff2
+* Purpose: Monospace font for CSS code output in the standalone tool interface
+

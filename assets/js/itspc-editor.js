@@ -138,6 +138,10 @@
 
         // --- Listen for rename requests from PageCraft iframe ---
         window.addEventListener('message', function(e) {
+            // Security: only accept messages from the same origin.
+            if ( e.origin !== window.location.origin ) {
+                return;
+            }
             var data = e.data;
             if (!data) return;
 
@@ -239,7 +243,7 @@
                                 iframeEl.contentWindow.postMessage({
                                     type: 'itspc_sync_success',
                                     message: 'Colors synced to Elementor successfully!'
-                                }, '*');
+                                }, window.location.origin);
                             }
                         }
                     }
@@ -249,7 +253,7 @@
                         iframeEl.contentWindow.postMessage({
                             type: 'itspc_sync_error',
                             message: 'Sync is only available inside Elementor editor.'
-                        }, '*');
+                        }, window.location.origin);
                     }
                 }
             }
@@ -300,7 +304,7 @@
                                 iframeEl.contentWindow.postMessage({
                                     type: 'itspc_sync_success',
                                     message: 'Fonts synced to Elementor successfully!'
-                                }, '*');
+                                }, window.location.origin);
                             }
                         }
                     }
@@ -310,7 +314,7 @@
                         iframeEl.contentWindow.postMessage({
                             type: 'itspc_sync_error',
                             message: 'Sync is only available inside Elementor editor.'
-                        }, '*');
+                        }, window.location.origin);
                     }
                 }
             }
@@ -325,7 +329,7 @@
                             type: 'itspc_audit_results',
                             results: [],
                             error: 'Not inside Elementor editor preview.'
-                        }, '*');
+                        }, window.location.origin);
                     }
                     return;
                 }
@@ -450,7 +454,7 @@
                     iframeEl.contentWindow.postMessage({
                         type: 'itspc_audit_results',
                         results: results
-                    }, '*');
+                    }, window.location.origin);
                 }
             }
 
@@ -494,7 +498,7 @@
                                     id: id,
                                     cid: cid,
                                     title: newTitle
-                                }, '*');
+                                }, window.location.origin);
                             }
                         }
                     }

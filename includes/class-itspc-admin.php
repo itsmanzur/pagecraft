@@ -21,7 +21,6 @@ class ITSPC_Admin {
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'register_menu' ) );
-        add_action( 'admin_init', array( $this, 'register_settings' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
         add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widget' ) );
     }
@@ -62,71 +61,11 @@ class ITSPC_Admin {
         );
     }
 
-    /**
-     * Register plugin settings using Settings API.
-     */
-    public function register_settings() {
-        register_setting(
-            'itspc_settings_group',
-            'itspc_settings',
-            array( $this, 'sanitize_settings' )
-        );
-
-        add_settings_section(
-            'itspc_general_section',
-            __( 'General Settings', 'pagecraft' ),
-            array( $this, 'render_section_description' ),
-            'pagecraft'
-        );
-
-        add_settings_field(
-            'itspc_show_in_editor',
-            __( 'Show in Elementor Editor', 'pagecraft' ),
-            array( $this, 'render_checkbox_field' ),
-            'pagecraft',
-            'itspc_general_section',
-            array(
-                'field' => 'show_in_editor',
-                'desc'  => __( 'Display the PageCraft floating button inside the Elementor editor.', 'pagecraft' ),
-            )
-        );
-
-        add_settings_field(
-            'itspc_panel_position',
-            __( 'Panel Position', 'pagecraft' ),
-            array( $this, 'render_select_field' ),
-            'pagecraft',
-            'itspc_general_section',
-            array(
-                'field'   => 'panel_position',
-                'options' => array(
-                    'right' => __( 'Right', 'pagecraft' ),
-                    'left'  => __( 'Left', 'pagecraft' ),
-                ),
-                'desc'    => __( 'Which side of the screen the panel opens on.', 'pagecraft' ),
-            )
-        );
-
-        add_settings_field(
-            'itspc_panel_width',
-            __( 'Panel Width (px)', 'pagecraft' ),
-            array( $this, 'render_number_field' ),
-            'pagecraft',
-            'itspc_general_section',
-            array(
-                'field' => 'panel_width',
-                'min'   => 380,
-                'max'   => 600,
-                'step'  => 10,
-                'desc'  => __( 'Width of the tool panel in pixels (380–600).', 'pagecraft' ),
-            )
-        );
-    }
 
     /**
      * Sanitize settings before save.
      *
-     * @param array $input Raw input from form.
+     * @param array $input Raw input array (from $_POST or Settings API).
      * @return array Sanitized settings.
      */
     public function sanitize_settings( $input ) {
@@ -142,7 +81,7 @@ class ITSPC_Admin {
         $sanitized['panel_width'] = 420;
         if ( isset( $input['panel_width'] ) ) {
             $width = absint( $input['panel_width'] );
-            $sanitized['panel_width'] = max( 380, min( 600, $width ) );
+            $sanitized['panel_width'] = max( 380, min( 680, $width ) );
         }
 
         $sanitized['show_welcome_widget']   = ! empty( $input['show_welcome_widget'] );
@@ -150,82 +89,9 @@ class ITSPC_Admin {
         $sanitized['welcome_widget_logo']   = isset( $input['welcome_widget_logo'] ) ? esc_url_raw( $input['welcome_widget_logo'] ) : '';
         $sanitized['welcome_widget_msg']    = isset( $input['welcome_widget_msg'] ) ? sanitize_textarea_field( $input['welcome_widget_msg'] ) : '';
         $sanitized['welcome_widget_video']  = isset( $input['welcome_widget_video'] ) ? esc_url_raw( $input['welcome_widget_video'] ) : '';
-        $sanitized['welcome_widget_email']  = isset( $input['welcome_widget_email'] ) ? sanitize_text_field( $input['welcome_widget_email'] ) : '';
-
-        $sanitized['show_admin_page'] = true;
+        $sanitized['welcome_widget_email']  = isset( $input['welcome_widget_email'] ) ? sanitize_email( $input['welcome_widget_email'] ) : '';
 
         return $sanitized;
-    }
-
-    /**
-     * Render settings section description.
-     */
-    public function render_section_description() {
-        echo '<p>' . esc_html__( 'Configure how PageCraft appears and behaves.', 'pagecraft' ) . '</p>';
-    }
-
-    /**
-     * Render a checkbox settings field.
-     *
-     * @param array $args Field arguments.
-     */
-    public function render_checkbox_field( $args ) {
-        $settings = get_option( 'itspc_settings', array() );
-        $value    = isset( $settings[ $args['field'] ] ) ? $settings[ $args['field'] ] : true;
-        ?>
-        <label>
-            <input type="checkbox" name="itspc_settings[<?php echo esc_attr( $args['field'] ); ?>]" value="1" <?php checked( $value, true ); ?> />
-            <?php if ( ! empty( $args['desc'] ) ) : ?>
-                <span class="description"><?php echo esc_html( $args['desc'] ); ?></span>
-            <?php endif; ?>
-        </label>
-        <?php
-    }
-
-    /**
-     * Render a select settings field.
-     *
-     * @param array $args Field arguments.
-     */
-    public function render_select_field( $args ) {
-        $settings = get_option( 'itspc_settings', array() );
-        $value    = isset( $settings[ $args['field'] ] ) ? $settings[ $args['field'] ] : 'right';
-        ?>
-        <select name="itspc_settings[<?php echo esc_attr( $args['field'] ); ?>]">
-            <?php foreach ( $args['options'] as $key => $label ) : ?>
-                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $value, $key ); ?>>
-                    <?php echo esc_html( $label ); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <?php if ( ! empty( $args['desc'] ) ) : ?>
-            <p class="description"><?php echo esc_html( $args['desc'] ); ?></p>
-        <?php endif; ?>
-        <?php
-    }
-
-    /**
-     * Render a number settings field.
-     *
-     * @param array $args Field arguments.
-     */
-    public function render_number_field( $args ) {
-        $settings = get_option( 'itspc_settings', array() );
-        $value    = isset( $settings[ $args['field'] ] ) ? absint( $settings[ $args['field'] ] ) : 420;
-        ?>
-        <input
-            type="number"
-            name="itspc_settings[<?php echo esc_attr( $args['field'] ); ?>]"
-            value="<?php echo esc_attr( $value ); ?>"
-            min="<?php echo esc_attr( $args['min'] ); ?>"
-            max="<?php echo esc_attr( $args['max'] ); ?>"
-            step="<?php echo esc_attr( $args['step'] ); ?>"
-            style="width:120px"
-        />
-        <?php if ( ! empty( $args['desc'] ) ) : ?>
-            <p class="description"><?php echo esc_html( $args['desc'] ); ?></p>
-        <?php endif; ?>
-        <?php
     }
 
     /**
@@ -251,19 +117,8 @@ class ITSPC_Admin {
          
         // Handle form submission
         if ( isset( $_POST['itspc_save'] ) && isset( $_POST['itspc_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['itspc_nonce'] ) ), 'itspc_save_settings' ) ) {
-            $settings['show_in_editor'] = isset( $_POST['show_in_editor'] );
-            if ( isset( $_POST['panel_position'] ) ) {
-                $settings['panel_position'] = sanitize_text_field( wp_unslash( $_POST['panel_position'] ) );
-            }
-            if ( isset( $_POST['panel_width'] ) ) {
-                $settings['panel_width'] = absint( wp_unslash( $_POST['panel_width'] ) );
-            }
-            $settings['show_welcome_widget']   = isset( $_POST['show_welcome_widget'] );
-            $settings['welcome_widget_agency'] = isset( $_POST['welcome_widget_agency'] ) ? sanitize_text_field( wp_unslash( $_POST['welcome_widget_agency'] ) ) : '';
-            $settings['welcome_widget_logo']   = isset( $_POST['welcome_widget_logo'] ) ? esc_url_raw( wp_unslash( $_POST['welcome_widget_logo'] ) ) : '';
-            $settings['welcome_widget_msg']    = isset( $_POST['welcome_widget_msg'] ) ? sanitize_textarea_field( wp_unslash( $_POST['welcome_widget_msg'] ) ) : '';
-            $settings['welcome_widget_video']  = isset( $_POST['welcome_widget_video'] ) ? esc_url_raw( wp_unslash( $_POST['welcome_widget_video'] ) ) : '';
-            $settings['welcome_widget_email']  = isset( $_POST['welcome_widget_email'] ) ? sanitize_text_field( wp_unslash( $_POST['welcome_widget_email'] ) ) : '';
+            // Delegate all sanitization to sanitize_settings() to avoid duplication.
+            $settings = $this->sanitize_settings( wp_unslash( $_POST ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
             update_option( 'itspc_settings', $settings );
 
@@ -314,13 +169,16 @@ class ITSPC_Admin {
                         <div class="itspc-form-desc"><?php esc_html_e( 'Display the PageCraft button inside the Elementor editor.', 'pagecraft' ); ?></div>
                       </div>
                       <div class="itspc-form-control">
-                        <div class="itspc-checkbox-row">
-                          <input type="checkbox" name="show_in_editor" id="show_in_editor"
-                            class="itspc-checkbox" value="1"
-                            <?php checked($settings['show_in_editor'], true); ?>>
-                          <label for="show_in_editor" class="itspc-checkbox-label">
-                            <?php esc_html_e( 'Enable PageCraft in editor', 'pagecraft' ); ?>
+                        <div class="itspc-toggle-control">
+                          <label class="itspc-switch">
+                            <input type="checkbox" name="show_in_editor" id="show_in_editor"
+                              class="itspc-checkbox" value="1"
+                              <?php checked($settings['show_in_editor'], true); ?>>
+                            <span class="itspc-switch-slider"></span>
                           </label>
+                          <span class="itspc-switch-label-text">
+                            <?php esc_html_e( 'Enable PageCraft in editor', 'pagecraft' ); ?>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -331,11 +189,15 @@ class ITSPC_Admin {
                         <div class="itspc-form-desc"><?php esc_html_e( 'Which side of the screen the panel opens on.', 'pagecraft' ); ?></div>
                       </div>
                       <div class="itspc-form-control">
-                        <select name="panel_position" id="panel_position"
-                          class="itspc-select" style="max-width:200px">
-                          <option value="right" <?php selected($settings['panel_position'], 'right'); ?>><?php esc_html_e( 'Right', 'pagecraft' ); ?></option>
-                          <option value="left"  <?php selected($settings['panel_position'], 'left');  ?>><?php esc_html_e( 'Left', 'pagecraft' ); ?></option>
-                        </select>
+                        <div class="itspc-segmented-control">
+                          <input type="radio" name="panel_position" id="panel_position_right" value="right" <?php checked($settings['panel_position'], 'right'); ?>>
+                          <label for="panel_position_right" class="itspc-segment-label"><?php esc_html_e( 'Right Side', 'pagecraft' ); ?></label>
+
+                          <input type="radio" name="panel_position" id="panel_position_left" value="left" <?php checked($settings['panel_position'], 'left'); ?>>
+                          <label for="panel_position_left" class="itspc-segment-label"><?php esc_html_e( 'Left Side', 'pagecraft' ); ?></label>
+                          
+                          <span class="itspc-segmented-slider"></span>
+                        </div>
                       </div>
                     </div>
              
@@ -344,11 +206,13 @@ class ITSPC_Admin {
                         <label class="itspc-form-label" for="panel_width"><?php esc_html_e( 'Panel Width (px)', 'pagecraft' ); ?></label>
                         <div class="itspc-form-desc"><?php esc_html_e( 'Width of the tool panel (380–680px).', 'pagecraft' ); ?></div>
                       </div>
-                      <div class="itspc-form-control">
+                      <div class="itspc-form-control" style="display: flex; align-items: center; gap: 10px;">
                         <input type="number" name="panel_width" id="panel_width"
-                          class="itspc-input" style="max-width:120px"
+                          class="itspc-input" style="max-width:80px"
                           value="<?php echo esc_attr($settings['panel_width']); ?>"
                           min="380" max="680">
+                        <input type="range" id="panel_width_range" class="itspc-range-slider" min="380" max="680" step="10" value="<?php echo esc_attr($settings['panel_width']); ?>">
+                        <span id="panel_width_val" style="font-size: 13.5px; font-weight: 600; color: #4B5563;"></span>
                       </div>
                     </div>
              
@@ -369,74 +233,108 @@ class ITSPC_Admin {
                         <div class="itspc-form-desc"><?php esc_html_e( 'Show a white-labeled support and resource widget on the WordPress admin dashboard.', 'pagecraft' ); ?></div>
                       </div>
                       <div class="itspc-form-control">
-                        <div class="itspc-checkbox-row">
-                          <input type="checkbox" name="show_welcome_widget" id="show_welcome_widget"
-                            class="itspc-checkbox" value="1"
-                            <?php checked( ! empty( $settings['show_welcome_widget'] ), true ); ?>>
-                          <label for="show_welcome_widget" class="itspc-checkbox-label">
-                            <?php esc_html_e( 'Enable Dashboard Widget', 'pagecraft' ); ?>
+                        <div class="itspc-toggle-control">
+                          <label class="itspc-switch">
+                            <input type="checkbox" name="show_welcome_widget" id="show_welcome_widget" value="1"
+                              <?php checked( ! empty( $settings['show_welcome_widget'] ), true ); ?>>
+                            <span class="itspc-switch-slider"></span>
                           </label>
+                          <span class="itspc-switch-label-text">
+                            <?php esc_html_e( 'Enable Dashboard Widget', 'pagecraft' ); ?>
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    <div class="itspc-form-row">
-                      <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label" for="welcome_widget_agency"><?php esc_html_e( 'Developer / Agency Name', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'Your brand or agency name shown in the widget header.', 'pagecraft' ); ?></div>
+                    <div id="itspc-whitelabel-fields">
+                      <div class="itspc-form-row">
+                        <div class="itspc-form-label-wrap">
+                          <label class="itspc-form-label" for="welcome_widget_agency"><?php esc_html_e( 'Developer / Agency Name', 'pagecraft' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'Your brand or agency name shown in the widget header.', 'pagecraft' ); ?></div>
+                        </div>
+                        <div class="itspc-form-control">
+                          <input type="text" name="welcome_widget_agency" id="welcome_widget_agency"
+                            class="itspc-input" value="<?php echo esc_attr( isset( $settings['welcome_widget_agency'] ) ? $settings['welcome_widget_agency'] : '' ); ?>"
+                            placeholder="<?php esc_attr_e( 'e.g. Acme Web Agency', 'pagecraft' ); ?>">
+                        </div>
                       </div>
-                      <div class="itspc-form-control">
-                        <input type="text" name="welcome_widget_agency" id="welcome_widget_agency"
-                          class="itspc-input" value="<?php echo esc_attr( isset( $settings['welcome_widget_agency'] ) ? $settings['welcome_widget_agency'] : '' ); ?>"
-                          placeholder="<?php esc_attr_e( 'e.g. Acme Web Agency', 'pagecraft' ); ?>">
-                      </div>
-                    </div>
 
-                    <div class="itspc-form-row">
-                      <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label" for="welcome_widget_logo"><?php esc_html_e( 'Agency Logo URL', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'Optional logo image URL (recommended size: 80x80px).', 'pagecraft' ); ?></div>
+                      <div class="itspc-form-row">
+                        <div class="itspc-form-label-wrap">
+                          <label class="itspc-form-label" for="welcome_widget_logo"><?php esc_html_e( 'Agency Logo URL', 'pagecraft' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'Optional logo image URL (recommended size: 80x80px).', 'pagecraft' ); ?></div>
+                        </div>
+                        <div class="itspc-form-control">
+                          <input type="url" name="welcome_widget_logo" id="welcome_widget_logo"
+                            class="itspc-input" value="<?php echo esc_url( isset( $settings['welcome_widget_logo'] ) ? $settings['welcome_widget_logo'] : '' ); ?>"
+                            placeholder="<?php esc_attr_e( 'e.g. https://youragency.com/logo.png', 'pagecraft' ); ?>">
+                        </div>
                       </div>
-                      <div class="itspc-form-control">
-                        <input type="url" name="welcome_widget_logo" id="welcome_widget_logo"
-                          class="itspc-input" value="<?php echo esc_url( isset( $settings['welcome_widget_logo'] ) ? $settings['welcome_widget_logo'] : '' ); ?>"
-                          placeholder="<?php esc_attr_e( 'e.g. https://youragency.com/logo.png', 'pagecraft' ); ?>">
-                      </div>
-                    </div>
 
-                    <div class="itspc-form-row">
-                      <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label" for="welcome_widget_msg"><?php esc_html_e( 'Welcome Message / Guidelines', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'Guidance notes or instructions for the client when they manage their site.', 'pagecraft' ); ?></div>
+                      <div class="itspc-form-row">
+                        <div class="itspc-form-label-wrap">
+                          <label class="itspc-form-label" for="welcome_widget_msg"><?php esc_html_e( 'Welcome Message / Guidelines', 'pagecraft' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'Guidance notes or instructions for the client when they manage their site.', 'pagecraft' ); ?></div>
+                        </div>
+                        <div class="itspc-form-control">
+                          <textarea name="welcome_widget_msg" id="welcome_widget_msg"
+                            class="itspc-input" style="min-height: 100px;"
+                            placeholder="<?php esc_attr_e( 'Welcome to your new website! Here you can manage your pages and posts. If you need any assistance, reach out to us using the contact details below.', 'pagecraft' ); ?>"><?php echo esc_textarea( isset( $settings['welcome_widget_msg'] ) ? $settings['welcome_widget_msg'] : '' ); ?></textarea>
+                        </div>
                       </div>
-                      <div class="itspc-form-control">
-                        <textarea name="welcome_widget_msg" id="welcome_widget_msg"
-                          class="itspc-input" style="min-height: 100px;"
-                          placeholder="<?php esc_attr_e( 'Welcome to your new website! Here you can manage your pages and posts. If you need any assistance, reach out to us using the contact details below.', 'pagecraft' ); ?>"><?php echo esc_textarea( isset( $settings['welcome_widget_msg'] ) ? $settings['welcome_widget_msg'] : '' ); ?></textarea>
-                      </div>
-                    </div>
 
-                    <div class="itspc-form-row">
-                      <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label" for="welcome_widget_video"><?php esc_html_e( 'Video Tutorial URL (YouTube/Vimeo)', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'A link to a video tutorial helping clients edit and manage their website.', 'pagecraft' ); ?></div>
+                      <div class="itspc-form-row">
+                        <div class="itspc-form-label-wrap">
+                          <label class="itspc-form-label" for="welcome_widget_video"><?php esc_html_e( 'Video Tutorial URL (YouTube/Vimeo)', 'pagecraft' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'A link to a video tutorial helping clients edit and manage their website.', 'pagecraft' ); ?></div>
+                        </div>
+                        <div class="itspc-form-control">
+                          <input type="url" name="welcome_widget_video" id="welcome_widget_video"
+                            class="itspc-input" value="<?php echo esc_url( isset( $settings['welcome_widget_video'] ) ? $settings['welcome_widget_video'] : '' ); ?>"
+                            placeholder="<?php esc_attr_e( 'e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'pagecraft' ); ?>">
+                        </div>
                       </div>
-                      <div class="itspc-form-control">
-                        <input type="url" name="welcome_widget_video" id="welcome_widget_video"
-                          class="itspc-input" value="<?php echo esc_url( isset( $settings['welcome_widget_video'] ) ? $settings['welcome_widget_video'] : '' ); ?>"
-                          placeholder="<?php esc_attr_e( 'e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'pagecraft' ); ?>">
-                      </div>
-                    </div>
 
-                    <div class="itspc-form-row">
-                      <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label" for="welcome_widget_email"><?php esc_html_e( 'Support Email / Contact', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'The support email address where clients can send requests.', 'pagecraft' ); ?></div>
+                      <div class="itspc-form-row">
+                        <div class="itspc-form-label-wrap">
+                          <label class="itspc-form-label" for="welcome_widget_email"><?php esc_html_e( 'Support Email / Contact', 'pagecraft' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'The support email address where clients can send requests.', 'pagecraft' ); ?></div>
+                        </div>
+                        <div class="itspc-form-control">
+                          <input type="text" name="welcome_widget_email" id="welcome_widget_email"
+                            class="itspc-input" value="<?php echo esc_attr( isset( $settings['welcome_widget_email'] ) ? $settings['welcome_widget_email'] : '' ); ?>"
+                            placeholder="<?php esc_attr_e( 'e.g. support@youragency.com', 'pagecraft' ); ?>">
+                        </div>
                       </div>
-                      <div class="itspc-form-control">
-                        <input type="text" name="welcome_widget_email" id="welcome_widget_email"
-                          class="itspc-input" value="<?php echo esc_attr( isset( $settings['welcome_widget_email'] ) ? $settings['welcome_widget_email'] : '' ); ?>"
-                          placeholder="<?php esc_attr_e( 'e.g. support@youragency.com', 'pagecraft' ); ?>">
+
+                      <div class="itspc-preview-container-wrap" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #E5E7EB;">
+                        <div class="itspc-preview-title" style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">
+                          <?php esc_html_e( 'Live Preview', 'pagecraft' ); ?>
+                        </div>
+                        <div id="itspc-widget-preview" class="itspc-widget-preview">
+                          <div class="itspc-preview-header">
+                            <img id="itspc-preview-logo" src="" class="itspc-preview-logo" alt="" style="display: none;">
+                            <div class="itspc-preview-title-wrap">
+                              <h4 id="itspc-preview-agency" class="itspc-preview-agency-name"></h4>
+                              <span class="itspc-preview-badge"><?php esc_html_e( 'Website Partner', 'pagecraft' ); ?></span>
+                            </div>
+                          </div>
+                          <div id="itspc-preview-msg" class="itspc-preview-msg"></div>
+                          <div id="itspc-preview-footer" class="itspc-preview-footer">
+                            <div class="itspc-preview-footer-left">
+                              <span class="dashicons dashicons-email"></span>
+                              <span>
+                                <?php esc_html_e( 'Support:', 'pagecraft' ); ?>
+                                <span id="itspc-preview-email"></span>
+                              </span>
+                            </div>
+                            <span id="itspc-preview-video-wrap" style="display: none;">
+                              <a id="itspc-preview-video-link" href="#" target="_blank" class="itspc-preview-video-link">
+                                ▶ <?php esc_html_e( 'Watch tutorial', 'pagecraft' ); ?>
+                              </a>
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -469,21 +367,22 @@ class ITSPC_Admin {
                           <div class="itspc-card-title"><?php esc_html_e( 'System Status', 'pagecraft' ); ?></div>
                       </div>
                       <div class="itspc-card-body" style="padding: 16px 20px;">
-                          <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px;">
-                              <span style="color:#5A5862;"><?php esc_html_e( 'Elementor Builder:', 'pagecraft' ); ?></span>
+                          <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px;">
+                              <span style="color:#4B5563;"><?php esc_html_e( 'Elementor Builder:', 'pagecraft' ); ?></span>
                               <?php if ( did_action( 'elementor/loaded' ) ) : ?>
                                   <span style="color:#C8FF00; font-weight:600;">● <?php esc_html_e( 'Active', 'pagecraft' ); ?></span>
                               <?php else : ?>
                                   <span style="color:#FF4D4D; font-weight:600;">● <?php esc_html_e( 'Inactive', 'pagecraft' ); ?></span>
                               <?php endif; ?>
                           </div>
-                          <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px;">
-                              <span style="color:#5A5862;"><?php esc_html_e( 'PHP Version:', 'pagecraft' ); ?></span>
-                              <span style="color:#F0EFE8;"><?php echo esc_html( phpversion() ); ?> (<?php echo version_compare( phpversion(), '7.4', '>=' ) ? '✓' : '✗'; ?>)</span>
+                          <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px;">
+                              <span style="color:#4B5563;"><?php esc_html_e( 'PHP Version:', 'pagecraft' ); ?></span>
+                              <span style="color:#111827;"><?php echo esc_html( phpversion() ); ?> (<?php echo version_compare( phpversion(), '7.4', '>=' ) ? '✓' : '✗'; ?>)</span>
                           </div>
-                          <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:12px;">
-                              <span style="color:#5A5862;"><?php esc_html_e( 'Active Theme:', 'pagecraft' ); ?></span>
-                              <span style="color:#F0EFE8; font-weight:500; overflow:hidden; text-overflow:ellipsis; max-width:140px; white-space:nowrap;" title="<?php echo esc_attr( wp_get_theme()->get('Name') ); ?>"><?php echo esc_html( wp_get_theme()->get('Name') ); ?></span>
+                          <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px;">
+                              <span style="color:#4B5563;"><?php esc_html_e( 'Active Theme:', 'pagecraft' ); ?></span>
+                              <?php $active_theme = wp_get_theme()->get( 'Name' ); ?>
+                              <span style="color:#111827; font-weight:500; overflow:hidden; text-overflow:ellipsis; max-width:140px; white-space:nowrap;" title="<?php echo esc_attr( $active_theme ); ?>"><?php echo esc_html( $active_theme ); ?></span>
                           </div>
                       </div>
                   </div>
@@ -495,10 +394,10 @@ class ITSPC_Admin {
                           <div class="itspc-card-title"><?php esc_html_e( 'Data Maintenance', 'pagecraft' ); ?></div>
                       </div>
                       <div class="itspc-card-body" style="padding: 16px 20px;">
-                          <p style="font-size:11px; color:#5A5862; margin-top:0; margin-bottom:12px; line-height:1.4;">
+                          <p style="font-size:13.5px; color:#4B5563; margin-top:0; margin-bottom:12px; line-height:1.55;">
                               <?php esc_html_e( 'Having sync issues? Clear PageCraft data from this browser\'s local storage cache to start fresh.', 'pagecraft' ); ?>
                           </p>
-                          <button type="button" class="itspc-btn-save" id="itspc-reset-cache-btn" style="background:#FF4D4D; color:#fff; font-size:11px; padding:6px 12px; margin:0; border-radius:6px;">
+                          <button type="button" class="itspc-btn-save" id="itspc-reset-cache-btn" style="background:#FF4D4D; color:#fff; font-size:13px; padding:8px 14px; margin:0; border-radius:6px;">
                               🗑️ <?php esc_html_e( 'Reset Browser Cache', 'pagecraft' ); ?>
                           </button>
                       </div>
@@ -555,47 +454,49 @@ class ITSPC_Admin {
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
                 <div class="itspc-card-icon">🧩</div>
-                <div class="itspc-card-title"><?php esc_html_e( 'Feature Modules', 'pagecraft' ); ?></div>
+                <div class="itspc-card-title"><?php esc_html_e( 'Interactive Feature Guide', 'pagecraft' ); ?></div>
               </div>
               <div class="itspc-card-body">
+                <p style="font-size: 14px; color: #4B5563; margin-top: 0; margin-bottom: 16px;">
+                  <?php esc_html_e( 'Explore each PageCraft module below. Click on any card to see a step-by-step usage guide and developer pro-tips.', 'pagecraft' ); ?>
+                </p>
                 <div class="itspc-feature-grid">
  
-                  <div class="itspc-feature-card">
+                  <div class="itspc-feature-card active" data-feature="planner">
                     <div class="itspc-feature-icon">📐</div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Section Planner', 'pagecraft' ); ?></div>
-                    <div class="itspc-feature-desc"><?php esc_html_e( 'Drag & drop section ordering, type badges, CSS class labels, quick templates.', 'pagecraft' ); ?></div>
                   </div>
  
-                  <div class="itspc-feature-card">
+                  <div class="itspc-feature-card" data-feature="checklist">
                     <div class="itspc-feature-icon">✅</div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Design Checklist', 'pagecraft' ); ?></div>
-                    <div class="itspc-feature-desc"><?php esc_html_e( '30+ pre-handover checkpoints across 5 categories. Add custom items and groups.', 'pagecraft' ); ?></div>
                   </div>
  
-                  <div class="itspc-feature-card">
+                  <div class="itspc-feature-card" data-feature="palette">
                     <div class="itspc-feature-icon">🎨</div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Color Palette', 'pagecraft' ); ?></div>
-                    <div class="itspc-feature-desc"><?php esc_html_e( 'Save brand colors with roles (Primary, Accent, BG). Click any swatch to copy hex.', 'pagecraft' ); ?></div>
                   </div>
  
-                  <div class="itspc-feature-card">
+                  <div class="itspc-feature-card" data-feature="fonts">
                     <div class="itspc-feature-icon">🔤</div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Font Pairing', 'pagecraft' ); ?></div>
-                    <div class="itspc-feature-desc"><?php esc_html_e( '10 curated pairs including Bengali. Copy Google Fonts link or CSS in one click.', 'pagecraft' ); ?></div>
                   </div>
  
-                  <div class="itspc-feature-card">
+                  <div class="itspc-feature-card" data-feature="css">
                     <div class="itspc-feature-icon">💻</div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'CSS Generator', 'pagecraft' ); ?></div>
-                    <div class="itspc-feature-desc"><?php esc_html_e( '6 presets: Section, Container, Typography, Button, Card, Responsive. Save snippets.', 'pagecraft' ); ?></div>
                   </div>
  
-                  <div class="itspc-feature-card">
+                  <div class="itspc-feature-card" data-feature="notes">
                     <div class="itspc-feature-icon">📝</div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Project Notes', 'pagecraft' ); ?></div>
-                    <div class="itspc-feature-desc"><?php esc_html_e( 'Client feedback, revision log, TODOs — with quick-insert tags and date stamps.', 'pagecraft' ); ?></div>
                   </div>
  
+                </div>
+
+                <!-- Feature Details Explorer Panel -->
+                <div id="itspc-feature-detail-panel" class="itspc-feature-detail-panel">
+                  <!-- JS will load details here -->
                 </div>
               </div>
             </div>
@@ -701,7 +602,7 @@ class ITSPC_Admin {
                       <div class="itspc-about-grid">
                           <div class="itspc-about-text">
                               <div class="itspc-about-logo">Page<span>Craft</span></div>
-                              <p style="margin-top: 12px; font-size: 14px; color: #F0EFE8; font-weight: 500;"><?php esc_html_e( 'Brought to you by TheReadScope', 'pagecraft' ); ?></p>
+                              <p style="margin-top: 12px; font-size: 14px; color: #6B7280; font-weight: 500;"><?php esc_html_e( 'Brought to you by TheReadScope', 'pagecraft' ); ?></p>
                               <p><?php esc_html_e( 'We are a dedicated team of WordPress developers building modern workflow companion utilities to optimize your web development process. PageCraft was born out of the need to eliminate browser tab clutter and app-switching fatigue while planning and structuring Elementor layouts.', 'pagecraft' ); ?></p>
                               <p><?php esc_html_e( 'If PageCraft helps you design better websites faster, please consider giving us a review on WordPress.org to support the ongoing development of this 100% free plugin!', 'pagecraft' ); ?></p>
                               
@@ -716,61 +617,7 @@ class ITSPC_Admin {
               </div>
           </div>
 
-          <!-- Inline Vanilla JavaScript Switcher -->
-          <script>
-          document.addEventListener('DOMContentLoaded', function() {
-              // Tab switching
-              const tabs = document.querySelectorAll('.itspc-tab-btn');
-              const contents = document.querySelectorAll('.itspc-tab-content');
 
-              tabs.forEach(tab => {
-                  tab.addEventListener('click', function() {
-                      const target = this.getAttribute('data-tab');
-
-                      tabs.forEach(t => t.classList.remove('active'));
-                      contents.forEach(c => c.classList.remove('active'));
-
-                      this.classList.add('active');
-                      document.getElementById('itspc-tab-' + target).classList.add('active');
-                  });
-              });
-
-              // Local data reset tool
-              const resetBtn = document.getElementById('itspc-reset-cache-btn');
-              if (resetBtn) {
-                  resetBtn.addEventListener('click', function() {
-                      if (confirm('<?php echo esc_js( __( 'Are you sure you want to reset all PageCraft tool data? This will permanently delete all planner structures, palettes, and checklists from this browser.', 'pagecraft' ) ); ?>')) {
-                          Object.keys(localStorage).forEach(key => {
-                              if (key.indexOf('itspc_') === 0) {
-                                  localStorage.removeItem(key);
-                              }
-                          });
-                          alert('<?php echo esc_js( __( 'All browser cached data for PageCraft has been successfully cleared.', 'pagecraft' ) ); ?>');
-                          location.reload();
-                      }
-                  });
-              }
-
-              // Accordion
-              document.querySelectorAll('.itspc-accordion-btn').forEach(function(btn) {
-                  btn.addEventListener('click', function() {
-                      var body = this.nextElementSibling;
-                      var isOpen = this.classList.contains('open');
-                      // close all
-                      document.querySelectorAll('.itspc-accordion-btn').forEach(function(b) {
-                          b.classList.remove('open');
-                          b.nextElementSibling.classList.remove('open');
-                      });
-                      // open clicked if it was closed
-                      if (!isOpen) {
-                          this.classList.add('open');
-                          body.classList.add('open');
-                      }
-                  });
-              });
-          });
-          </script>
-         
         </div>
         <?php
     }
@@ -785,12 +632,7 @@ class ITSPC_Admin {
 
         $tool_url = esc_url( add_query_arg( 'v', ITSPC_VERSION, ITSPC_PLUGIN_URI . '/assets/tool/index.html' ) );
         ?>
-        <style>
-            #wpbody-content { padding: 0 !important; }
-            #wpadminbar, #adminmenuwrap, #adminmenuback, #wpfooter { display: none !important; }
-            #wpcontent, #wpbody { margin-left: 0 !important; }
-            html.wp-toolbar { padding-top: 0 !important; }
-        </style>
+
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=pagecraft' ) ); ?>" class="itspc-back-link">
             ← <?php esc_html_e( 'Back to Dashboard', 'pagecraft' ); ?>
         </a>
@@ -866,145 +708,6 @@ class ITSPC_Admin {
         $video_url   = $settings['welcome_widget_video'];
         $email       = $settings['welcome_widget_email'];
         ?>
-        <style>
-        .itspc-dashboard-widget-wrap {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
-            color: #2c3338;
-        }
-        .itspc-widget-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #f0f0f1;
-            padding-bottom: 15px;
-        }
-        .itspc-widget-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #f0f0f1;
-            border: 1px solid #dcdcde;
-        }
-        .itspc-widget-logo-placeholder {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            background: #0d0d0f;
-            color: #c8ff00;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            border: 1px solid #2a2a30;
-        }
-        .itspc-widget-title-wrap {
-            flex: 1;
-        }
-        .itspc-widget-agency-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 0 0 3px;
-            color: #1d2327;
-        }
-        .itspc-widget-badge {
-            display: inline-block;
-            background: #c8ff00;
-            color: #111;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 99px;
-            text-transform: uppercase;
-        }
-        .itspc-widget-msg {
-            font-size: 13px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            color: #50575e;
-        }
-        .itspc-video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #c8ff0030;
-        }
-        .itspc-video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-        }
-        .itspc-video-fallback {
-            margin: 15px 0;
-        }
-        .itspc-widget-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f6f7f7;
-            padding: 12px 15px;
-            border-radius: 6px;
-            border: 1px solid #dcdcde;
-            margin-top: 15px;
-        }
-        .itspc-widget-footer-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #50575e;
-        }
-        .itspc-widget-footer-left .dashicons {
-            color: #c8ff00;
-            background: #0d0d0f;
-            border-radius: 50%;
-            padding: 4px;
-            font-size: 14px;
-            width: 14px;
-            height: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .itspc-widget-email-link {
-            font-weight: 600;
-            text-decoration: none;
-            color: #1d2327;
-        }
-        .itspc-widget-email-link:hover {
-            color: #c8ff00;
-        }
-        .itspc-support-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #0d0d0f;
-            color: #c8ff00 !important;
-            border: 1px solid #2a2a30;
-            padding: 6px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .itspc-support-btn:hover {
-            background: #c8ff00;
-            color: #0d0d0f !important;
-            border-color: #c8ff00;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(200, 255, 0, 0.15);
-        }
-        </style>
         <div class="itspc-dashboard-widget-wrap">
             <div class="itspc-widget-header">
                 <?php if ( ! empty( $logo_url ) ) : ?>
@@ -1053,19 +756,67 @@ class ITSPC_Admin {
     /**
      * Enqueue admin scripts and styles.
      *
-     * @param string $hook Current admin page hook.
+     * Loads:
+     * — itspc-admin.css on all plugin pages and on the dashboard when the widget is active.
+     * — itspc-admin.js (tab switching, accordion, cache reset) on plugin pages.
+     * — itspc-tool-page.css only on the pagecraft-tool sub-page.
+     *
+     * @param string $hook Current admin page hook suffix.
      */
     public function enqueue_admin_scripts( $hook ) {
-        // Only load on our pages
-        if ( strpos( $hook, 'pagecraft' ) === false ) {
+        $is_pagecraft = false !== strpos( $hook, 'pagecraft' );
+        $is_dashboard = 'index.php' === $hook;
+
+        // Load CSS on the WP dashboard when the welcome widget is active.
+        if ( $is_dashboard ) {
+            $settings = get_option( 'itspc_settings', array() );
+            if ( ! empty( $settings['show_welcome_widget'] ) ) {
+                wp_enqueue_style(
+                    'itspc-admin',
+                    ITSPC_PLUGIN_URI . '/assets/css/itspc-admin.css',
+                    array(),
+                    ITSPC_VERSION
+                );
+            }
+        }
+
+        // Everything below is for plugin pages only.
+        if ( ! $is_pagecraft ) {
             return;
         }
 
         wp_enqueue_style(
             'itspc-admin',
             ITSPC_PLUGIN_URI . '/assets/css/itspc-admin.css',
-            [],
+            array(),
             ITSPC_VERSION
         );
+
+        wp_enqueue_script(
+            'itspc-admin',
+            ITSPC_PLUGIN_URI . '/assets/js/itspc-admin.js',
+            array(),
+            ITSPC_VERSION,
+            true
+        );
+
+        wp_localize_script(
+            'itspc-admin',
+            'itspcAdminData',
+            array(
+                'confirmReset' => __( 'Are you sure you want to reset all PageCraft tool data? This will permanently delete all planner structures, palettes, and checklists from this browser.', 'pagecraft' ),
+                'resetSuccess' => __( 'All browser cached data for PageCraft has been successfully cleared.', 'pagecraft' ),
+            )
+        );
+
+        // Tool page: fullscreen CSS override (hides admin bar, sidebar, footer).
+        if ( false !== strpos( $hook, 'pagecraft-tool' ) ) {
+            wp_enqueue_style(
+                'itspc-tool-page',
+                ITSPC_PLUGIN_URI . '/assets/css/itspc-tool-page.css',
+                array( 'itspc-admin' ),
+                ITSPC_VERSION
+            );
+        }
     }
 }

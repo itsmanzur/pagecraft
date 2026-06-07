@@ -142,7 +142,7 @@
 }
 
 .itspc-form-label {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     color: #111827;
     display: block;
@@ -150,7 +150,7 @@
 }
 
 .itspc-form-desc {
-    font-size: 12px;
+    font-size: 13.5px;
     color: #4B5563;
     margin-top: 4px;
     line-height: 1.55;
@@ -298,7 +298,7 @@
 }
 
 .itspc-launch-desc {
-    font-size: 13px;
+    font-size: 14px;
     color: #4B5563;
     margin-bottom: 16px;
 }
@@ -337,7 +337,7 @@
     border-radius: 10px;
     padding: 10px 16px;
     color: #A8D800;
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 16px;
     display: flex;
     align-items: center;
@@ -524,7 +524,7 @@
 }
 
 .itspc-tab-btn.active {
-    color: #C8FF00;
+    color: #2f341d;
     background: #C8FF0015;
     border-color: #C8FF0030;
 }
@@ -572,7 +572,7 @@
 .itspc-shortcut-item {
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
+    font-size: 14px;
     padding: 8px 0;
     border-bottom: 1px solid #F3F4F6;
 }
@@ -607,6 +607,12 @@
     flex: 1;
 }
 
+.itspc-about-text p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #374151;
+}
+
 .itspc-about-logo {
     font-size: 32px;
     font-weight: 800;
@@ -624,7 +630,7 @@
     gap: 6px;
     color: #C8FF00 !important;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     transition: all 0.2s;
 }
@@ -666,7 +672,7 @@
     margin-bottom: 5px;
 }
 .itspc-step-desc {
-    font-size: 13px;
+    font-size: 14px;
     color: #4B5563;
     line-height: 1.65;
 }
@@ -720,13 +726,13 @@
     display: block;
 }
 .itspc-feature-name {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     color: #111827;
     margin-bottom: 6px;
 }
 .itspc-feature-desc {
-    font-size: 12px;
+    font-size: 13.5px;
     color: #4B5563;
     line-height: 1.65;
 }
@@ -778,7 +784,7 @@
 }
 .itspc-accordion-body.open { display: block; }
 .itspc-accordion-body p {
-    font-size: 13px;
+    font-size: 14.5px;
     color: #4B5563;
     line-height: 1.75;
     margin: 0;
@@ -787,3 +793,495 @@
     border-radius: 8px;
     border-left: 3px solid #C8FF00;
 }
+
+/* ============================================================
+   Dashboard Welcome Widget Styles
+   (moved from inline <style> in render_dashboard_widget())
+   ============================================================ */
+
+.itspc-dashboard-widget-wrap {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+    color: #2c3338;
+}
+.itspc-widget-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f1;
+    padding-bottom: 15px;
+}
+.itspc-widget-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f0f0f1;
+    border: 1px solid #dcdcde;
+}
+.itspc-widget-logo-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background: #0d0d0f;
+    color: #c8ff00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    border: 1px solid #2a2a30;
+}
+.itspc-widget-title-wrap {
+    flex: 1;
+}
+.itspc-widget-agency-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: #1d2327;
+}
+.itspc-widget-badge {
+    display: inline-block;
+    background: #c8ff00;
+    color: #111;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+    text-transform: uppercase;
+}
+.itspc-widget-msg {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    color: #50575e;
+}
+.itspc-video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(200, 255, 0, 0.19);
+}
+.itspc-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+.itspc-video-fallback {
+    margin: 15px 0;
+}
+.itspc-widget-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f6f7f7;
+    padding: 12px 15px;
+    border-radius: 6px;
+    border: 1px solid #dcdcde;
+    margin-top: 15px;
+}
+.itspc-widget-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #50575e;
+}
+.itspc-widget-footer-left .dashicons {
+    color: #c8ff00;
+    background: #0d0d0f;
+    border-radius: 50%;
+    padding: 4px;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.itspc-widget-email-link {
+    font-weight: 600;
+    text-decoration: none;
+    color: #1d2327;
+}
+.itspc-widget-email-link:hover {
+    color: #c8ff00;
+}
+.itspc-support-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #0d0d0f;
+    color: #c8ff00 !important;
+    border: 1px solid #2a2a30;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.itspc-support-btn:hover {
+    background: #c8ff00;
+    color: #0d0d0f !important;
+    border-color: #c8ff00;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(200, 255, 0, 0.15);
+}
+
+/* ============================================================
+   Interactive Settings Elements Styles
+   ============================================================ */
+
+#itspc-whitelabel-fields {
+    transition: opacity 0.2s ease;
+}
+#itspc-whitelabel-fields.itspc-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* Live Preview Widget Container */
+.itspc-widget-preview {
+    background: #ffffff;
+    border: 1px solid #E5E7EB;
+    border-top: 3px solid #C8FF00;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    max-width: 100%;
+    margin-top: 12px;
+}
+.itspc-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #F3F4F6;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+.itspc-preview-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #E5E7EB;
+}
+.itspc-preview-title-wrap {
+    flex: 1;
+}
+.itspc-preview-agency-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 2px;
+}
+.itspc-preview-badge {
+    display: inline-block;
+    background: #F3F4F6;
+    color: #4B5563;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 99px;
+    text-transform: uppercase;
+}
+.itspc-preview-msg {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #4B5563;
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+    min-height: 1em;
+}
+.itspc-preview-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F9FAFB;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #E5E7EB;
+    font-size: 12px;
+}
+.itspc-preview-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #4B5563;
+}
+.itspc-preview-footer-left .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #9CA3AF;
+}
+.itspc-preview-video-link {
+    font-weight: 600;
+    color: #111827;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.itspc-preview-video-link:hover {
+    color: #A8D800;
+}
+
+/* Custom range slider styling */
+.itspc-range-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    max-width: 200px;
+    height: 6px;
+    border-radius: 3px;
+    background: #E5E7EB;
+    outline: none;
+    margin: 0 10px;
+    vertical-align: middle;
+}
+/* Chrome, Safari, Opera and Edge */
+.itspc-range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #C8FF00;
+    border: 2px solid #0D0D0F;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.itspc-range-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+/* Firefox */
+.itspc-range-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #C8FF00;
+    border: 2px solid #0D0D0F;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.itspc-range-slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
+/* ============================================================
+   Interactive Feature Explorer Styles
+   ============================================================ */
+
+.itspc-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+.itspc-feature-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+.itspc-feature-card:hover {
+    border-color: #C8FF00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(200, 255, 0, 0.06);
+}
+.itspc-feature-card.active {
+    border-color: #C8FF00;
+    background: rgba(200, 255, 0, 0.04);
+    box-shadow: 0 4px 12px rgba(200, 255, 0, 0.08);
+}
+.itspc-feature-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+.itspc-feature-detail-panel {
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    animation: itspcFadeIn 0.25s ease-out;
+}
+.itspc-feature-detail-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.itspc-feature-detail-section {
+    margin-bottom: 14px;
+}
+.itspc-feature-detail-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #4B5563;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.itspc-feature-detail-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+}
+.itspc-feature-detail-steps {
+    margin: 0;
+    padding-left: 20px;
+}
+.itspc-feature-detail-steps li {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+    margin-bottom: 6px;
+}
+.itspc-feature-detail-tip-box {
+    background: rgba(200, 255, 0, 0.08);
+    border-left: 4px solid #C8FF00;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #374151;
+    margin-top: 16px;
+}
+
+@keyframes itspcFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   Premium UI Input Switches & Segmented Controls
+   ============================================================ */
+
+/* iOS Toggle Switch */
+.itspc-toggle-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+.itspc-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    margin: 0;
+    cursor: pointer;
+}
+.itspc-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.itspc-switch-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #E5E7EB;
+    transition: .3s;
+    border-radius: 24px;
+}
+.itspc-switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.itspc-switch input:checked + .itspc-switch-slider {
+    background-color: #C8FF00;
+}
+.itspc-switch input:focus + .itspc-switch-slider {
+    box-shadow: 0 0 1px #C8FF00;
+}
+.itspc-switch input:checked + .itspc-switch-slider:before {
+    transform: translateX(20px);
+    background-color: #0D0D0F;
+}
+.itspc-switch-label-text {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #374151;
+    user-select: none;
+}
+
+/* Segmented Control for Radio Options */
+.itspc-segmented-control {
+    display: inline-flex;
+    position: relative;
+    background: #F3F4F6;
+    border-radius: 8px;
+    padding: 2px;
+    width: 100%;
+    max-width: 240px;
+    border: 1px solid #E5E7EB;
+    box-sizing: border-box;
+}
+.itspc-segmented-control input[type="radio"] {
+    position: absolute;
+    visibility: hidden;
+}
+.itspc-segment-label {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #4B5563;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.2s;
+    user-select: none;
+    margin: 0;
+}
+.itspc-segmented-control input[type="radio"]:checked + .itspc-segment-label {
+    color: #0D0D0F;
+}
+.itspc-segmented-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    bottom: 2px;
+    width: calc(50% - 2px);
+    background: #FFFFFF;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    z-index: 1;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.itspc-segmented-control input[type="radio"]#panel_position_right:checked ~ .itspc-segmented-slider {
+    transform: translateX(0);
+}
+.itspc-segmented-control input[type="radio"]#panel_position_left:checked ~ .itspc-segmented-slider {
+    transform: translateX(100%);
+}
+
+.itspc-preview-empty {
+    color: #9CA3AF;
+    font-style: italic;
+}
+
