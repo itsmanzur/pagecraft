@@ -1,0 +1,11 @@
+# WordPress plugin gitignore
+pagecraft.zip
+pagecraft.rar
+*.zip
+*.rar
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+vendor/
+.gemini/
