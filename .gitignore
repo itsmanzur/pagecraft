@@ -7,5 +7,5 @@ pagecraft.rar
 .DS_Store
 Thumbs.db
 node_modules/
-vendor/
+/vendor/
 .gemini/
