@@ -33,7 +33,7 @@ class ITSPC_Admin {
         add_menu_page(
             __( 'PageCraft', 'pagecraft' ),
             __( 'PageCraft', 'pagecraft' ),
-            'edit_posts',
+            'manage_options',
             'pagecraft',
             array( $this, 'render_settings_page' ),
             'dashicons-layout',
@@ -45,7 +45,7 @@ class ITSPC_Admin {
             'pagecraft',
             __( 'PageCraft Settings', 'pagecraft' ),
             __( 'Settings', 'pagecraft' ),
-            'edit_posts',
+            'manage_options',
             'pagecraft',
             array( $this, 'render_settings_page' )
         );
@@ -55,7 +55,7 @@ class ITSPC_Admin {
             'pagecraft',
             __( 'PageCraft Tool', 'pagecraft' ),
             __( 'Open Tool', 'pagecraft' ),
-            'edit_posts',
+            'manage_options',
             'pagecraft-tool',
             array( $this, 'render_tool_page' )
         );
@@ -98,7 +98,7 @@ class ITSPC_Admin {
      * Render the settings page.
      */
     public function render_settings_page() {
-        if ( ! current_user_can( 'edit_posts' ) ) {
+        if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions.', 'pagecraft' ) );
         }
 
@@ -442,7 +442,7 @@ class ITSPC_Admin {
                     <div class="itspc-step-num">3</div>
                     <div class="itspc-step-content">
                       <div class="itspc-step-title"><?php esc_html_e( 'Plan, Design, Ship', 'pagecraft' ); ?></div>
-                      <div class="itspc-step-desc"><?php esc_html_e( 'Use the 6 modules: Section Planner, Checklist, Color Palette, Font Pairs, CSS Generator, and Notes — all saved automatically.', 'pagecraft' ); ?></div>
+                      <div class="itspc-step-desc"><?php esc_html_e( 'Use the 7 modules: Section Planner, Checklist, Color Palette, Font Pairs, CSS Generator, Notes, and Audit — all saved automatically.', 'pagecraft' ); ?></div>
                     </div>
                   </div>
  
@@ -596,19 +596,19 @@ class ITSPC_Admin {
               <div class="itspc-card">
                   <div class="itspc-card-header">
                       <div class="itspc-card-icon">❤️</div>
-                      <div class="itspc-card-title"><?php esc_html_e( 'About TheReadScope', 'pagecraft' ); ?></div>
+                      <div class="itspc-card-title"><?php esc_html_e( 'About the Developer', 'pagecraft' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
                       <div class="itspc-about-grid">
                           <div class="itspc-about-text">
                               <div class="itspc-about-logo">Page<span>Craft</span></div>
-                              <p style="margin-top: 12px; font-size: 14px; color: #6B7280; font-weight: 500;"><?php esc_html_e( 'Brought to you by TheReadScope', 'pagecraft' ); ?></p>
-                              <p><?php esc_html_e( 'We are a dedicated team of WordPress developers building modern workflow companion utilities to optimize your web development process. PageCraft was born out of the need to eliminate browser tab clutter and app-switching fatigue while planning and structuring Elementor layouts.', 'pagecraft' ); ?></p>
-                              <p><?php esc_html_e( 'If PageCraft helps you design better websites faster, please consider giving us a review on WordPress.org to support the ongoing development of this 100% free plugin!', 'pagecraft' ); ?></p>
+                              <p style="margin-top: 12px; font-size: 14px; color: #6B7280; font-weight: 500;"><?php esc_html_e( 'Built by itsmanzur', 'pagecraft' ); ?></p>
+                              <p><?php esc_html_e( 'I\'m an independent WordPress developer building modern workflow tools to speed up your web development process. PageCraft was born out of the need to eliminate browser-tab clutter and app-switching fatigue while planning and structuring Elementor layouts.', 'pagecraft' ); ?></p>
+                              <p><?php esc_html_e( 'If PageCraft helps you design better websites faster, please consider leaving a review on WordPress.org to support the ongoing development of this 100% free plugin!', 'pagecraft' ); ?></p>
                               
                               <div style="margin-top: 24px; display: flex; gap: 20px;">
-                                  <a href="https://thereadscope.com/" target="_blank" class="itspc-link-btn">🌐 <?php esc_html_e( 'Visit Website', 'pagecraft' ); ?></a>
-                                  <a href="https://thereadscope.com/pagecraft/" target="_blank" class="itspc-link-btn">💬 <?php esc_html_e( 'Get Support', 'pagecraft' ); ?></a>
+                                  <a href="https://profiles.wordpress.org/itsmanzur/" target="_blank" class="itspc-link-btn">🌐 <?php esc_html_e( 'Profile', 'pagecraft' ); ?></a>
+                                  <a href="https://wordpress.org/support/plugin/pagecraft/" target="_blank" class="itspc-link-btn">💬 <?php esc_html_e( 'Get Support', 'pagecraft' ); ?></a>
                                   <a href="https://wordpress.org/support/plugin/pagecraft/reviews/" target="_blank" class="itspc-link-btn">⭐ <?php esc_html_e( 'Rate & Review', 'pagecraft' ); ?></a>
                               </div>
                           </div>
@@ -626,7 +626,7 @@ class ITSPC_Admin {
      * Render the full-screen tool page.
      */
     public function render_tool_page() {
-        if ( ! current_user_can( 'edit_posts' ) ) {
+        if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions.', 'pagecraft' ) );
         }
 

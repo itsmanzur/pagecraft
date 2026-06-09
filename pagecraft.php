@@ -1,18 +1,18 @@
 <?php
 /**
  * @package   PageCraft
- * @author    TheReadScope
+ * @author    itsmanzur
  * @license   GPL-2.0+
- * @link      https://thereadscope.com/
- * @copyright 2024 TheReadScope
+ * @link      https://profiles.wordpress.org/itsmanzur/
+ * @copyright 2026 itsmanzur
  *
  * @wordpress-plugin
- * Plugin Name:       PageCraft — Elementor Workflow Companion
- * Plugin URI:        https://thereadscope.com/pagecraft/
+ * Plugin Name:       PageCraft — Workflow Toolkit & Section Planner
+ * Plugin URI:        https://wordpress.org/plugins/pagecraft/
  * Description:       The ultimate workflow tool for Elementor — section planner, design checklist, color palette, font pairing, CSS generator, and project notes.
- * Version:           1.0.1
- * Author:            TheReadScope
- * Author URI:        https://thereadscope.com/
+ * Version:           1.0.0
+ * Author:            itsmanzur
+ * Author URI:        https://profiles.wordpress.org/itsmanzur/
  * Text Domain:       pagecraft
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Plugin constants
  */
 if ( ! defined( 'ITSPC_VERSION' ) ) {
-    define( 'ITSPC_VERSION', '1.0.1' );
+    define( 'ITSPC_VERSION', '1.0.0' );
 }
 if ( ! defined( 'ITSPC_PLUGIN_DIR' ) ) {
     define( 'ITSPC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

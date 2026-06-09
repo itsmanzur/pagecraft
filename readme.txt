@@ -1,10 +1,10 @@
-=== PageCraft — Workflow Toolkit & Section Planner for Elementor ===
-Contributors: thereadscope
+=== PageCraft — Workflow Toolkit & Section Planner ===
+Contributors: itsmanzur
 Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
-Tested up to: 7
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,8 @@ Stop switching between apps and browser tabs — plan, design, and organize ever
 **CSS Generator** — Generate Elementor-ready custom CSS snippets. 6 presets (Section, Container, Typography, Button, Card, Responsive). Auto-fill from your Section Planner. Save and reuse snippets.
 
 **Project Notes** — Client feedback, revision history, TODOs — all in one place. Quick insert tags for common patterns. Date stamps and structured formatting.
+
+**Pre-Publish Audit** — Scan your Elementor page for common issues before publishing. Detect placeholder text, broken links, missing image alt tags, and layout hierarchy issues. Locate elements with a single click.
 
 **Export** — Export your entire project as formatted text or JSON. Download .txt for client handover. JSON backup/import for portability.
 
@@ -95,17 +97,6 @@ PageCraft is designed for Elementor workflows, but the standalone tool (Admin �
 
 == Changelog ==
 
-= 1.0.1 =
-* Security: Added origin validation to postMessage event listener in Elementor editor integration
-* Security: Replaced wildcard '*' postMessage target-origin with explicit window.location.origin
-* Code: Removed redundant Settings API registration (dual form-processing conflict)
-* Code: Moved inline admin JavaScript to external file (itspc-admin.js) via wp_enqueue_script
-* Code: Moved all inline CSS blocks to external stylesheets via wp_enqueue_style
-* Code: Refactored settings POST handler to use sanitize_settings() — eliminates duplicated sanitization logic
-* Fix: Email field now uses sanitize_email() instead of sanitize_text_field()
-* Fix: wp_get_theme() result cached to avoid duplicate calls
-* Improvement: Dashboard widget CSS conditionally loaded only when widget is active
-
 = 1.0.0 =
 * Initial release
 * Section Planner with drag-and-drop and quick templates
@@ -121,9 +112,6 @@ PageCraft is designed for Elementor workflows, but the standalone tool (Admin �
 * Settings page for panel configuration
 
 == Upgrade Notice ==
-
-= 1.0.1 =
-Security and code quality improvements. Recommended update for all users.
 
 = 1.0.0 =
 Initial release of PageCraft — the Elementor Workflow Companion.
