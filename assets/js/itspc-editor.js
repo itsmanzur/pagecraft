@@ -1,5 +1,5 @@
 ﻿/**
- * Sekkei â€” Elementor Editor Integration
+ * Sekkei  Elementor Editor Integration
  *
  * Injects floating button and sliding iframe panel into the Elementor editor.
  * Uses localized `itspcData` object from PHP.
@@ -52,6 +52,42 @@
                 hex: hex
             };
         }).filter(Boolean);
+    }
+
+
+    function addHeadLink(attrs) {
+        var selector = 'link[href="' + attrs.href + '"]';
+        if (document.head.querySelector(selector)) {
+            return;
+        }
+        var link = document.createElement('link');
+        Object.keys(attrs).forEach(function(key) {
+            link.setAttribute(key, attrs[key]);
+        });
+        document.head.appendChild(link);
+    }
+
+    function warmSekkeiAssets() {
+        if (typeof itspcData === 'undefined' || !itspcData.assetBaseUrl) {
+            return;
+        }
+        var base = String(itspcData.assetBaseUrl).replace(/\/$/, '');
+        addHeadLink({ rel: 'preload', href: base + '/vendor/tabler-icons/fonts/tabler-icons.woff2', 'as': 'font', type: 'font/woff2', crossorigin: 'anonymous' });
+        addHeadLink({ rel: 'preload', href: base + '/vendor/fonts/dm-sans-400.woff2', 'as': 'font', type: 'font/woff2', crossorigin: 'anonymous' });
+        addHeadLink({ rel: 'preload', href: base + '/vendor/fonts/syne-700.woff2', 'as': 'font', type: 'font/woff2', crossorigin: 'anonymous' });
+        addHeadLink({ rel: 'prefetch', href: base + '/vendor/fonts/fonts.css', 'as': 'style' });
+        addHeadLink({ rel: 'prefetch', href: base + '/vendor/tabler-icons/tabler-icons.min.css', 'as': 'style' });
+        if (itspcData.toolUrl) {
+            addHeadLink({ rel: 'prefetch', href: itspcData.toolUrl, 'as': 'document' });
+        }
+    }
+
+    function scheduleAssetWarmup() {
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(warmSekkeiAssets, { timeout: 1500 });
+        } else {
+            setTimeout(warmSekkeiAssets, 500);
+        }
     }
 
     function getContainerChildren(container) {
@@ -181,6 +217,7 @@
     }
 
     function initSekkei() {
+        scheduleAssetWarmup();
         var btn       = document.getElementById('itspc-toggle-btn');
         var panel     = document.getElementById('itspc-panel');
         var iframe    = document.getElementById('itspc-panel-iframe');

@@ -1,50 +1,50 @@
-﻿=== Sekkei â€” Section Planner & Workflow Toolkit for Elementor ===
+=== Sekkei  Section Planner & Workflow Toolkit for Elementor ===
 Contributors: itsmanzur
 Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Elementor workflow toolkit â€” plan sections, run a design checklist, save color palettes & font pairs, and generate CSS, right beside your canvas.
+Elementor workflow toolkit  plan sections, run a design checklist, save color palettes & font pairs, and generate CSS, right beside your canvas.
 
 == Description ==
 
 **Sekkei** is the all-in-one workflow tool designed specifically for Elementor page builders. It integrates directly into the Elementor editor as a sliding side panel, or works as a standalone tool from your WordPress dashboard.
 
-Stop switching between apps and browser tabs â€” plan, design, and organize everything in one place, right next to your Elementor canvas.
+Stop switching between apps and browser tabs  plan, design, and organize everything in one place, right next to your Elementor canvas.
 
-= ðŸŽ¯ Key Features =
+=  Key Features =
 
-**Section Planner** â€” Plan your page structure before building. Add sections with names, types (hero/nav/content/CTA/footer/custom), CSS classes, and notes. Drag-and-drop to reorder. Quick template to scaffold common pages.
+**Section Planner**  Plan your page structure before building. Add sections with names, types (hero/nav/content/CTA/footer/custom), CSS classes, and notes. Drag-and-drop to reorder. Quick template to scaffold common pages.
 
-**Design Checklist** â€” Never miss a step. 30+ checklist items across 5 categories: Before Design, Structure, Design, Mobile, and Handover. Add custom items and groups. Track progress with a live progress bar.
+**Design Checklist**  Never miss a step. 30+ checklist items across 5 categories: Before Design, Structure, Design, Mobile, and Handover. Add custom items and groups. Track progress with a live progress bar.
 
-**Color Palette** â€” Save and organize your brand colors. Group colors by palette (Brand, Dark Mode, etc.). Click any swatch to copy the hex code. Assign roles like Primary, Accent, Background.
+**Color Palette**  Save and organize your brand colors. Group colors by palette (Brand, Dark Mode, etc.). Click any swatch to copy the hex code. Assign roles like Primary, Accent, Background.
 
-**Font Pairing** â€” 10 curated font pairings (including Bengali fonts). Filter by style: editorial, modern, minimal, bold. Copy CSS and Google Fonts links. Save custom pairings.
+**Font Pairing**  10 curated font pairings (including Bengali fonts). Filter by style: editorial, modern, minimal, bold. Copy CSS and Google Fonts links. Save custom pairings.
 
-**CSS Generator** â€” Generate Elementor-ready custom CSS snippets. 6 presets (Section, Container, Typography, Button, Card, Responsive). Auto-fill from your Section Planner. Save and reuse snippets.
+**CSS Generator**  Generate Elementor-ready custom CSS snippets. 6 presets (Section, Container, Typography, Button, Card, Responsive). Auto-fill from your Section Planner. Save and reuse snippets.
 
-**Project Notes** â€” Client feedback, revision history, TODOs â€” all in one place. Quick insert tags for common patterns. Date stamps and structured formatting.
+**Project Notes**  Client feedback, revision history, TODOs  all in one place. Quick insert tags for common patterns. Date stamps and structured formatting.
 
-**Pre-Publish Audit** â€” Scan your Elementor page for common issues before publishing. Detect placeholder text, broken links, missing image alt tags, and layout hierarchy issues. Locate elements with a single click.
+**Pre-Publish Audit**  Scan your Elementor page for common issues before publishing. Detect placeholder text, broken links, missing image alt tags, and layout hierarchy issues. Locate elements with a single click.
 
-**Export** â€” Export your entire project as formatted text or JSON. Download .txt for client handover. JSON backup/import for portability.
+**Export**  Export your entire project as formatted text or JSON. Download .txt for client handover. JSON backup/import for portability.
 
-**Multiple Projects** â€” Manage separate projects with independent data. Switch between projects instantly.
+**Multiple Projects**  Manage separate projects with independent data. Switch between projects instantly.
 
-= ðŸ”§ How It Works =
+=  How It Works =
 
-1. **In Elementor Editor**: A floating "âš¡ Sekkei" button appears. Click it to open the tool as a sliding side panel. Use keyboard shortcut `Ctrl+Shift+P` for quick access.
+1. **In Elementor Editor**: A floating " Sekkei" button appears. Click it to open the tool as a sliding side panel. Use keyboard shortcut `Ctrl+Shift+P` for quick access.
 
-2. **In WordPress Admin**: Navigate to Sekkei â†’ Open Tool for a full-screen experience.
+2. **In WordPress Admin**: Navigate to Sekkei  Open Tool for a full-screen experience.
 
-3. **Data Storage**: All data is saved in your browser's localStorage â€” no server requests, no database load, instant performance.
+3. **Data Storage**: All data is saved in your browser's localStorage  no server requests, no database load, instant performance.
 
-= ðŸš€ 100% Free & Unlocked =
+=  100% Free & Unlocked =
 
 Sekkei is 100% free and open-source. Every feature is included with no paywalls, subscriptions, or license keys:
 
@@ -60,8 +60,8 @@ Sekkei is 100% free and open-source. Every feature is included with no paywalls,
 
 1. Upload the `sekkei` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Open any page with Elementor editor â€” look for the "âš¡ Sekkei" button
-4. Or navigate to Sekkei â†’ Open Tool in the WordPress admin menu
+3. Open any page with Elementor editor  look for the " Sekkei" button
+4. Or navigate to Sekkei  Open Tool in the WordPress admin menu
 
 == Frequently Asked Questions ==
 
@@ -79,23 +79,27 @@ Yes! Use the Export tab to download your project as a .txt file for client hando
 
 = Will this slow down my site? =
 
-No. Sekkei only loads in the Elementor editor and WordPress admin â€” never on the frontend. Zero impact on site performance.
+No. Sekkei only loads in the Elementor editor and WordPress admin  never on the frontend. Zero impact on site performance.
 
 = Does it work with other page builders? =
 
-Sekkei is designed for Elementor workflows, but the standalone tool (Admin â†’ Open Tool) can be used for planning any website project.
+Sekkei is designed for Elementor workflows, but the standalone tool (Admin  Open Tool) can be used for planning any website project.
 
 == Screenshots ==
 
-1. Section Planner â€” Plan and organize your page sections with drag-and-drop
-2. Design Checklist â€” Track your progress with categorized checkpoints
-3. Color Palette â€” Save and organize brand colors with groups and roles
-4. Font Pairing â€” Curated font combinations with live preview
-5. CSS Generator â€” Generate Elementor-ready CSS snippets with presets
-6. Elementor Integration â€” Floating button and sliding panel in the editor
-7. Settings Page â€” Configure panel position, width, and behavior
+1. Section Planner  Plan and organize your page sections with drag-and-drop
+2. Design Checklist  Track your progress with categorized checkpoints
+3. Color Palette  Save and organize brand colors with groups and roles
+4. Font Pairing  Curated font combinations with live preview
+5. CSS Generator  Generate Elementor-ready CSS snippets with presets
+6. Elementor Integration  Floating button and sliding panel in the editor
+7. Settings Page  Configure panel position, width, and behavior
 
 == Changelog ==
+
+= 1.0.2 =
+* Preloaded editor panel fonts and icon assets for faster first open
+* Reduced delayed icon rendering in the Elementor panel
 
 = 1.0.1 =
 * Improved Elementor structure sync for newly added sections and containers
@@ -119,11 +123,14 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin â†
 
 == Upgrade Notice ==
 
+= 1.0.2 =
+Improves editor panel asset loading and icon rendering speed.
+
 = 1.0.1 =
 Improves Elementor live sync and security hardening.
 
 = 1.0.0 =
-Initial release of Sekkei â€” the Elementor Workflow Companion.
+Initial release of Sekkei  the Elementor Workflow Companion.
 
 == Third-Party Libraries ==
 

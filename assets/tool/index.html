@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sekkei â€” Elementor Workflow Tool</title>
+<title>Sekkei  Elementor Workflow Tool</title>
 <link rel="stylesheet" href="../vendor/fonts/fonts.css">
 <link rel="stylesheet" href="../vendor/tabler-icons/tabler-icons.min.css">
 <style>
@@ -497,7 +497,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       <div class="panel-header">
         <div>
           <div class="panel-title">Section <span>Planner</span></div>
-          <div class="panel-sub">Drag to reorder Â· Click edit to rename Â· Label every section</div>
+          <div class="panel-sub">Drag to reorder - Click edit to rename - Label every section</div>
         </div>
         <div style="display:flex;gap:6px">
           <button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Quick Template</button>
@@ -582,7 +582,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       <div class="panel-header">
         <div>
           <div class="panel-title">Color <span>Palette</span></div>
-          <div class="panel-sub">Save & organize your brand colors Â· Click swatch to copy hex</div>
+          <div class="panel-sub">Save & organize your brand colors - Click swatch to copy hex</div>
         </div>
         <button class="btn btn-accent btn-sm" onclick="syncColorsToElementor()"><i class="ti ti-bolt"></i> Push to Elementor</button>
       </div>
@@ -606,7 +606,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
           <button class="btn btn-accent" onclick="addColor()"><i class="ti ti-plus"></i> Add</button>
         </div>
         <div style="margin-top:8px">
-          <input type="text" id="new-color-group" placeholder="Group (e.g. Brand Colors, Dark Palette) â€” leave blank for default" style="font-size:12px" />
+          <input type="text" id="new-color-group" placeholder="Group (e.g. Brand Colors, Dark Palette)  leave blank for default" style="font-size:12px" />
         </div>
       </div>
     </div>
@@ -756,7 +756,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       <div class="panel-header">
         <div>
           <div class="panel-title">Project <span>Notes</span></div>
-          <div class="panel-sub">Client feedback Â· Revision history Â· TODOs</div>
+          <div class="panel-sub">Client feedback - Revision history - TODOs</div>
         </div>
         <div style="display:flex;gap:6px">
           <button class="btn btn-sm" onclick="copyNotes()"><i class="ti ti-copy"></i> Copy</button>
@@ -988,16 +988,16 @@ function normalizeSnippet(snippet) {
 
 // ===== FONT PAIRS DATA =====
 const fontPairsDB = [
-  {id:'f1',heading:'Playfair Display',body:'Source Sans Pro',tags:['editorial','modern'],note:'Classic editorial â€” great for luxury brands, publishers',previewText:'The Art of Storytelling'},
+  {id:'f1',heading:'Playfair Display',body:'Source Sans Pro',tags:['editorial','modern'],note:'Classic editorial  great for luxury brands, publishers',previewText:'The Art of Storytelling'},
   {id:'f2',heading:'Syne',body:'DM Sans',tags:['modern','bold'],note:'Tech-forward, great for SaaS and agencies',previewText:'Build Without Limits'},
-  {id:'f3',heading:'Cormorant Garamond',body:'Raleway',tags:['editorial','minimal'],note:'Refined and elegant â€” law firms, consulting',previewText:'Excellence in Every Detail'},
+  {id:'f3',heading:'Cormorant Garamond',body:'Raleway',tags:['editorial','minimal'],note:'Refined and elegant  law firms, consulting',previewText:'Excellence in Every Detail'},
   {id:'f4',heading:'Space Grotesk',body:'Inter',tags:['modern','minimal'],note:'Clean SaaS, fintech, modern startup',previewText:'Move Fast, Stay Sharp'},
-  {id:'f5',heading:'Fraunces',body:'Nunito Sans',tags:['editorial','bold'],note:'Warm editorial â€” great for food, lifestyle',previewText:'Made with Intention'},
-  {id:'f6',heading:'Bebas Neue',body:'Open Sans',tags:['bold'],note:'High-impact display â€” fitness, sports, events',previewText:'PUSH YOUR LIMITS'},
-  {id:'f7',heading:'DM Serif Display',body:'DM Sans',tags:['minimal','modern'],note:'Balanced, approachable â€” marketing, landing pages',previewText:'Simple. Powerful. Yours.'},
-  {id:'f8',heading:'Libre Baskerville',body:'Libre Franklin',tags:['editorial'],note:'Traditional authority â€” news, education, NGO',previewText:'The Truth, Clearly Told'},
-  {id:'f9',heading:'Noto Serif Bengali',body:'Noto Sans Bengali',tags:['bengali'],note:'à¦¬à¦¾à¦‚à¦²à¦¾ à¦¸à¦¾à¦‡à¦Ÿà§‡à¦° à¦œà¦¨à§à¦¯ à¦¸à§‡à¦°à¦¾ â€” à¦‡à¦¸à¦²à¦¾à¦®à¦¿à¦•, à¦ªà¦¾à¦¬à¦²à¦¿à¦¶à¦¾à¦°',previewText:'à¦œà§à¦žà¦¾à¦¨à§‡à¦° à¦†à¦²à§‹à¦¯à¦¼ à¦†à¦²à§‹à¦•à¦¿à¦¤ à¦¹à¦“'},
-  {id:'f10',heading:'Hind Siliguri',body:'Noto Sans Bengali',tags:['bengali'],note:'à¦¬à¦¾à¦‚à¦²à¦¾ UI â€” à¦•à§à¦²à¦¿à¦¨, à¦®à¦¡à¦¾à¦°à§à¦¨ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨à§‡à¦° à¦œà¦¨à§à¦¯',previewText:'à¦†à¦ªà¦¨à¦¾à¦° à¦¬à§à¦°à§à¦¯à¦¾à¦¨à§à¦¡à§‡à¦° à¦ªà¦°à¦¿à¦šà¦¯à¦¼'},
+  {id:'f5',heading:'Fraunces',body:'Nunito Sans',tags:['editorial','bold'],note:'Warm editorial  great for food, lifestyle',previewText:'Made with Intention'},
+  {id:'f6',heading:'Bebas Neue',body:'Open Sans',tags:['bold'],note:'High-impact display  fitness, sports, events',previewText:'PUSH YOUR LIMITS'},
+  {id:'f7',heading:'DM Serif Display',body:'DM Sans',tags:['minimal','modern'],note:'Balanced, approachable  marketing, landing pages',previewText:'Simple. Powerful. Yours.'},
+  {id:'f8',heading:'Libre Baskerville',body:'Libre Franklin',tags:['editorial'],note:'Traditional authority  news, education, NGO',previewText:'The Truth, Clearly Told'},
+  {id:'f9',heading:'Noto Serif Bengali',body:'Noto Sans Bengali',tags:['bengali'],note:'Bengali-friendly serif and sans pairing',previewText:'Bengali typography preview'},
+  {id:'f10',heading:'Hind Siliguri',body:'Noto Sans Bengali',tags:['bengali'],note:'Clean Bengali UI pairing for modern designs',previewText:'Bengali brand identity'},
 ];
 
 // ===== CHECKLIST DATA =====
@@ -1019,7 +1019,7 @@ const defaultChecklist = {
     'Global fonts saved in Elementor settings',
   ],
   'Design': [
-    'Typography scale applied (H1â€“H6)',
+    'Typography scale applied (H1H6)',
     'Consistent section padding throughout',
     'Icon set consistent (one set only)',
     'Images compressed and WebP converted',
@@ -1029,8 +1029,8 @@ const defaultChecklist = {
     'Spacing and alignment verified',
   ],
   'Mobile': [
-    'Mobile layout reviewed (320pxâ€“768px)',
-    'Tablet layout reviewed (768pxâ€“1024px)',
+    'Mobile layout reviewed (320px768px)',
+    'Tablet layout reviewed (768px1024px)',
     'Touch targets minimum 44px',
     'Font sizes readable on mobile',
     'Horizontal scroll eliminated',
@@ -1760,15 +1760,15 @@ function clearNotes() {
 // ===== EXPORT =====
 function buildExport() {
   const p = proj();
-  let out = `â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n`;
-  out += `  SEKKEI â€” PROJECT EXPORT\n`;
+  let out = `\n`;
+  out += `  SEKKEI  PROJECT EXPORT\n`;
   out += `  ${p.name}\n`;
   out += `  Generated: ${new Date().toLocaleString()}\n`;
-  out += `â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n\n`;
+  out += `\n\n`;
 
   // Sections
   if (p.sections && p.sections.length) {
-    out += `â”€â”€ SECTION PLAN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n`;
+    out += ` SECTION PLAN \n\n`;
     p.sections.forEach((s, i) => {
       out += `  ${String(i+1).padStart(2,'0')}. [${s.type.toUpperCase()}] ${s.name}\n`;
       if (s.note) out += `      Note: ${s.note}\n`;
@@ -1780,7 +1780,7 @@ function buildExport() {
   // Checklist
   const checks = p.checks || {};
   if (Object.keys(checks).length) {
-    out += `â”€â”€ DESIGN CHECKLIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n`;
+    out += ` DESIGN CHECKLIST \n\n`;
     for (const [group, items] of Object.entries(checks)) {
       out += `  ${group}:\n`;
       items.forEach(item => {
@@ -1792,7 +1792,7 @@ function buildExport() {
 
   // Colors
   if (p.colors && p.colors.length) {
-    out += `â”€â”€ COLOR PALETTE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n`;
+    out += ` COLOR PALETTE \n\n`;
     const groups = {};
     p.colors.forEach(c => {
       const g = c.group || 'Project Colors';
@@ -1808,7 +1808,7 @@ function buildExport() {
 
   // Font Pairs
   if (p.savedFontPairs && p.savedFontPairs.length) {
-    out += `â”€â”€ FONT PAIRS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n`;
+    out += ` FONT PAIRS \n\n`;
     p.savedFontPairs.forEach(fp => {
       out += `  Heading: ${fp.heading}\n  Body: ${fp.body}\n\n`;
     });
@@ -1816,20 +1816,20 @@ function buildExport() {
 
   // CSS Snippets
   if (p.cssSnippets && p.cssSnippets.length) {
-    out += `â”€â”€ CSS SNIPPETS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n`;
+    out += ` CSS SNIPPETS \n\n`;
     p.cssSnippets.forEach(s => {
-      out += `  /* ${s.name} â€” ${s.date} */\n`;
+      out += `  /* ${s.name}  ${s.date} */\n`;
       out += s.code.split('\n').map(l => '  ' + l).join('\n') + '\n\n';
     });
   }
 
   // Notes
   if (p.notes) {
-    out += `â”€â”€ PROJECT NOTES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n`;
+    out += ` PROJECT NOTES \n\n`;
     out += p.notes.split('\n').map(l => '  ' + l).join('\n') + '\n';
   }
 
-  out += `\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n  End of Export â€” Sekkei v1.0\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`;
+  out += `\n\n  End of Export  Sekkei v1.0\n`;
   document.getElementById('export-preview').textContent = out;
 }
 

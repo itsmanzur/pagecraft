@@ -1,6 +1,6 @@
 <?php
 /**
- * Core plugin class — singleton orchestrator.
+ * Core plugin class - singleton orchestrator.
  *
  * @package Sekkei
  */
@@ -36,7 +36,7 @@ class ITSPC_Core {
     }
 
     /**
-     * Constructor — load dependencies and initialize hooks.
+     * Constructor - load dependencies and initialize hooks.
      */
     private function __construct() {
         $this->includes();

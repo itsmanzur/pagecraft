@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class ITSPC_Elementor
  *
  * Injects the Sekkei floating button and sliding panel into the Elementor editor.
- * Uses the free Elementor hooks — no Pro API required.
+ * Uses the free Elementor hooks - no Pro API required.
  */
 class ITSPC_Elementor {
 
@@ -25,7 +25,7 @@ class ITSPC_Elementor {
     private $settings = null;
 
     /**
-     * Constructor — register Elementor editor hooks.
+     * Constructor - register Elementor editor hooks.
      */
     public function __construct() {
         add_action( 'elementor/editor/after_enqueue_scripts', array( $this, 'enqueue_editor_scripts' ) );
@@ -46,7 +46,7 @@ class ITSPC_Elementor {
     }
 
     /**
-     * Get asset version string — filemtime in debug mode, plugin version in production.
+     * Get asset version string - filemtime in debug mode, plugin version in production.
      *
      * @param string $relative_path Relative path from plugin dir.
      * @return string|int
@@ -80,6 +80,7 @@ class ITSPC_Elementor {
 
         wp_localize_script( 'itspc-editor', 'itspcData', array(
             'toolUrl'       => add_query_arg( 'v', ITSPC_VERSION, ITSPC_PLUGIN_URI . '/assets/tool/index.html' ),
+            'assetBaseUrl'  => ITSPC_PLUGIN_URI . '/assets',
             'panelPosition' => isset( $settings['panel_position'] ) ? $settings['panel_position'] : 'right',
             'panelWidth'    => isset( $settings['panel_width'] ) ? absint( $settings['panel_width'] ) : 420,
             'pluginVersion' => ITSPC_VERSION,
@@ -121,7 +122,7 @@ class ITSPC_Elementor {
         ?>
         <!-- Sekkei Toggle Button -->
         <div id="itspc-toggle-btn" title="<?php esc_attr_e( 'Sekkei (Ctrl+Shift+P)', 'sekkei' ); ?>">
-            <span class="itspc-btn-text">⚡ Sekkei</span>
+            <span class="itspc-btn-text">Sekkei</span>
         </div>
 
         <!-- Sekkei Sliding Panel -->
@@ -129,8 +130,8 @@ class ITSPC_Elementor {
             <div id="itspc-panel-resizer"></div>
             <div class="itspc-panel-header">
                 <span class="itspc-panel-title">Sek<span>kei</span></span>
-                <button id="itspc-panel-popout" class="itspc-panel-btn" title="<?php esc_attr_e( 'Open in new window', 'sekkei' ); ?>">↗</button>
-                <button id="itspc-panel-close" class="itspc-panel-btn" title="<?php esc_attr_e( 'Close', 'sekkei' ); ?>">✕</button>
+                <button id="itspc-panel-popout" class="itspc-panel-btn" title="<?php esc_attr_e( 'Open in new window', 'sekkei' ); ?>">Open</button>
+                <button id="itspc-panel-close" class="itspc-panel-btn" title="<?php esc_attr_e( 'Close', 'sekkei' ); ?>">x</button>
             </div>
             <iframe id="itspc-panel-iframe" src="" loading="lazy" title="<?php esc_attr_e( 'Sekkei Tool', 'sekkei' ); ?>"></iframe>
         </div>

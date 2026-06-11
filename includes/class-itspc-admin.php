@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class ITSPC_Admin {
 
     /**
-     * Constructor — register hooks.
+     * Constructor - register hooks.
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'register_menu' ) );
@@ -132,7 +132,7 @@ class ITSPC_Admin {
          
           <?php if (isset($_GET['saved'])): ?>
           <div class="itspc-notice">
-            <span>✓</span> Settings saved successfully.
+            <span>OK</span> Settings saved successfully.
           </div>
           <?php endif; ?>
          
@@ -146,9 +146,9 @@ class ITSPC_Admin {
 
           <!-- Tabs Navigation -->
           <div class="itspc-tabs-nav">
-              <button class="itspc-tab-btn active" data-tab="settings">⚙️ Settings</button>
-              <button class="itspc-tab-btn" data-tab="docs">📚 Docs & Help</button>
-              <button class="itspc-tab-btn" data-tab="about">❤️ About Us</button>
+              <button class="itspc-tab-btn active" data-tab="settings"> Settings</button>
+              <button class="itspc-tab-btn" data-tab="docs"> Docs & Help</button>
+              <button class="itspc-tab-btn" data-tab="about"> About Us</button>
           </div>
 
           <!-- Tab Pane 1: Settings -->
@@ -158,7 +158,7 @@ class ITSPC_Admin {
              
                 <div class="itspc-card">
                   <div class="itspc-card-header">
-                    <div class="itspc-card-icon">⚙️</div>
+                    <div class="itspc-card-icon"></div>
                     <div class="itspc-card-title"><?php esc_html_e( 'General Settings', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
@@ -204,7 +204,7 @@ class ITSPC_Admin {
                     <div class="itspc-form-row">
                       <div class="itspc-form-label-wrap">
                         <label class="itspc-form-label" for="panel_width"><?php esc_html_e( 'Panel Width (px)', 'sekkei' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'Width of the tool panel (380–680px).', 'sekkei' ); ?></div>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Width of the tool panel (380-680px).', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-form-control" style="display: flex; align-items: center; gap: 10px;">
                         <input type="number" name="panel_width" id="panel_width"
@@ -222,7 +222,7 @@ class ITSPC_Admin {
                 <!-- Client Handover & White-Label Widget Card -->
                 <div class="itspc-card">
                   <div class="itspc-card-header">
-                    <div class="itspc-card-icon">💼</div>
+                    <div class="itspc-card-icon"></div>
                     <div class="itspc-card-title"><?php esc_html_e( 'Client Handover & White-Label Widget', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
@@ -330,7 +330,7 @@ class ITSPC_Admin {
                             </div>
                             <span id="itspc-preview-video-wrap" style="display: none;">
                               <a id="itspc-preview-video-link" href="#" target="_blank" rel="noopener noreferrer" class="itspc-preview-video-link">
-                                ▶ <?php esc_html_e( 'Watch tutorial', 'sekkei' ); ?>
+                                > <?php esc_html_e( 'Watch tutorial', 'sekkei' ); ?>
                               </a>
                             </span>
                           </div>
@@ -342,7 +342,7 @@ class ITSPC_Admin {
                 </div>
 
                 <button type="submit" name="itspc_save" class="itspc-btn-save">
-                  <span>✓</span> <?php esc_html_e( 'Save Settings', 'sekkei' ); ?>
+                  <span>OK</span> <?php esc_html_e( 'Save Settings', 'sekkei' ); ?>
                 </button>
              
               </form>
@@ -354,7 +354,7 @@ class ITSPC_Admin {
                 </div>
                 <a href="<?php echo esc_url(admin_url('admin.php?page=sekkei-tool')); ?>"
                    class="itspc-btn-launch">
-                  ⚡ <?php esc_html_e( 'Open Sekkei Tool', 'sekkei' ); ?>
+                  <?php esc_html_e( 'Open Sekkei Tool', 'sekkei' ); ?>
                 </a>
               </div>
 
@@ -363,21 +363,21 @@ class ITSPC_Admin {
                   <!-- Card: System Status -->
                   <div class="itspc-card" style="margin-bottom: 0;">
                       <div class="itspc-card-header">
-                          <div class="itspc-card-icon">🏥</div>
+                          <div class="itspc-card-icon"></div>
                           <div class="itspc-card-title"><?php esc_html_e( 'System Status', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-card-body" style="padding: 16px 20px;">
                           <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px;">
                               <span style="color:#4B5563;"><?php esc_html_e( 'Elementor Builder:', 'sekkei' ); ?></span>
                               <?php if ( did_action( 'elementor/loaded' ) ) : ?>
-                                  <span style="color:#C8FF00; font-weight:600;">● <?php esc_html_e( 'Active', 'sekkei' ); ?></span>
+                                  <span style="color:#C8FF00; font-weight:600;">* <?php esc_html_e( 'Active', 'sekkei' ); ?></span>
                               <?php else : ?>
-                                  <span style="color:#FF4D4D; font-weight:600;">● <?php esc_html_e( 'Inactive', 'sekkei' ); ?></span>
+                                  <span style="color:#FF4D4D; font-weight:600;">* <?php esc_html_e( 'Inactive', 'sekkei' ); ?></span>
                               <?php endif; ?>
                           </div>
                           <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px;">
                               <span style="color:#4B5563;"><?php esc_html_e( 'PHP Version:', 'sekkei' ); ?></span>
-                              <span style="color:#111827;"><?php echo esc_html( phpversion() ); ?> (<?php echo version_compare( phpversion(), '7.4', '>=' ) ? '✓' : '✗'; ?>)</span>
+                              <span style="color:#111827;"><?php echo esc_html( phpversion() ); ?> (<?php echo version_compare( phpversion(), '7.4', '>=' ) ? 'OK' : 'No'; ?>)</span>
                           </div>
                           <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px;">
                               <span style="color:#4B5563;"><?php esc_html_e( 'Active Theme:', 'sekkei' ); ?></span>
@@ -390,7 +390,7 @@ class ITSPC_Admin {
                   <!-- Card: Data Maintenance -->
                   <div class="itspc-card" style="margin-bottom: 0;">
                       <div class="itspc-card-header">
-                          <div class="itspc-card-icon">🧼</div>
+                          <div class="itspc-card-icon"></div>
                           <div class="itspc-card-title"><?php esc_html_e( 'Data Maintenance', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-card-body" style="padding: 16px 20px;">
@@ -398,7 +398,7 @@ class ITSPC_Admin {
                               <?php esc_html_e( 'Having sync issues? Clear Sekkei data from this browser\'s local storage cache to start fresh.', 'sekkei' ); ?>
                           </p>
                           <button type="button" class="itspc-btn-save" id="itspc-reset-cache-btn" style="background:#FF4D4D; color:#fff; font-size:13px; padding:8px 14px; margin:0; border-radius:6px;">
-                              🗑️ <?php esc_html_e( 'Reset Browser Cache', 'sekkei' ); ?>
+                               <?php esc_html_e( 'Reset Browser Cache', 'sekkei' ); ?>
                           </button>
                       </div>
                   </div>
@@ -411,8 +411,8 @@ class ITSPC_Admin {
             <!-- Quick Start Timeline -->
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
-                <div class="itspc-card-icon">🚀</div>
-                <div class="itspc-card-title"><?php esc_html_e( 'Quick Start — 3 Steps', 'sekkei' ); ?></div>
+                <div class="itspc-card-icon"></div>
+                <div class="itspc-card-title"><?php esc_html_e( 'Quick Start - 3 Steps', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
                 <div class="itspc-steps">
@@ -431,7 +431,7 @@ class ITSPC_Admin {
                       <div class="itspc-step-title"><?php esc_html_e( 'Launch the Panel', 'sekkei' ); ?></div>
                       <div class="itspc-step-desc">
                         <?php esc_html_e( 'Click the floating', 'sekkei' ); ?>
-                        <span class="itspc-inline-badge">⚡ Sekkei</span>
+                        <span class="itspc-inline-badge">Sekkei</span>
                         <?php esc_html_e( 'button (bottom-right), or press', 'sekkei' ); ?>
                         <kbd class="itspc-kbd">Ctrl</kbd>+<kbd class="itspc-kbd">Shift</kbd>+<kbd class="itspc-kbd">P</kbd>
                       </div>
@@ -442,7 +442,7 @@ class ITSPC_Admin {
                     <div class="itspc-step-num">3</div>
                     <div class="itspc-step-content">
                       <div class="itspc-step-title"><?php esc_html_e( 'Plan, Design, Ship', 'sekkei' ); ?></div>
-                      <div class="itspc-step-desc"><?php esc_html_e( 'Use the 7 modules: Section Planner, Checklist, Color Palette, Font Pairs, CSS Generator, Notes, and Audit — all saved automatically.', 'sekkei' ); ?></div>
+                      <div class="itspc-step-desc"><?php esc_html_e( 'Use the 7 modules: Section Planner, Checklist, Color Palette, Font Pairs, CSS Generator, Notes, and Audit - all saved automatically.', 'sekkei' ); ?></div>
                     </div>
                   </div>
  
@@ -453,7 +453,7 @@ class ITSPC_Admin {
             <!-- Feature Cards -->
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
-                <div class="itspc-card-icon">🧩</div>
+                <div class="itspc-card-icon"></div>
                 <div class="itspc-card-title"><?php esc_html_e( 'Interactive Feature Guide', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body">
@@ -463,32 +463,32 @@ class ITSPC_Admin {
                 <div class="itspc-feature-grid">
  
                   <div class="itspc-feature-card active" data-feature="planner">
-                    <div class="itspc-feature-icon">📐</div>
+                    <div class="itspc-feature-icon"></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Section Planner', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="checklist">
-                    <div class="itspc-feature-icon">✅</div>
+                    <div class="itspc-feature-icon"></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Design Checklist', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="palette">
-                    <div class="itspc-feature-icon">🎨</div>
+                    <div class="itspc-feature-icon"></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Color Palette', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="fonts">
-                    <div class="itspc-feature-icon">🔤</div>
+                    <div class="itspc-feature-icon"></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Font Pairing', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="css">
-                    <div class="itspc-feature-icon">💻</div>
+                    <div class="itspc-feature-icon"></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'CSS Generator', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="notes">
-                    <div class="itspc-feature-icon">📝</div>
+                    <div class="itspc-feature-icon"></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Project Notes', 'sekkei' ); ?></div>
                   </div>
  
@@ -504,7 +504,7 @@ class ITSPC_Admin {
             <!-- FAQ Accordion -->
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
-                <div class="itspc-card-icon">❓</div>
+                <div class="itspc-card-icon"></div>
                 <div class="itspc-card-title"><?php esc_html_e( 'Frequently Asked Questions', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
@@ -513,7 +513,7 @@ class ITSPC_Admin {
                   <div class="itspc-accordion-item">
                     <button class="itspc-accordion-btn" type="button">
                       <span><?php esc_html_e( 'Does Sekkei require Elementor Pro?', 'sekkei' ); ?></span>
-                      <span class="itspc-accordion-arrow">▾</span>
+                      <span class="itspc-accordion-arrow">v</span>
                     </button>
                     <div class="itspc-accordion-body">
                       <p><?php esc_html_e( 'No. Sekkei works with the free version of Elementor. No Pro license needed.', 'sekkei' ); ?></p>
@@ -523,27 +523,27 @@ class ITSPC_Admin {
                   <div class="itspc-accordion-item">
                     <button class="itspc-accordion-btn" type="button">
                       <span><?php esc_html_e( 'Where is my data stored?', 'sekkei' ); ?></span>
-                      <span class="itspc-accordion-arrow">▾</span>
+                      <span class="itspc-accordion-arrow">v</span>
                     </button>
                     <div class="itspc-accordion-body">
-                      <p><?php esc_html_e( 'All your project data (sections, colors, notes, etc.) is stored in your browser\'s localStorage. It stays on your device and is never sent to any server. Use the Export → JSON feature to back it up.', 'sekkei' ); ?></p>
+                      <p><?php esc_html_e( 'All your project data (sections, colors, notes, etc.) is stored in your browser\'s localStorage. It stays on your device and is never sent to any server. Use the Export -> JSON feature to back it up.', 'sekkei' ); ?></p>
                     </div>
                   </div>
  
                   <div class="itspc-accordion-item">
                     <button class="itspc-accordion-btn" type="button">
                       <span><?php esc_html_e( 'Will it slow down my website?', 'sekkei' ); ?></span>
-                      <span class="itspc-accordion-arrow">▾</span>
+                      <span class="itspc-accordion-arrow">v</span>
                     </button>
                     <div class="itspc-accordion-body">
-                      <p><?php esc_html_e( 'Sekkei only loads its scripts inside the Elementor editor — never on your frontend. Your site\'s load time is completely unaffected.', 'sekkei' ); ?></p>
+                      <p><?php esc_html_e( 'Sekkei only loads its scripts inside the Elementor editor - never on your frontend. Your site\'s load time is completely unaffected.', 'sekkei' ); ?></p>
                     </div>
                   </div>
  
                   <div class="itspc-accordion-item">
                     <button class="itspc-accordion-btn" type="button">
                       <span><?php esc_html_e( 'Can I use it for multiple client projects?', 'sekkei' ); ?></span>
-                      <span class="itspc-accordion-arrow">▾</span>
+                      <span class="itspc-accordion-arrow">v</span>
                     </button>
                     <div class="itspc-accordion-body">
                       <p><?php esc_html_e( 'Yes. Use the Projects feature inside the tool to create separate workspaces for each client. Each project has its own sections, colors, palette, and notes.', 'sekkei' ); ?></p>
@@ -553,10 +553,10 @@ class ITSPC_Admin {
                   <div class="itspc-accordion-item" style="border-bottom:none">
                     <button class="itspc-accordion-btn" type="button">
                       <span><?php esc_html_e( 'How do I back up or move my data?', 'sekkei' ); ?></span>
-                      <span class="itspc-accordion-arrow">▾</span>
+                      <span class="itspc-accordion-arrow">v</span>
                     </button>
                     <div class="itspc-accordion-body">
-                      <p><?php esc_html_e( 'Open the tool → go to the Export tab → click "Download JSON". This saves all your projects. To restore, click "Import JSON" on any browser/device.', 'sekkei' ); ?></p>
+                      <p><?php esc_html_e( 'Open the tool -> go to the Export tab -> click "Download JSON". This saves all your projects. To restore, click "Import JSON" on any browser/device.', 'sekkei' ); ?></p>
                     </div>
                   </div>
  
@@ -567,7 +567,7 @@ class ITSPC_Admin {
             <!-- Keyboard Shortcuts -->
             <div class="itspc-card">
               <div class="itspc-card-header">
-                <div class="itspc-card-icon">⌨️</div>
+                <div class="itspc-card-icon"></div>
                 <div class="itspc-card-title"><?php esc_html_e( 'Keyboard Shortcuts', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
@@ -595,7 +595,7 @@ class ITSPC_Admin {
           <div class="itspc-tab-content" id="itspc-tab-about">
               <div class="itspc-card">
                   <div class="itspc-card-header">
-                      <div class="itspc-card-icon">❤️</div>
+                      <div class="itspc-card-icon"></div>
                       <div class="itspc-card-title"><?php esc_html_e( 'About the Developer', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
@@ -607,9 +607,9 @@ class ITSPC_Admin {
                               <p><?php esc_html_e( 'If Sekkei helps you design better websites faster, please consider leaving a review on WordPress.org to support the ongoing development of this 100% free plugin!', 'sekkei' ); ?></p>
                               
                               <div style="margin-top: 24px; display: flex; gap: 20px;">
-                                  <a href="https://profiles.wordpress.org/itsmanzur/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn">🌐 <?php esc_html_e( 'Profile', 'sekkei' ); ?></a>
-                                  <a href="https://wordpress.org/support/plugin/sekkei/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn">💬 <?php esc_html_e( 'Get Support', 'sekkei' ); ?></a>
-                                  <a href="https://wordpress.org/support/plugin/sekkei/reviews/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn">⭐ <?php esc_html_e( 'Rate & Review', 'sekkei' ); ?></a>
+                                  <a href="https://profiles.wordpress.org/itsmanzur/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn"> <?php esc_html_e( 'Profile', 'sekkei' ); ?></a>
+                                  <a href="https://wordpress.org/support/plugin/sekkei/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn"> <?php esc_html_e( 'Get Support', 'sekkei' ); ?></a>
+                                  <a href="https://wordpress.org/support/plugin/sekkei/reviews/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn"> <?php esc_html_e( 'Rate & Review', 'sekkei' ); ?></a>
                               </div>
                           </div>
                       </div>
@@ -634,7 +634,7 @@ class ITSPC_Admin {
         ?>
 
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=sekkei' ) ); ?>" class="itspc-back-link">
-            ← <?php esc_html_e( 'Back to Dashboard', 'sekkei' ); ?>
+            <- <?php esc_html_e( 'Back to Dashboard', 'sekkei' ); ?>
         </a>
         <iframe
             src="<?php echo esc_url( $tool_url ); ?>"
@@ -713,7 +713,7 @@ class ITSPC_Admin {
                 <?php if ( ! empty( $logo_url ) ) : ?>
                     <img src="<?php echo esc_url( $logo_url ); ?>" class="itspc-widget-logo" alt="<?php echo esc_attr( $agency_name ); ?>">
                 <?php else : ?>
-                    <div class="itspc-widget-logo-placeholder">⚡</div>
+                    <div class="itspc-widget-logo-placeholder"></div>
                 <?php endif; ?>
                 <div class="itspc-widget-title-wrap">
                     <h4 class="itspc-widget-agency-name"><?php echo esc_html( $agency_name ); ?></h4>
@@ -757,9 +757,9 @@ class ITSPC_Admin {
      * Enqueue admin scripts and styles.
      *
      * Loads:
-     * — itspc-admin.css on all plugin pages and on the dashboard when the widget is active.
-     * — itspc-admin.js (tab switching, accordion, cache reset) on plugin pages.
-     * — itspc-tool-page.css only on the sekkei-tool sub-page.
+     * - itspc-admin.css on all plugin pages and on the dashboard when the widget is active.
+     * - itspc-admin.js (tab switching, accordion, cache reset) on plugin pages.
+     * - itspc-tool-page.css only on the sekkei-tool sub-page.
      *
      * @param string $hook Current admin page hook suffix.
      */

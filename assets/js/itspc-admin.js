@@ -1,5 +1,5 @@
 /**
- * Sekkei — Admin Page Scripts
+ * Sekkei - Admin Page Scripts
  *
  * Handles tab switching, accordion, and cache reset on the admin settings page.
  * Strings are localized via itspcAdminData (wp_localize_script).
@@ -279,7 +279,7 @@
 
         var featureData = {
             planner: {
-                title: "Section Planner 📐",
+                title: "Section Planner ",
                 what: "Helps you plan the page layout and design structure of your sections. Includes drag-and-drop section reordering, category badges, and custom CSS class assignment.",
                 how: [
                     "Open any page in the Elementor editor and launch the Sekkei panel.",
@@ -290,7 +290,7 @@
                 tip: "Use short, semantic custom CSS classes (like `.hero-section` or `.cta-banner`) for easy styling later."
             },
             checklist: {
-                title: "Design Checklist ✅",
+                title: "Design Checklist ",
                 what: "Helps you review over 30 pre-handover checkpoints across 5 categories (SEO, Performance, Responsive, Links audit) before client handover.",
                 how: [
                     "Navigate to the Checklist tab inside the tool and review each category group.",
@@ -300,7 +300,7 @@
                 tip: "Create different checklist templates for E-commerce vs. Portfolio sites to ensure no critical task is missed during handover."
             },
             palette: {
-                title: "Color Palette 🎨",
+                title: "Color Palette ",
                 what: "Manage and store your project's brand colors (Primary, Secondary, Accent, BG) in one centralized location.",
                 how: [
                     "Set your project brand hex codes inside the Color Palette tab.",
@@ -309,7 +309,7 @@
                 tip: "Name your swatches matching your CSS variable names to copy variables directly to your stylesheet."
             },
             fonts: {
-                title: "Font Pairing 🔤",
+                title: "Font Pairing ",
                 what: "Provides previews and one-click enqueuing for 10 curated professional font combinations (including optimized pairs for English & Bengali).",
                 how: [
                     "Go to the Font Pairs section to preview the curated typography combinations.",
@@ -318,7 +318,7 @@
                 tip: "Maintain a proper font size and line-height hierarchy between headings and body text to maximize readability."
             },
             css: {
-                title: "CSS Generator 💻",
+                title: "CSS Generator ",
                 what: "Generate clean, customizable CSS snippets for buttons, sections, typography, containers, cards, and responsive layouts.",
                 how: [
                     "Select a layout preset in the CSS Generator tab (e.g. Button hover style).",
@@ -327,7 +327,7 @@
                 tip: "Paste the copied CSS directly inside Elementor's Custom CSS field or your child theme's `style.css` file."
             },
             notes: {
-                title: "Project Notes 📝",
+                title: "Project Notes ",
                 what: "Keep client feedback, revision logs, and TODO checklists directly inside the Elementor editor workspace.",
                 how: [
                     "Use the Notes tab to write down client requirements, revisions, or task lists.",
@@ -385,7 +385,7 @@
 
             var tipBox = document.createElement( 'div' );
             tipBox.className = 'itspc-feature-detail-tip-box';
-            tipBox.textContent = '💡 Pro Tip: ' + data.tip;
+            tipBox.textContent = ' Pro Tip: ' + data.tip;
 
             detailPanel.appendChild( titleEl );
             detailPanel.appendChild( descSection );
