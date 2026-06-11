@@ -1,10 +1,10 @@
-=== Sekkei  Section Planner & Workflow Toolkit for Elementor ===
+=== Sekkei - Section Planner & Workflow Toolkit for Elementor ===
 Contributors: itsmanzur
 Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,16 +97,6 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin  Open
 
 == Changelog ==
 
-= 1.0.2 =
-* Preloaded editor panel fonts and icon assets for faster first open
-* Reduced delayed icon rendering in the Elementor panel
-
-= 1.0.1 =
-* Improved Elementor structure sync for newly added sections and containers
-* Hardened import, iframe messaging, and editor sync validation
-* Added safer rendering for audit results and saved snippets
-* Added noopener/noreferrer to external admin links
-
 = 1.0.0 =
 * Initial release
 * Section Planner with drag-and-drop and quick templates
@@ -122,12 +112,6 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin  Open
 * Settings page for panel configuration
 
 == Upgrade Notice ==
-
-= 1.0.2 =
-Improves editor panel asset loading and icon rendering speed.
-
-= 1.0.1 =
-Improves Elementor live sync and security hardening.
 
 = 1.0.0 =
 Initial release of Sekkei  the Elementor Workflow Companion.

@@ -23,6 +23,7 @@
   --accent2:#A8D800;
   --accent-dim:rgba(200,255,0,0.10);
   --accent-border:rgba(200,255,0,0.25);
+  --accent-text:#0D0D0F;
   --red:#FF4D4D;
   --amber:#FFB020;
   --teal:#00E5CC;
@@ -53,6 +54,7 @@ body.light-mode {
   --accent2:#486E00;
   --accent-dim:rgba(90,135,0,0.10);
   --accent-border:rgba(90,135,0,0.25);
+  --accent-text:#FFFFFF;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;overflow:hidden;transition:background-color 0.2s, color 0.2s}
 
@@ -264,8 +266,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 
 /* ===== INPUTS ===== */
 input[type=text],input[type=number],input[type=email],select,textarea{
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:9px 12px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;transition:border .15s;width:100%;line-height:1.5}
-input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--border2)}
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:9px 12px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;transition:all .15s ease-in-out;width:100%;line-height:1.5}
+input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--accent-border);box-shadow:0 0 0 2px var(--accent-dim);background:var(--bg2)}
 select{cursor:pointer}
 textarea{resize:vertical;min-height:80px;line-height:1.6}
 input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);border:1px solid var(--border);background:var(--bg3);cursor:pointer}
@@ -273,8 +275,8 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 /* ===== BUTTONS ===== */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-md);font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text2);transition:all .15s;line-height:1;letter-spacing:0.01em}
 .btn:hover{border-color:var(--border2);color:var(--text);background:var(--bg4)}
-.btn-accent{background:var(--accent);color:#0D0D0F;border-color:var(--accent);font-weight:600}
-.btn-accent:hover{background:var(--accent2);border-color:var(--accent2);color:#0D0D0F}
+.btn-accent{background:var(--accent);color:var(--accent-text);border-color:var(--accent);font-weight:600}
+.btn-accent:hover{background:var(--accent2);border-color:var(--accent2);color:var(--accent-text)}
 .btn-sm{padding:5px 10px;font-size:12px}
 .btn-icon{width:32px;height:32px;padding:0;justify-content:center;flex-shrink:0}
 .btn i{font-size:15px}
@@ -350,13 +352,19 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .fp-body{font-size:14px;color:var(--text2);line-height:1.75}
 .fp-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .fp-tag{font-size:10px;padding:3px 8px;border-radius:99px;background:var(--bg4);color:var(--text3);border:1px solid var(--border)}
+.font-filter-btn{font-size:11px;padding:5px 12px;border-radius:99px;background:var(--bg4);color:var(--text3);border:1px solid var(--border);cursor:pointer;transition:all .2s ease}
+.font-filter-btn:hover{border-color:var(--border2);color:var(--text2);background:var(--bg3)}
+.font-filter-btn.active{border-color:var(--accent-border);background:var(--accent-dim);color:var(--accent)}
+.font-filter-btn.active:hover{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-border)}
 .fp-fonts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .fp-font-item{background:var(--bg4);border-radius:var(--r-md);padding:8px 10px}
 .fp-font-role{font-size:11px;color:var(--text3);margin-bottom:2px}
 .fp-font-name{font-size:13px;font-weight:500;color:var(--text2)}
-.fp-actions{display:flex;gap:6px}
+.fp-actions{display:flex;gap:6px;flex-wrap:wrap}
 
 /* ===== CSS GENERATOR ===== */
+.css-generator-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width: 650px){.css-generator-grid{grid-template-columns:1fr 1fr}}
 .code-block{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px;font-family:var(--font-mono);font-size:13px;color:var(--text2);line-height:1.85;white-space:pre-wrap;min-height:100px;max-height:280px;overflow-y:auto}
 
 /* ===== NOTES ===== */
@@ -626,12 +634,12 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       </div>
 
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="font-filters">
-        <button class="fp-tag active" style="cursor:pointer;padding:5px 12px;border:1px solid var(--accent-border);background:var(--accent-dim);color:var(--accent)" onclick="filterFonts('all')" data-filter="all">All</button>
-        <button class="fp-tag" style="cursor:pointer;padding:5px 12px;border:1px solid var(--border)" onclick="filterFonts('editorial')" data-filter="editorial">Editorial</button>
-        <button class="fp-tag" style="cursor:pointer;padding:5px 12px;border:1px solid var(--border)" onclick="filterFonts('modern')" data-filter="modern">Modern</button>
-        <button class="fp-tag" style="cursor:pointer;padding:5px 12px;border:1px solid var(--border)" onclick="filterFonts('minimal')" data-filter="minimal">Minimal</button>
-        <button class="fp-tag" style="cursor:pointer;padding:5px 12px;border:1px solid var(--border)" onclick="filterFonts('bold')" data-filter="bold">Bold</button>
-        <button class="fp-tag" style="cursor:pointer;padding:5px 12px;border:1px solid var(--border)" onclick="filterFonts('bengali')" data-filter="bengali">Bengali</button>
+        <button class="font-filter-btn active" onclick="filterFonts('all')" data-filter="all">All</button>
+        <button class="font-filter-btn" onclick="filterFonts('editorial')" data-filter="editorial">Editorial</button>
+        <button class="font-filter-btn" onclick="filterFonts('modern')" data-filter="modern">Modern</button>
+        <button class="font-filter-btn" onclick="filterFonts('minimal')" data-filter="minimal">Minimal</button>
+        <button class="font-filter-btn" onclick="filterFonts('bold')" data-filter="bold">Bold</button>
+        <button class="font-filter-btn" onclick="filterFonts('bengali')" data-filter="bengali">Bengali</button>
       </div>
 
       <div id="font-pairs-container"></div>
@@ -673,7 +681,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
         <button class="btn btn-sm" onclick="loadPreset('responsive')">Responsive Hide</button>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="css-generator-grid">
         <div>
           <div class="card">
             <div class="card-title">Parameters</div>
@@ -1469,15 +1477,11 @@ let currentFilter = 'all';
 
 function filterFonts(tag) {
   currentFilter = tag;
-  document.querySelectorAll('#font-filters .fp-tag').forEach(btn => {
+  document.querySelectorAll('#font-filters .font-filter-btn').forEach(btn => {
     if (btn.dataset.filter === tag) {
-      btn.style.borderColor = 'var(--accent-border)';
-      btn.style.background = 'var(--accent-dim)';
-      btn.style.color = 'var(--accent)';
+      btn.classList.add('active');
     } else {
-      btn.style.borderColor = 'var(--border)';
-      btn.style.background = '';
-      btn.style.color = '';
+      btn.classList.remove('active');
     }
   });
   renderFontPairs();
@@ -1543,8 +1547,8 @@ function renderFontPairCard(p, isSaved) {
       </div>
     </div>
     <div class="fp-actions">
-      <button class="btn btn-sm" onclick="copyText(\`${cssCode.replace(/`/g, '\\`')}\`)"><i class="ti ti-code"></i> Copy CSS</button>
-      <button class="btn btn-sm" onclick="copyText(\`${linkCode.replace(/`/g, '\\`')}\`)"><i class="ti ti-link"></i> Google Link</button>
+      <button class="btn btn-sm" onclick="copyText(\`${cssCode.replace(/`/g, '\\`').replace(/"/g, '&quot;')}\`)"><i class="ti ti-code"></i> Copy CSS</button>
+      <button class="btn btn-sm" onclick="copyText(\`${linkCode.replace(/`/g, '\\`').replace(/"/g, '&quot;')}\`)"><i class="ti ti-link"></i> Google Link</button>
       <button class="btn btn-sm ${isSaved ? 'btn-accent' : ''}" onclick="${isSaved ? `removeSavedPair('${esc(p.heading)}','${esc(p.body)}')` : `saveFontPair('${esc(p.heading)}','${esc(p.body)}','${esc(p.previewText||'')}','${esc((p.tags||[]).join(','))}')`}">
         <i class="ti ti-${isSaved ? 'check' : 'bookmark'}"></i> ${isSaved ? 'Saved' : 'Save'}
       </button>
