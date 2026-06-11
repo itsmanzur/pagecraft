@@ -1,52 +1,52 @@
-=== PageCraft — Workflow Toolkit & Section Planner ===
+﻿=== Sekkei â€” Section Planner & Workflow Toolkit for Elementor ===
 Contributors: itsmanzur
 Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Elementor workflow toolkit — plan sections, run a design checklist, save color palettes & font pairs, and generate CSS, right beside your canvas.
+Elementor workflow toolkit â€” plan sections, run a design checklist, save color palettes & font pairs, and generate CSS, right beside your canvas.
 
 == Description ==
 
-**PageCraft** is the all-in-one workflow tool designed specifically for Elementor page builders. It integrates directly into the Elementor editor as a sliding side panel, or works as a standalone tool from your WordPress dashboard.
+**Sekkei** is the all-in-one workflow tool designed specifically for Elementor page builders. It integrates directly into the Elementor editor as a sliding side panel, or works as a standalone tool from your WordPress dashboard.
 
-Stop switching between apps and browser tabs — plan, design, and organize everything in one place, right next to your Elementor canvas.
+Stop switching between apps and browser tabs â€” plan, design, and organize everything in one place, right next to your Elementor canvas.
 
-= 🎯 Key Features =
+= ðŸŽ¯ Key Features =
 
-**Section Planner** — Plan your page structure before building. Add sections with names, types (hero/nav/content/CTA/footer/custom), CSS classes, and notes. Drag-and-drop to reorder. Quick template to scaffold common pages.
+**Section Planner** â€” Plan your page structure before building. Add sections with names, types (hero/nav/content/CTA/footer/custom), CSS classes, and notes. Drag-and-drop to reorder. Quick template to scaffold common pages.
 
-**Design Checklist** — Never miss a step. 30+ checklist items across 5 categories: Before Design, Structure, Design, Mobile, and Handover. Add custom items and groups. Track progress with a live progress bar.
+**Design Checklist** â€” Never miss a step. 30+ checklist items across 5 categories: Before Design, Structure, Design, Mobile, and Handover. Add custom items and groups. Track progress with a live progress bar.
 
-**Color Palette** — Save and organize your brand colors. Group colors by palette (Brand, Dark Mode, etc.). Click any swatch to copy the hex code. Assign roles like Primary, Accent, Background.
+**Color Palette** â€” Save and organize your brand colors. Group colors by palette (Brand, Dark Mode, etc.). Click any swatch to copy the hex code. Assign roles like Primary, Accent, Background.
 
-**Font Pairing** — 10 curated font pairings (including Bengali fonts). Filter by style: editorial, modern, minimal, bold. Copy CSS and Google Fonts links. Save custom pairings.
+**Font Pairing** â€” 10 curated font pairings (including Bengali fonts). Filter by style: editorial, modern, minimal, bold. Copy CSS and Google Fonts links. Save custom pairings.
 
-**CSS Generator** — Generate Elementor-ready custom CSS snippets. 6 presets (Section, Container, Typography, Button, Card, Responsive). Auto-fill from your Section Planner. Save and reuse snippets.
+**CSS Generator** â€” Generate Elementor-ready custom CSS snippets. 6 presets (Section, Container, Typography, Button, Card, Responsive). Auto-fill from your Section Planner. Save and reuse snippets.
 
-**Project Notes** — Client feedback, revision history, TODOs — all in one place. Quick insert tags for common patterns. Date stamps and structured formatting.
+**Project Notes** â€” Client feedback, revision history, TODOs â€” all in one place. Quick insert tags for common patterns. Date stamps and structured formatting.
 
-**Pre-Publish Audit** — Scan your Elementor page for common issues before publishing. Detect placeholder text, broken links, missing image alt tags, and layout hierarchy issues. Locate elements with a single click.
+**Pre-Publish Audit** â€” Scan your Elementor page for common issues before publishing. Detect placeholder text, broken links, missing image alt tags, and layout hierarchy issues. Locate elements with a single click.
 
-**Export** — Export your entire project as formatted text or JSON. Download .txt for client handover. JSON backup/import for portability.
+**Export** â€” Export your entire project as formatted text or JSON. Download .txt for client handover. JSON backup/import for portability.
 
-**Multiple Projects** — Manage separate projects with independent data. Switch between projects instantly.
+**Multiple Projects** â€” Manage separate projects with independent data. Switch between projects instantly.
 
-= 🔧 How It Works =
+= ðŸ”§ How It Works =
 
-1. **In Elementor Editor**: A floating "⚡ PageCraft" button appears. Click it to open the tool as a sliding side panel. Use keyboard shortcut `Ctrl+Shift+P` for quick access.
+1. **In Elementor Editor**: A floating "âš¡ Sekkei" button appears. Click it to open the tool as a sliding side panel. Use keyboard shortcut `Ctrl+Shift+P` for quick access.
 
-2. **In WordPress Admin**: Navigate to PageCraft → Open Tool for a full-screen experience.
+2. **In WordPress Admin**: Navigate to Sekkei â†’ Open Tool for a full-screen experience.
 
-3. **Data Storage**: All data is saved in your browser's localStorage — no server requests, no database load, instant performance.
+3. **Data Storage**: All data is saved in your browser's localStorage â€” no server requests, no database load, instant performance.
 
-= 🚀 100% Free & Unlocked =
+= ðŸš€ 100% Free & Unlocked =
 
-Unlike other tools, PageCraft is 100% free and open-source. All premium features are fully unlocked with no paywalls, subscriptions, or license keys:
+Sekkei is 100% free and open-source. Every feature is included with no paywalls, subscriptions, or license keys:
 
 * **Section Planner**: Add unlimited sections and use all pre-made workflow templates.
 * **Design Checklist**: Add unlimited custom checklist items and custom item groups.
@@ -58,16 +58,16 @@ Unlike other tools, PageCraft is 100% free and open-source. All premium features
 
 == Installation ==
 
-1. Upload the `pagecraft` folder to the `/wp-content/plugins/` directory
+1. Upload the `sekkei` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Open any page with Elementor editor — look for the "⚡ PageCraft" button
-4. Or navigate to PageCraft → Open Tool in the WordPress admin menu
+3. Open any page with Elementor editor â€” look for the "âš¡ Sekkei" button
+4. Or navigate to Sekkei â†’ Open Tool in the WordPress admin menu
 
 == Frequently Asked Questions ==
 
 = Does this require Elementor Pro? =
 
-No! PageCraft works with the free version of Elementor. No Pro API is used.
+No! Sekkei works with the free version of Elementor. No Pro API is used.
 
 = Where is my data saved? =
 
@@ -79,23 +79,29 @@ Yes! Use the Export tab to download your project as a .txt file for client hando
 
 = Will this slow down my site? =
 
-No. PageCraft only loads in the Elementor editor and WordPress admin — never on the frontend. Zero impact on site performance.
+No. Sekkei only loads in the Elementor editor and WordPress admin â€” never on the frontend. Zero impact on site performance.
 
 = Does it work with other page builders? =
 
-PageCraft is designed for Elementor workflows, but the standalone tool (Admin → Open Tool) can be used for planning any website project.
+Sekkei is designed for Elementor workflows, but the standalone tool (Admin â†’ Open Tool) can be used for planning any website project.
 
 == Screenshots ==
 
-1. Section Planner — Plan and organize your page sections with drag-and-drop
-2. Design Checklist — Track your progress with categorized checkpoints
-3. Color Palette — Save and organize brand colors with groups and roles
-4. Font Pairing — Curated font combinations with live preview
-5. CSS Generator — Generate Elementor-ready CSS snippets with presets
-6. Elementor Integration — Floating button and sliding panel in the editor
-7. Settings Page — Configure panel position, width, and behavior
+1. Section Planner â€” Plan and organize your page sections with drag-and-drop
+2. Design Checklist â€” Track your progress with categorized checkpoints
+3. Color Palette â€” Save and organize brand colors with groups and roles
+4. Font Pairing â€” Curated font combinations with live preview
+5. CSS Generator â€” Generate Elementor-ready CSS snippets with presets
+6. Elementor Integration â€” Floating button and sliding panel in the editor
+7. Settings Page â€” Configure panel position, width, and behavior
 
 == Changelog ==
+
+= 1.0.1 =
+* Improved Elementor structure sync for newly added sections and containers
+* Hardened import, iframe messaging, and editor sync validation
+* Added safer rendering for audit results and saved snippets
+* Added noopener/noreferrer to external admin links
 
 = 1.0.0 =
 * Initial release
@@ -113,12 +119,15 @@ PageCraft is designed for Elementor workflows, but the standalone tool (Admin �
 
 == Upgrade Notice ==
 
+= 1.0.1 =
+Improves Elementor live sync and security hardening.
+
 = 1.0.0 =
-Initial release of PageCraft — the Elementor Workflow Companion.
+Initial release of Sekkei â€” the Elementor Workflow Companion.
 
 == Third-Party Libraries ==
 
-PageCraft uses the following third-party libraries, included in the plugin package:
+Sekkei uses the following third-party libraries, included in the plugin package:
 
 = Tabler Icons =
 * Version: Latest stable
@@ -151,4 +160,5 @@ PageCraft uses the following third-party libraries, included in the plugin packa
 * Source: https://fonts.google.com/specimen/DM+Mono
 * Location: assets/vendor/fonts/dm-mono-400.woff2
 * Purpose: Monospace font for CSS code output in the standalone tool interface
+
 

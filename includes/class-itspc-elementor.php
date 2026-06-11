@@ -2,7 +2,7 @@
 /**
  * Elementor editor integration.
  *
- * @package PageCraft
+ * @package Sekkei
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class ITSPC_Elementor
  *
- * Injects the PageCraft floating button and sliding panel into the Elementor editor.
+ * Injects the Sekkei floating button and sliding panel into the Elementor editor.
  * Uses the free Elementor hooks — no Pro API required.
  */
 class ITSPC_Elementor {
@@ -119,20 +119,20 @@ class ITSPC_Elementor {
         $position = isset( $settings['panel_position'] ) ? $settings['panel_position'] : 'right';
         $width    = isset( $settings['panel_width'] ) ? absint( $settings['panel_width'] ) : 420;
         ?>
-        <!-- PageCraft Toggle Button -->
-        <div id="itspc-toggle-btn" title="<?php esc_attr_e( 'PageCraft (Ctrl+Shift+P)', 'pagecraft' ); ?>">
-            <span class="itspc-btn-text">⚡ PageCraft</span>
+        <!-- Sekkei Toggle Button -->
+        <div id="itspc-toggle-btn" title="<?php esc_attr_e( 'Sekkei (Ctrl+Shift+P)', 'sekkei' ); ?>">
+            <span class="itspc-btn-text">⚡ Sekkei</span>
         </div>
 
-        <!-- PageCraft Sliding Panel -->
+        <!-- Sekkei Sliding Panel -->
         <div id="itspc-panel" class="itspc-panel-closed itspc-pos-<?php echo esc_attr( $position ); ?>" style="width:<?php echo esc_attr( $width ); ?>px;">
             <div id="itspc-panel-resizer"></div>
             <div class="itspc-panel-header">
-                <span class="itspc-panel-title">Page<span>Craft</span></span>
-                <button id="itspc-panel-popout" class="itspc-panel-btn" title="<?php esc_attr_e( 'Open in new window', 'pagecraft' ); ?>">↗</button>
-                <button id="itspc-panel-close" class="itspc-panel-btn" title="<?php esc_attr_e( 'Close', 'pagecraft' ); ?>">✕</button>
+                <span class="itspc-panel-title">Sek<span>kei</span></span>
+                <button id="itspc-panel-popout" class="itspc-panel-btn" title="<?php esc_attr_e( 'Open in new window', 'sekkei' ); ?>">↗</button>
+                <button id="itspc-panel-close" class="itspc-panel-btn" title="<?php esc_attr_e( 'Close', 'sekkei' ); ?>">✕</button>
             </div>
-            <iframe id="itspc-panel-iframe" src="" loading="lazy" title="<?php esc_attr_e( 'PageCraft Tool', 'pagecraft' ); ?>"></iframe>
+            <iframe id="itspc-panel-iframe" src="" loading="lazy" title="<?php esc_attr_e( 'Sekkei Tool', 'sekkei' ); ?>"></iframe>
         </div>
         <?php
     }

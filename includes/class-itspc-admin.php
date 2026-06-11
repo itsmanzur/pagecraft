@@ -2,7 +2,7 @@
 /**
  * Admin pages and settings management.
  *
- * @package PageCraft
+ * @package Sekkei
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,10 +31,10 @@ class ITSPC_Admin {
     public function register_menu() {
         // Top-level menu
         add_menu_page(
-            __( 'PageCraft', 'pagecraft' ),
-            __( 'PageCraft', 'pagecraft' ),
+            __( 'Sekkei', 'sekkei' ),
+            __( 'Sekkei', 'sekkei' ),
             'manage_options',
-            'pagecraft',
+            'sekkei',
             array( $this, 'render_settings_page' ),
             'dashicons-layout',
             59
@@ -42,21 +42,21 @@ class ITSPC_Admin {
 
         // Settings submenu (replaces auto-generated submenu)
         add_submenu_page(
-            'pagecraft',
-            __( 'PageCraft Settings', 'pagecraft' ),
-            __( 'Settings', 'pagecraft' ),
+            'sekkei',
+            __( 'Sekkei Settings', 'sekkei' ),
+            __( 'Settings', 'sekkei' ),
             'manage_options',
-            'pagecraft',
+            'sekkei',
             array( $this, 'render_settings_page' )
         );
 
         // Open Tool submenu
         add_submenu_page(
-            'pagecraft',
-            __( 'PageCraft Tool', 'pagecraft' ),
-            __( 'Open Tool', 'pagecraft' ),
+            'sekkei',
+            __( 'Sekkei Tool', 'sekkei' ),
+            __( 'Open Tool', 'sekkei' ),
             'manage_options',
-            'pagecraft-tool',
+            'sekkei-tool',
             array( $this, 'render_tool_page' )
         );
     }
@@ -99,7 +99,7 @@ class ITSPC_Admin {
      */
     public function render_settings_page() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions.', 'pagecraft' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions.', 'sekkei' ) );
         }
 
         $settings = get_option( 'itspc_settings', array() );
@@ -122,7 +122,7 @@ class ITSPC_Admin {
 
             update_option( 'itspc_settings', $settings );
 
-            $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : admin_url( 'admin.php?page=pagecraft' );
+            $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : admin_url( 'admin.php?page=sekkei' );
             wp_safe_redirect( add_query_arg( 'saved', '1', $request_uri ) );
             exit;
         }
@@ -138,7 +138,7 @@ class ITSPC_Admin {
          
           <div class="itspc-header">
             <div>
-              <div class="itspc-header-logo">Page<span>Craft</span></div>
+              <div class="itspc-header-logo">Sek<span>kei</span></div>
               <div class="itspc-header-sub">Elementor Workflow Companion</div>
             </div>
             <div class="itspc-version-badge">v<?php echo esc_html(ITSPC_VERSION); ?></div>
@@ -159,14 +159,14 @@ class ITSPC_Admin {
                 <div class="itspc-card">
                   <div class="itspc-card-header">
                     <div class="itspc-card-icon">⚙️</div>
-                    <div class="itspc-card-title"><?php esc_html_e( 'General Settings', 'pagecraft' ); ?></div>
+                    <div class="itspc-card-title"><?php esc_html_e( 'General Settings', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
              
                     <div class="itspc-form-row">
                       <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label"><?php esc_html_e( 'Show in Elementor Editor', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'Display the PageCraft button inside the Elementor editor.', 'pagecraft' ); ?></div>
+                        <label class="itspc-form-label"><?php esc_html_e( 'Show in Elementor Editor', 'sekkei' ); ?></label>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Display the Sekkei button inside the Elementor editor.', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-form-control">
                         <div class="itspc-toggle-control">
@@ -177,7 +177,7 @@ class ITSPC_Admin {
                             <span class="itspc-switch-slider"></span>
                           </label>
                           <span class="itspc-switch-label-text">
-                            <?php esc_html_e( 'Enable PageCraft in editor', 'pagecraft' ); ?>
+                            <?php esc_html_e( 'Enable Sekkei in editor', 'sekkei' ); ?>
                           </span>
                         </div>
                       </div>
@@ -185,16 +185,16 @@ class ITSPC_Admin {
              
                     <div class="itspc-form-row">
                       <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label" for="panel_position"><?php esc_html_e( 'Panel Position', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'Which side of the screen the panel opens on.', 'pagecraft' ); ?></div>
+                        <label class="itspc-form-label" for="panel_position"><?php esc_html_e( 'Panel Position', 'sekkei' ); ?></label>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Which side of the screen the panel opens on.', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-form-control">
                         <div class="itspc-segmented-control">
                           <input type="radio" name="panel_position" id="panel_position_right" value="right" <?php checked($settings['panel_position'], 'right'); ?>>
-                          <label for="panel_position_right" class="itspc-segment-label"><?php esc_html_e( 'Right Side', 'pagecraft' ); ?></label>
+                          <label for="panel_position_right" class="itspc-segment-label"><?php esc_html_e( 'Right Side', 'sekkei' ); ?></label>
 
                           <input type="radio" name="panel_position" id="panel_position_left" value="left" <?php checked($settings['panel_position'], 'left'); ?>>
-                          <label for="panel_position_left" class="itspc-segment-label"><?php esc_html_e( 'Left Side', 'pagecraft' ); ?></label>
+                          <label for="panel_position_left" class="itspc-segment-label"><?php esc_html_e( 'Left Side', 'sekkei' ); ?></label>
                           
                           <span class="itspc-segmented-slider"></span>
                         </div>
@@ -203,8 +203,8 @@ class ITSPC_Admin {
              
                     <div class="itspc-form-row">
                       <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label" for="panel_width"><?php esc_html_e( 'Panel Width (px)', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'Width of the tool panel (380–680px).', 'pagecraft' ); ?></div>
+                        <label class="itspc-form-label" for="panel_width"><?php esc_html_e( 'Panel Width (px)', 'sekkei' ); ?></label>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Width of the tool panel (380–680px).', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-form-control" style="display: flex; align-items: center; gap: 10px;">
                         <input type="number" name="panel_width" id="panel_width"
@@ -223,14 +223,14 @@ class ITSPC_Admin {
                 <div class="itspc-card">
                   <div class="itspc-card-header">
                     <div class="itspc-card-icon">💼</div>
-                    <div class="itspc-card-title"><?php esc_html_e( 'Client Handover & White-Label Widget', 'pagecraft' ); ?></div>
+                    <div class="itspc-card-title"><?php esc_html_e( 'Client Handover & White-Label Widget', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
 
                     <div class="itspc-form-row">
                       <div class="itspc-form-label-wrap">
-                        <label class="itspc-form-label"><?php esc_html_e( 'Enable Welcome Widget', 'pagecraft' ); ?></label>
-                        <div class="itspc-form-desc"><?php esc_html_e( 'Show a white-labeled support and resource widget on the WordPress admin dashboard.', 'pagecraft' ); ?></div>
+                        <label class="itspc-form-label"><?php esc_html_e( 'Enable Welcome Widget', 'sekkei' ); ?></label>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Show a white-labeled support and resource widget on the WordPress admin dashboard.', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-form-control">
                         <div class="itspc-toggle-control">
@@ -240,7 +240,7 @@ class ITSPC_Admin {
                             <span class="itspc-switch-slider"></span>
                           </label>
                           <span class="itspc-switch-label-text">
-                            <?php esc_html_e( 'Enable Dashboard Widget', 'pagecraft' ); ?>
+                            <?php esc_html_e( 'Enable Dashboard Widget', 'sekkei' ); ?>
                           </span>
                         </div>
                       </div>
@@ -249,74 +249,74 @@ class ITSPC_Admin {
                     <div id="itspc-whitelabel-fields">
                       <div class="itspc-form-row">
                         <div class="itspc-form-label-wrap">
-                          <label class="itspc-form-label" for="welcome_widget_agency"><?php esc_html_e( 'Developer / Agency Name', 'pagecraft' ); ?></label>
-                          <div class="itspc-form-desc"><?php esc_html_e( 'Your brand or agency name shown in the widget header.', 'pagecraft' ); ?></div>
+                          <label class="itspc-form-label" for="welcome_widget_agency"><?php esc_html_e( 'Developer / Agency Name', 'sekkei' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'Your brand or agency name shown in the widget header.', 'sekkei' ); ?></div>
                         </div>
                         <div class="itspc-form-control">
                           <input type="text" name="welcome_widget_agency" id="welcome_widget_agency"
                             class="itspc-input" value="<?php echo esc_attr( isset( $settings['welcome_widget_agency'] ) ? $settings['welcome_widget_agency'] : '' ); ?>"
-                            placeholder="<?php esc_attr_e( 'e.g. Acme Web Agency', 'pagecraft' ); ?>">
+                            placeholder="<?php esc_attr_e( 'e.g. Acme Web Agency', 'sekkei' ); ?>">
                         </div>
                       </div>
 
                       <div class="itspc-form-row">
                         <div class="itspc-form-label-wrap">
-                          <label class="itspc-form-label" for="welcome_widget_logo"><?php esc_html_e( 'Agency Logo URL', 'pagecraft' ); ?></label>
-                          <div class="itspc-form-desc"><?php esc_html_e( 'Optional logo image URL (recommended size: 80x80px).', 'pagecraft' ); ?></div>
+                          <label class="itspc-form-label" for="welcome_widget_logo"><?php esc_html_e( 'Agency Logo URL', 'sekkei' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'Optional logo image URL (recommended size: 80x80px).', 'sekkei' ); ?></div>
                         </div>
                         <div class="itspc-form-control">
                           <input type="url" name="welcome_widget_logo" id="welcome_widget_logo"
                             class="itspc-input" value="<?php echo esc_url( isset( $settings['welcome_widget_logo'] ) ? $settings['welcome_widget_logo'] : '' ); ?>"
-                            placeholder="<?php esc_attr_e( 'e.g. https://youragency.com/logo.png', 'pagecraft' ); ?>">
+                            placeholder="<?php esc_attr_e( 'e.g. https://youragency.com/logo.png', 'sekkei' ); ?>">
                         </div>
                       </div>
 
                       <div class="itspc-form-row">
                         <div class="itspc-form-label-wrap">
-                          <label class="itspc-form-label" for="welcome_widget_msg"><?php esc_html_e( 'Welcome Message / Guidelines', 'pagecraft' ); ?></label>
-                          <div class="itspc-form-desc"><?php esc_html_e( 'Guidance notes or instructions for the client when they manage their site.', 'pagecraft' ); ?></div>
+                          <label class="itspc-form-label" for="welcome_widget_msg"><?php esc_html_e( 'Welcome Message / Guidelines', 'sekkei' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'Guidance notes or instructions for the client when they manage their site.', 'sekkei' ); ?></div>
                         </div>
                         <div class="itspc-form-control">
                           <textarea name="welcome_widget_msg" id="welcome_widget_msg"
                             class="itspc-input" style="min-height: 100px;"
-                            placeholder="<?php esc_attr_e( 'Welcome to your new website! Here you can manage your pages and posts. If you need any assistance, reach out to us using the contact details below.', 'pagecraft' ); ?>"><?php echo esc_textarea( isset( $settings['welcome_widget_msg'] ) ? $settings['welcome_widget_msg'] : '' ); ?></textarea>
+                            placeholder="<?php esc_attr_e( 'Welcome to your new website! Here you can manage your pages and posts. If you need any assistance, reach out to us using the contact details below.', 'sekkei' ); ?>"><?php echo esc_textarea( isset( $settings['welcome_widget_msg'] ) ? $settings['welcome_widget_msg'] : '' ); ?></textarea>
                         </div>
                       </div>
 
                       <div class="itspc-form-row">
                         <div class="itspc-form-label-wrap">
-                          <label class="itspc-form-label" for="welcome_widget_video"><?php esc_html_e( 'Video Tutorial URL (YouTube/Vimeo)', 'pagecraft' ); ?></label>
-                          <div class="itspc-form-desc"><?php esc_html_e( 'A link to a video tutorial helping clients edit and manage their website.', 'pagecraft' ); ?></div>
+                          <label class="itspc-form-label" for="welcome_widget_video"><?php esc_html_e( 'Video Tutorial URL (YouTube/Vimeo)', 'sekkei' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'A link to a video tutorial helping clients edit and manage their website.', 'sekkei' ); ?></div>
                         </div>
                         <div class="itspc-form-control">
                           <input type="url" name="welcome_widget_video" id="welcome_widget_video"
                             class="itspc-input" value="<?php echo esc_url( isset( $settings['welcome_widget_video'] ) ? $settings['welcome_widget_video'] : '' ); ?>"
-                            placeholder="<?php esc_attr_e( 'e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'pagecraft' ); ?>">
+                            placeholder="<?php esc_attr_e( 'e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'sekkei' ); ?>">
                         </div>
                       </div>
 
                       <div class="itspc-form-row">
                         <div class="itspc-form-label-wrap">
-                          <label class="itspc-form-label" for="welcome_widget_email"><?php esc_html_e( 'Support Email / Contact', 'pagecraft' ); ?></label>
-                          <div class="itspc-form-desc"><?php esc_html_e( 'The support email address where clients can send requests.', 'pagecraft' ); ?></div>
+                          <label class="itspc-form-label" for="welcome_widget_email"><?php esc_html_e( 'Support Email / Contact', 'sekkei' ); ?></label>
+                          <div class="itspc-form-desc"><?php esc_html_e( 'The support email address where clients can send requests.', 'sekkei' ); ?></div>
                         </div>
                         <div class="itspc-form-control">
                           <input type="text" name="welcome_widget_email" id="welcome_widget_email"
                             class="itspc-input" value="<?php echo esc_attr( isset( $settings['welcome_widget_email'] ) ? $settings['welcome_widget_email'] : '' ); ?>"
-                            placeholder="<?php esc_attr_e( 'e.g. support@youragency.com', 'pagecraft' ); ?>">
+                            placeholder="<?php esc_attr_e( 'e.g. support@youragency.com', 'sekkei' ); ?>">
                         </div>
                       </div>
 
                       <div class="itspc-preview-container-wrap" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #E5E7EB;">
                         <div class="itspc-preview-title" style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">
-                          <?php esc_html_e( 'Live Preview', 'pagecraft' ); ?>
+                          <?php esc_html_e( 'Live Preview', 'sekkei' ); ?>
                         </div>
                         <div id="itspc-widget-preview" class="itspc-widget-preview">
                           <div class="itspc-preview-header">
                             <img id="itspc-preview-logo" src="" class="itspc-preview-logo" alt="" style="display: none;">
                             <div class="itspc-preview-title-wrap">
                               <h4 id="itspc-preview-agency" class="itspc-preview-agency-name"></h4>
-                              <span class="itspc-preview-badge"><?php esc_html_e( 'Website Partner', 'pagecraft' ); ?></span>
+                              <span class="itspc-preview-badge"><?php esc_html_e( 'Website Partner', 'sekkei' ); ?></span>
                             </div>
                           </div>
                           <div id="itspc-preview-msg" class="itspc-preview-msg"></div>
@@ -324,13 +324,13 @@ class ITSPC_Admin {
                             <div class="itspc-preview-footer-left">
                               <span class="dashicons dashicons-email"></span>
                               <span>
-                                <?php esc_html_e( 'Support:', 'pagecraft' ); ?>
+                                <?php esc_html_e( 'Support:', 'sekkei' ); ?>
                                 <span id="itspc-preview-email"></span>
                               </span>
                             </div>
                             <span id="itspc-preview-video-wrap" style="display: none;">
-                              <a id="itspc-preview-video-link" href="#" target="_blank" class="itspc-preview-video-link">
-                                ▶ <?php esc_html_e( 'Watch tutorial', 'pagecraft' ); ?>
+                              <a id="itspc-preview-video-link" href="#" target="_blank" rel="noopener noreferrer" class="itspc-preview-video-link">
+                                ▶ <?php esc_html_e( 'Watch tutorial', 'sekkei' ); ?>
                               </a>
                             </span>
                           </div>
@@ -342,19 +342,19 @@ class ITSPC_Admin {
                 </div>
 
                 <button type="submit" name="itspc_save" class="itspc-btn-save">
-                  <span>✓</span> <?php esc_html_e( 'Save Settings', 'pagecraft' ); ?>
+                  <span>✓</span> <?php esc_html_e( 'Save Settings', 'sekkei' ); ?>
                 </button>
              
               </form>
              
               <div class="itspc-launch-card" style="margin-top:24px">
-                <div class="itspc-launch-title"><?php esc_html_e( 'Quick Launch', 'pagecraft' ); ?></div>
+                <div class="itspc-launch-title"><?php esc_html_e( 'Quick Launch', 'sekkei' ); ?></div>
                 <div class="itspc-launch-desc">
-                  <?php esc_html_e( 'Open the full PageCraft tool in a dedicated admin page.', 'pagecraft' ); ?>
+                  <?php esc_html_e( 'Open the full Sekkei tool in a dedicated admin page.', 'sekkei' ); ?>
                 </div>
-                <a href="<?php echo esc_url(admin_url('admin.php?page=pagecraft-tool')); ?>"
+                <a href="<?php echo esc_url(admin_url('admin.php?page=sekkei-tool')); ?>"
                    class="itspc-btn-launch">
-                  ⚡ <?php esc_html_e( 'Open PageCraft Tool', 'pagecraft' ); ?>
+                  ⚡ <?php esc_html_e( 'Open Sekkei Tool', 'sekkei' ); ?>
                 </a>
               </div>
 
@@ -364,23 +364,23 @@ class ITSPC_Admin {
                   <div class="itspc-card" style="margin-bottom: 0;">
                       <div class="itspc-card-header">
                           <div class="itspc-card-icon">🏥</div>
-                          <div class="itspc-card-title"><?php esc_html_e( 'System Status', 'pagecraft' ); ?></div>
+                          <div class="itspc-card-title"><?php esc_html_e( 'System Status', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-card-body" style="padding: 16px 20px;">
                           <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px;">
-                              <span style="color:#4B5563;"><?php esc_html_e( 'Elementor Builder:', 'pagecraft' ); ?></span>
+                              <span style="color:#4B5563;"><?php esc_html_e( 'Elementor Builder:', 'sekkei' ); ?></span>
                               <?php if ( did_action( 'elementor/loaded' ) ) : ?>
-                                  <span style="color:#C8FF00; font-weight:600;">● <?php esc_html_e( 'Active', 'pagecraft' ); ?></span>
+                                  <span style="color:#C8FF00; font-weight:600;">● <?php esc_html_e( 'Active', 'sekkei' ); ?></span>
                               <?php else : ?>
-                                  <span style="color:#FF4D4D; font-weight:600;">● <?php esc_html_e( 'Inactive', 'pagecraft' ); ?></span>
+                                  <span style="color:#FF4D4D; font-weight:600;">● <?php esc_html_e( 'Inactive', 'sekkei' ); ?></span>
                               <?php endif; ?>
                           </div>
                           <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px;">
-                              <span style="color:#4B5563;"><?php esc_html_e( 'PHP Version:', 'pagecraft' ); ?></span>
+                              <span style="color:#4B5563;"><?php esc_html_e( 'PHP Version:', 'sekkei' ); ?></span>
                               <span style="color:#111827;"><?php echo esc_html( phpversion() ); ?> (<?php echo version_compare( phpversion(), '7.4', '>=' ) ? '✓' : '✗'; ?>)</span>
                           </div>
                           <div class="itspc-status-row" style="display:flex; justify-content:space-between; font-size:13.5px;">
-                              <span style="color:#4B5563;"><?php esc_html_e( 'Active Theme:', 'pagecraft' ); ?></span>
+                              <span style="color:#4B5563;"><?php esc_html_e( 'Active Theme:', 'sekkei' ); ?></span>
                               <?php $active_theme = wp_get_theme()->get( 'Name' ); ?>
                               <span style="color:#111827; font-weight:500; overflow:hidden; text-overflow:ellipsis; max-width:140px; white-space:nowrap;" title="<?php echo esc_attr( $active_theme ); ?>"><?php echo esc_html( $active_theme ); ?></span>
                           </div>
@@ -391,14 +391,14 @@ class ITSPC_Admin {
                   <div class="itspc-card" style="margin-bottom: 0;">
                       <div class="itspc-card-header">
                           <div class="itspc-card-icon">🧼</div>
-                          <div class="itspc-card-title"><?php esc_html_e( 'Data Maintenance', 'pagecraft' ); ?></div>
+                          <div class="itspc-card-title"><?php esc_html_e( 'Data Maintenance', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-card-body" style="padding: 16px 20px;">
                           <p style="font-size:13.5px; color:#4B5563; margin-top:0; margin-bottom:12px; line-height:1.55;">
-                              <?php esc_html_e( 'Having sync issues? Clear PageCraft data from this browser\'s local storage cache to start fresh.', 'pagecraft' ); ?>
+                              <?php esc_html_e( 'Having sync issues? Clear Sekkei data from this browser\'s local storage cache to start fresh.', 'sekkei' ); ?>
                           </p>
                           <button type="button" class="itspc-btn-save" id="itspc-reset-cache-btn" style="background:#FF4D4D; color:#fff; font-size:13px; padding:8px 14px; margin:0; border-radius:6px;">
-                              🗑️ <?php esc_html_e( 'Reset Browser Cache', 'pagecraft' ); ?>
+                              🗑️ <?php esc_html_e( 'Reset Browser Cache', 'sekkei' ); ?>
                           </button>
                       </div>
                   </div>
@@ -412,7 +412,7 @@ class ITSPC_Admin {
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
                 <div class="itspc-card-icon">🚀</div>
-                <div class="itspc-card-title"><?php esc_html_e( 'Quick Start — 3 Steps', 'pagecraft' ); ?></div>
+                <div class="itspc-card-title"><?php esc_html_e( 'Quick Start — 3 Steps', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
                 <div class="itspc-steps">
@@ -420,19 +420,19 @@ class ITSPC_Admin {
                   <div class="itspc-step">
                     <div class="itspc-step-num">1</div>
                     <div class="itspc-step-content">
-                      <div class="itspc-step-title"><?php esc_html_e( 'Activate & Open Elementor', 'pagecraft' ); ?></div>
-                      <div class="itspc-step-desc"><?php esc_html_e( 'Make sure PageCraft is activated. Open any page or post in Elementor editor.', 'pagecraft' ); ?></div>
+                      <div class="itspc-step-title"><?php esc_html_e( 'Activate & Open Elementor', 'sekkei' ); ?></div>
+                      <div class="itspc-step-desc"><?php esc_html_e( 'Make sure Sekkei is activated. Open any page or post in Elementor editor.', 'sekkei' ); ?></div>
                     </div>
                   </div>
  
                   <div class="itspc-step">
                     <div class="itspc-step-num">2</div>
                     <div class="itspc-step-content">
-                      <div class="itspc-step-title"><?php esc_html_e( 'Launch the Panel', 'pagecraft' ); ?></div>
+                      <div class="itspc-step-title"><?php esc_html_e( 'Launch the Panel', 'sekkei' ); ?></div>
                       <div class="itspc-step-desc">
-                        <?php esc_html_e( 'Click the floating', 'pagecraft' ); ?>
-                        <span class="itspc-inline-badge">⚡ PageCraft</span>
-                        <?php esc_html_e( 'button (bottom-right), or press', 'pagecraft' ); ?>
+                        <?php esc_html_e( 'Click the floating', 'sekkei' ); ?>
+                        <span class="itspc-inline-badge">⚡ Sekkei</span>
+                        <?php esc_html_e( 'button (bottom-right), or press', 'sekkei' ); ?>
                         <kbd class="itspc-kbd">Ctrl</kbd>+<kbd class="itspc-kbd">Shift</kbd>+<kbd class="itspc-kbd">P</kbd>
                       </div>
                     </div>
@@ -441,8 +441,8 @@ class ITSPC_Admin {
                   <div class="itspc-step" style="border-bottom:none">
                     <div class="itspc-step-num">3</div>
                     <div class="itspc-step-content">
-                      <div class="itspc-step-title"><?php esc_html_e( 'Plan, Design, Ship', 'pagecraft' ); ?></div>
-                      <div class="itspc-step-desc"><?php esc_html_e( 'Use the 7 modules: Section Planner, Checklist, Color Palette, Font Pairs, CSS Generator, Notes, and Audit — all saved automatically.', 'pagecraft' ); ?></div>
+                      <div class="itspc-step-title"><?php esc_html_e( 'Plan, Design, Ship', 'sekkei' ); ?></div>
+                      <div class="itspc-step-desc"><?php esc_html_e( 'Use the 7 modules: Section Planner, Checklist, Color Palette, Font Pairs, CSS Generator, Notes, and Audit — all saved automatically.', 'sekkei' ); ?></div>
                     </div>
                   </div>
  
@@ -454,42 +454,42 @@ class ITSPC_Admin {
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
                 <div class="itspc-card-icon">🧩</div>
-                <div class="itspc-card-title"><?php esc_html_e( 'Interactive Feature Guide', 'pagecraft' ); ?></div>
+                <div class="itspc-card-title"><?php esc_html_e( 'Interactive Feature Guide', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body">
                 <p style="font-size: 14px; color: #4B5563; margin-top: 0; margin-bottom: 16px;">
-                  <?php esc_html_e( 'Explore each PageCraft module below. Click on any card to see a step-by-step usage guide and developer pro-tips.', 'pagecraft' ); ?>
+                  <?php esc_html_e( 'Explore each Sekkei module below. Click on any card to see a step-by-step usage guide and developer pro-tips.', 'sekkei' ); ?>
                 </p>
                 <div class="itspc-feature-grid">
  
                   <div class="itspc-feature-card active" data-feature="planner">
                     <div class="itspc-feature-icon">📐</div>
-                    <div class="itspc-feature-name"><?php esc_html_e( 'Section Planner', 'pagecraft' ); ?></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Section Planner', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="checklist">
                     <div class="itspc-feature-icon">✅</div>
-                    <div class="itspc-feature-name"><?php esc_html_e( 'Design Checklist', 'pagecraft' ); ?></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Design Checklist', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="palette">
                     <div class="itspc-feature-icon">🎨</div>
-                    <div class="itspc-feature-name"><?php esc_html_e( 'Color Palette', 'pagecraft' ); ?></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Color Palette', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="fonts">
                     <div class="itspc-feature-icon">🔤</div>
-                    <div class="itspc-feature-name"><?php esc_html_e( 'Font Pairing', 'pagecraft' ); ?></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Font Pairing', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="css">
                     <div class="itspc-feature-icon">💻</div>
-                    <div class="itspc-feature-name"><?php esc_html_e( 'CSS Generator', 'pagecraft' ); ?></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'CSS Generator', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="notes">
                     <div class="itspc-feature-icon">📝</div>
-                    <div class="itspc-feature-name"><?php esc_html_e( 'Project Notes', 'pagecraft' ); ?></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Project Notes', 'sekkei' ); ?></div>
                   </div>
  
                 </div>
@@ -505,58 +505,58 @@ class ITSPC_Admin {
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
                 <div class="itspc-card-icon">❓</div>
-                <div class="itspc-card-title"><?php esc_html_e( 'Frequently Asked Questions', 'pagecraft' ); ?></div>
+                <div class="itspc-card-title"><?php esc_html_e( 'Frequently Asked Questions', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
                 <div class="itspc-accordion">
  
                   <div class="itspc-accordion-item">
                     <button class="itspc-accordion-btn" type="button">
-                      <span><?php esc_html_e( 'Does PageCraft require Elementor Pro?', 'pagecraft' ); ?></span>
+                      <span><?php esc_html_e( 'Does Sekkei require Elementor Pro?', 'sekkei' ); ?></span>
                       <span class="itspc-accordion-arrow">▾</span>
                     </button>
                     <div class="itspc-accordion-body">
-                      <p><?php esc_html_e( 'No. PageCraft works with the free version of Elementor. No Pro license needed.', 'pagecraft' ); ?></p>
+                      <p><?php esc_html_e( 'No. Sekkei works with the free version of Elementor. No Pro license needed.', 'sekkei' ); ?></p>
                     </div>
                   </div>
  
                   <div class="itspc-accordion-item">
                     <button class="itspc-accordion-btn" type="button">
-                      <span><?php esc_html_e( 'Where is my data stored?', 'pagecraft' ); ?></span>
+                      <span><?php esc_html_e( 'Where is my data stored?', 'sekkei' ); ?></span>
                       <span class="itspc-accordion-arrow">▾</span>
                     </button>
                     <div class="itspc-accordion-body">
-                      <p><?php esc_html_e( 'All your project data (sections, colors, notes, etc.) is stored in your browser\'s localStorage. It stays on your device and is never sent to any server. Use the Export → JSON feature to back it up.', 'pagecraft' ); ?></p>
+                      <p><?php esc_html_e( 'All your project data (sections, colors, notes, etc.) is stored in your browser\'s localStorage. It stays on your device and is never sent to any server. Use the Export → JSON feature to back it up.', 'sekkei' ); ?></p>
                     </div>
                   </div>
  
                   <div class="itspc-accordion-item">
                     <button class="itspc-accordion-btn" type="button">
-                      <span><?php esc_html_e( 'Will it slow down my website?', 'pagecraft' ); ?></span>
+                      <span><?php esc_html_e( 'Will it slow down my website?', 'sekkei' ); ?></span>
                       <span class="itspc-accordion-arrow">▾</span>
                     </button>
                     <div class="itspc-accordion-body">
-                      <p><?php esc_html_e( 'PageCraft only loads its scripts inside the Elementor editor — never on your frontend. Your site\'s load time is completely unaffected.', 'pagecraft' ); ?></p>
+                      <p><?php esc_html_e( 'Sekkei only loads its scripts inside the Elementor editor — never on your frontend. Your site\'s load time is completely unaffected.', 'sekkei' ); ?></p>
                     </div>
                   </div>
  
                   <div class="itspc-accordion-item">
                     <button class="itspc-accordion-btn" type="button">
-                      <span><?php esc_html_e( 'Can I use it for multiple client projects?', 'pagecraft' ); ?></span>
+                      <span><?php esc_html_e( 'Can I use it for multiple client projects?', 'sekkei' ); ?></span>
                       <span class="itspc-accordion-arrow">▾</span>
                     </button>
                     <div class="itspc-accordion-body">
-                      <p><?php esc_html_e( 'Yes. Use the Projects feature inside the tool to create separate workspaces for each client. Each project has its own sections, colors, palette, and notes.', 'pagecraft' ); ?></p>
+                      <p><?php esc_html_e( 'Yes. Use the Projects feature inside the tool to create separate workspaces for each client. Each project has its own sections, colors, palette, and notes.', 'sekkei' ); ?></p>
                     </div>
                   </div>
  
                   <div class="itspc-accordion-item" style="border-bottom:none">
                     <button class="itspc-accordion-btn" type="button">
-                      <span><?php esc_html_e( 'How do I back up or move my data?', 'pagecraft' ); ?></span>
+                      <span><?php esc_html_e( 'How do I back up or move my data?', 'sekkei' ); ?></span>
                       <span class="itspc-accordion-arrow">▾</span>
                     </button>
                     <div class="itspc-accordion-body">
-                      <p><?php esc_html_e( 'Open the tool → go to the Export tab → click "Download JSON". This saves all your projects. To restore, click "Import JSON" on any browser/device.', 'pagecraft' ); ?></p>
+                      <p><?php esc_html_e( 'Open the tool → go to the Export tab → click "Download JSON". This saves all your projects. To restore, click "Import JSON" on any browser/device.', 'sekkei' ); ?></p>
                     </div>
                   </div>
  
@@ -568,20 +568,20 @@ class ITSPC_Admin {
             <div class="itspc-card">
               <div class="itspc-card-header">
                 <div class="itspc-card-icon">⌨️</div>
-                <div class="itspc-card-title"><?php esc_html_e( 'Keyboard Shortcuts', 'pagecraft' ); ?></div>
+                <div class="itspc-card-title"><?php esc_html_e( 'Keyboard Shortcuts', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
                 <div class="itspc-shortcut-list" style="border:none;border-radius:0;background:transparent;padding:0 24px">
                   <div class="itspc-shortcut-item">
-                    <span><?php esc_html_e( 'Toggle Panel (Show / Hide)', 'pagecraft' ); ?></span>
+                    <span><?php esc_html_e( 'Toggle Panel (Show / Hide)', 'sekkei' ); ?></span>
                     <span class="itspc-shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd></span>
                   </div>
                   <div class="itspc-shortcut-item">
-                    <span><?php esc_html_e( 'Close Panel', 'pagecraft' ); ?></span>
+                    <span><?php esc_html_e( 'Close Panel', 'sekkei' ); ?></span>
                     <span class="itspc-shortcut-keys"><kbd>Esc</kbd></span>
                   </div>
                   <div class="itspc-shortcut-item" style="border-bottom:none">
-                    <span><?php esc_html_e( 'Navigate Tabs (inside tool)', 'pagecraft' ); ?></span>
+                    <span><?php esc_html_e( 'Navigate Tabs (inside tool)', 'sekkei' ); ?></span>
                     <span class="itspc-shortcut-keys"><kbd>Tab</kbd></span>
                   </div>
                 </div>
@@ -596,20 +596,20 @@ class ITSPC_Admin {
               <div class="itspc-card">
                   <div class="itspc-card-header">
                       <div class="itspc-card-icon">❤️</div>
-                      <div class="itspc-card-title"><?php esc_html_e( 'About the Developer', 'pagecraft' ); ?></div>
+                      <div class="itspc-card-title"><?php esc_html_e( 'About the Developer', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
                       <div class="itspc-about-grid">
                           <div class="itspc-about-text">
-                              <div class="itspc-about-logo">Page<span>Craft</span></div>
-                              <p style="margin-top: 12px; font-size: 14px; color: #6B7280; font-weight: 500;"><?php esc_html_e( 'Built by itsmanzur', 'pagecraft' ); ?></p>
-                              <p><?php esc_html_e( 'I\'m an independent WordPress developer building modern workflow tools to speed up your web development process. PageCraft was born out of the need to eliminate browser-tab clutter and app-switching fatigue while planning and structuring Elementor layouts.', 'pagecraft' ); ?></p>
-                              <p><?php esc_html_e( 'If PageCraft helps you design better websites faster, please consider leaving a review on WordPress.org to support the ongoing development of this 100% free plugin!', 'pagecraft' ); ?></p>
+                              <div class="itspc-about-logo">Sek<span>kei</span></div>
+                              <p style="margin-top: 12px; font-size: 14px; color: #6B7280; font-weight: 500;"><?php esc_html_e( 'Built by itsmanzur', 'sekkei' ); ?></p>
+                              <p><?php esc_html_e( 'I\'m an independent WordPress developer building modern workflow tools to speed up your web development process. Sekkei was born out of the need to eliminate browser-tab clutter and app-switching fatigue while planning and structuring Elementor layouts.', 'sekkei' ); ?></p>
+                              <p><?php esc_html_e( 'If Sekkei helps you design better websites faster, please consider leaving a review on WordPress.org to support the ongoing development of this 100% free plugin!', 'sekkei' ); ?></p>
                               
                               <div style="margin-top: 24px; display: flex; gap: 20px;">
-                                  <a href="https://profiles.wordpress.org/itsmanzur/" target="_blank" class="itspc-link-btn">🌐 <?php esc_html_e( 'Profile', 'pagecraft' ); ?></a>
-                                  <a href="https://wordpress.org/support/plugin/pagecraft/" target="_blank" class="itspc-link-btn">💬 <?php esc_html_e( 'Get Support', 'pagecraft' ); ?></a>
-                                  <a href="https://wordpress.org/support/plugin/pagecraft/reviews/" target="_blank" class="itspc-link-btn">⭐ <?php esc_html_e( 'Rate & Review', 'pagecraft' ); ?></a>
+                                  <a href="https://profiles.wordpress.org/itsmanzur/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn">🌐 <?php esc_html_e( 'Profile', 'sekkei' ); ?></a>
+                                  <a href="https://wordpress.org/support/plugin/sekkei/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn">💬 <?php esc_html_e( 'Get Support', 'sekkei' ); ?></a>
+                                  <a href="https://wordpress.org/support/plugin/sekkei/reviews/" target="_blank" rel="noopener noreferrer" class="itspc-link-btn">⭐ <?php esc_html_e( 'Rate & Review', 'sekkei' ); ?></a>
                               </div>
                           </div>
                       </div>
@@ -627,19 +627,19 @@ class ITSPC_Admin {
      */
     public function render_tool_page() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions.', 'pagecraft' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions.', 'sekkei' ) );
         }
 
         $tool_url = esc_url( add_query_arg( 'v', ITSPC_VERSION, ITSPC_PLUGIN_URI . '/assets/tool/index.html' ) );
         ?>
 
-        <a href="<?php echo esc_url( admin_url( 'admin.php?page=pagecraft' ) ); ?>" class="itspc-back-link">
-            ← <?php esc_html_e( 'Back to Dashboard', 'pagecraft' ); ?>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=sekkei' ) ); ?>" class="itspc-back-link">
+            ← <?php esc_html_e( 'Back to Dashboard', 'sekkei' ); ?>
         </a>
         <iframe
             src="<?php echo esc_url( $tool_url ); ?>"
             style="width:100%;height:100vh;border:none;display:block;"
-            title="<?php esc_attr_e( 'PageCraft Tool', 'pagecraft' ); ?>"
+            title="<?php esc_attr_e( 'Sekkei Tool', 'sekkei' ); ?>"
         ></iframe>
         <?php
     }
@@ -655,8 +655,8 @@ class ITSPC_Admin {
             wp_add_dashboard_widget(
                 'itspc_welcome_dashboard_widget',
                 isset( $settings['welcome_widget_agency'] ) && ! empty( $settings['welcome_widget_agency'] )
-                    ? sprintf( /* translators: %s: Agency name */ __( 'Welcome from %s', 'pagecraft' ), esc_html( $settings['welcome_widget_agency'] ) )
-                    : __( 'Client Support & Resources', 'pagecraft' ),
+                    ? sprintf( /* translators: %s: Agency name */ __( 'Welcome from %s', 'sekkei' ), esc_html( $settings['welcome_widget_agency'] ) )
+                    : __( 'Client Support & Resources', 'sekkei' ),
                 array( $this, 'render_dashboard_widget' )
             );
         }
@@ -686,7 +686,7 @@ class ITSPC_Admin {
         }
 
         // Fallback to a styled link button
-        return '<div class="itspc-video-fallback"><a href="' . esc_url( $url ) . '" target="_blank" class="button button-secondary"><span class="dashicons dashicons-video-alt3" style="vertical-align: middle; margin-right: 5px;"></span>' . esc_html__( 'Watch Video Tutorial', 'pagecraft' ) . '</a></div>';
+        return '<div class="itspc-video-fallback"><a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="button button-secondary"><span class="dashicons dashicons-video-alt3" style="vertical-align: middle; margin-right: 5px;"></span>' . esc_html__( 'Watch Video Tutorial', 'sekkei' ) . '</a></div>';
     }
 
     /**
@@ -702,7 +702,7 @@ class ITSPC_Admin {
             'welcome_widget_email'  => '',
         ) );
 
-        $agency_name = ! empty( $settings['welcome_widget_agency'] ) ? $settings['welcome_widget_agency'] : __( 'Acme Agency', 'pagecraft' );
+        $agency_name = ! empty( $settings['welcome_widget_agency'] ) ? $settings['welcome_widget_agency'] : __( 'Acme Agency', 'sekkei' );
         $logo_url    = $settings['welcome_widget_logo'];
         $msg         = $settings['welcome_widget_msg'];
         $video_url   = $settings['welcome_widget_video'];
@@ -717,7 +717,7 @@ class ITSPC_Admin {
                 <?php endif; ?>
                 <div class="itspc-widget-title-wrap">
                     <h4 class="itspc-widget-agency-name"><?php echo esc_html( $agency_name ); ?></h4>
-                    <span class="itspc-widget-badge"><?php esc_html_e( 'Website Partner', 'pagecraft' ); ?></span>
+                    <span class="itspc-widget-badge"><?php esc_html_e( 'Website Partner', 'sekkei' ); ?></span>
                 </div>
             </div>
 
@@ -727,7 +727,7 @@ class ITSPC_Admin {
                 </div>
             <?php else : ?>
                 <div class="itspc-widget-msg">
-                    <?php esc_html_e( 'Welcome to your site administration dashboard! If you need support or updates, feel free to contact us anytime.', 'pagecraft' ); ?>
+                    <?php esc_html_e( 'Welcome to your site administration dashboard! If you need support or updates, feel free to contact us anytime.', 'sekkei' ); ?>
                 </div>
             <?php endif; ?>
 
@@ -740,12 +740,12 @@ class ITSPC_Admin {
                     <div class="itspc-widget-footer-left">
                         <span class="dashicons dashicons-email"></span>
                         <span>
-                            <?php esc_html_e( 'Support Email:', 'pagecraft' ); ?>
+                            <?php esc_html_e( 'Support Email:', 'sekkei' ); ?>
                             <a href="mailto:<?php echo esc_attr( $email ); ?>" class="itspc-widget-email-link"><?php echo esc_html( $email ); ?></a>
                         </span>
                     </div>
                     <a href="mailto:<?php echo esc_attr( $email ); ?>" class="itspc-support-btn">
-                        <?php esc_html_e( 'Request Support', 'pagecraft' ); ?>
+                        <?php esc_html_e( 'Request Support', 'sekkei' ); ?>
                     </a>
                 </div>
             <?php endif; ?>
@@ -759,12 +759,12 @@ class ITSPC_Admin {
      * Loads:
      * — itspc-admin.css on all plugin pages and on the dashboard when the widget is active.
      * — itspc-admin.js (tab switching, accordion, cache reset) on plugin pages.
-     * — itspc-tool-page.css only on the pagecraft-tool sub-page.
+     * — itspc-tool-page.css only on the sekkei-tool sub-page.
      *
      * @param string $hook Current admin page hook suffix.
      */
     public function enqueue_admin_scripts( $hook ) {
-        $is_pagecraft = false !== strpos( $hook, 'pagecraft' );
+        $is_sekkei = false !== strpos( $hook, 'sekkei' );
         $is_dashboard = 'index.php' === $hook;
 
         // Load CSS on the WP dashboard when the welcome widget is active.
@@ -781,7 +781,7 @@ class ITSPC_Admin {
         }
 
         // Everything below is for plugin pages only.
-        if ( ! $is_pagecraft ) {
+        if ( ! $is_sekkei ) {
             return;
         }
 
@@ -804,13 +804,13 @@ class ITSPC_Admin {
             'itspc-admin',
             'itspcAdminData',
             array(
-                'confirmReset' => __( 'Are you sure you want to reset all PageCraft tool data? This will permanently delete all planner structures, palettes, and checklists from this browser.', 'pagecraft' ),
-                'resetSuccess' => __( 'All browser cached data for PageCraft has been successfully cleared.', 'pagecraft' ),
+                'confirmReset' => __( 'Are you sure you want to reset all Sekkei tool data? This will permanently delete all planner structures, palettes, and checklists from this browser.', 'sekkei' ),
+                'resetSuccess' => __( 'All browser cached data for Sekkei has been successfully cleared.', 'sekkei' ),
             )
         );
 
         // Tool page: fullscreen CSS override (hides admin bar, sidebar, footer).
-        if ( false !== strpos( $hook, 'pagecraft-tool' ) ) {
+        if ( false !== strpos( $hook, 'sekkei-tool' ) ) {
             wp_enqueue_style(
                 'itspc-tool-page',
                 ITSPC_PLUGIN_URI . '/assets/css/itspc-tool-page.css',

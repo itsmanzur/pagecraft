@@ -1,15 +1,186 @@
-/**
- * PageCraft — Elementor Editor Integration
+﻿/**
+ * Sekkei â€” Elementor Editor Integration
  *
  * Injects floating button and sliding iframe panel into the Elementor editor.
  * Uses localized `itspcData` object from PHP.
  *
- * @package PageCraft
+ * @package Sekkei
  */
 (function() {
     'use strict';
 
-    function initPageCraft() {
+    function cleanText(value, maxLen) {
+        return String(value || '').replace(/[\u0000-\u001F\u007F]/g, '').trim().slice(0, maxLen || 500);
+    }
+
+    function cleanId(value, fallback) {
+        return cleanText(value, 80).replace(/[^A-Za-z0-9_-]/g, '');
+    }
+
+    function cleanHex(value) {
+        var hex = cleanText(value, 16);
+        return /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(hex) ? hex : '';
+    }
+
+    function cleanFontName(value) {
+        return cleanText(value, 80).replace(/[^A-Za-z0-9 \-]/g, '');
+    }
+
+    function escapeSelectorValue(value) {
+        var id = cleanId(value);
+        if (window.CSS && typeof window.CSS.escape === 'function') {
+            return window.CSS.escape(id);
+        }
+        return id.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    }
+
+    function normalizeColors(colors) {
+        var systemRoles = ['primary', 'secondary', 'text', 'accent'];
+        if (!Array.isArray(colors)) {
+            return [];
+        }
+        return colors.slice(0, 100).map(function(c) {
+            var hex = cleanHex(c && c.hex);
+            if (!hex) {
+                return null;
+            }
+            var role = cleanText(c && c.role, 24).toLowerCase();
+            return {
+                id: cleanId(c && c.id) || ('color_' + Math.random().toString(36).substr(2, 9)),
+                name: cleanText(c && c.name, 80) || 'Custom Color',
+                role: systemRoles.indexOf(role) !== -1 ? role : 'custom',
+                hex: hex
+            };
+        }).filter(Boolean);
+    }
+
+    function getContainerChildren(container) {
+        if (!container || !container.children) {
+            return [];
+        }
+        if (Array.isArray(container.children)) {
+            return container.children;
+        }
+        if (typeof container.children.toArray === 'function') {
+            return container.children.toArray();
+        }
+        if (container.children.models && Array.isArray(container.children.models)) {
+            return container.children.models;
+        }
+        return [];
+    }
+
+    function getModelValue(container, key) {
+        if (!container || !container.model) {
+            return '';
+        }
+        if (typeof container.model.get === 'function') {
+            return container.model.get(key);
+        }
+        return container.model[key] || '';
+    }
+
+    function getModelSetting(container, key) {
+        if (!container || !container.model) {
+            return '';
+        }
+        if (typeof container.model.getSetting === 'function') {
+            return container.model.getSetting(key);
+        }
+        var settings = typeof container.model.get === 'function' ? container.model.get('settings') : container.model.settings;
+        if (settings && typeof settings.get === 'function') {
+            return settings.get(key);
+        }
+        return settings && settings[key] ? settings[key] : '';
+    }
+
+    function getElementorLayoutElements() {
+        if (typeof elementor === 'undefined' || !elementor.documents) {
+            return [];
+        }
+        try {
+            var doc = elementor.documents.getCurrent();
+            if (!doc || !doc.container || !doc.container.children) {
+                return [];
+            }
+            var found = [];
+            var seen = {};
+
+            function walk(container) {
+                getContainerChildren(container).forEach(function(child) {
+                    var elType = getModelValue(child, 'elType');
+                    var id = cleanId(getModelValue(child, 'id'));
+                    var cid = cleanId(child && child.model ? child.model.cid : '');
+
+                    if ((elType === 'section' || elType === 'container') && (id || cid) && !seen[id || cid]) {
+                        seen[id || cid] = true;
+                        found.push({
+                            id: id,
+                            cid: cid,
+                            title: cleanText(getModelSetting(child, '_title') || (elType.charAt(0).toUpperCase() + elType.slice(1)), 120),
+                            type: elType
+                        });
+                    }
+
+                    walk(child);
+                });
+            }
+
+            walk(doc.container);
+            return found;
+        } catch (err) {
+            return [];
+        }
+    }
+
+    function getElementorPreviewLayoutElements() {
+        var previewIframe = document.getElementById('elementor-preview-iframe');
+        if (!previewIframe) {
+            return [];
+        }
+        try {
+            var previewDoc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+            if (!previewDoc) {
+                return [];
+            }
+            var nodes = previewDoc.querySelectorAll('.elementor-element[data-id].e-con, .elementor-section[data-id], .elementor-top-section[data-id]');
+            var found = [];
+            var seen = {};
+            Array.prototype.forEach.call(nodes, function(node) {
+                var id = cleanId(node.getAttribute('data-id'));
+                if (!id || seen[id]) {
+                    return;
+                }
+                seen[id] = true;
+                var isSection = node.classList.contains('elementor-section') || node.classList.contains('elementor-top-section');
+                found.push({
+                    id: id,
+                    cid: '',
+                    title: cleanText(node.getAttribute('data-element_type') || (isSection ? 'Section' : 'Container'), 120),
+                    type: isSection ? 'section' : 'container'
+                });
+            });
+            return found;
+        } catch (err) {
+            return [];
+        }
+    }
+
+    function getElementorTopLevelElements() {
+        var elements = getElementorLayoutElements();
+        if (elements.length) {
+            return elements;
+        }
+        return getElementorPreviewLayoutElements();
+    }
+
+    function getStructureSignature(items) {
+        return items.map(function(item) {
+            return [item.id, item.cid, item.title, item.type].join(':');
+        }).join('|');
+    }
+
+    function initSekkei() {
         var btn       = document.getElementById('itspc-toggle-btn');
         var panel     = document.getElementById('itspc-panel');
         var iframe    = document.getElementById('itspc-panel-iframe');
@@ -17,6 +188,8 @@
         var popoutBtn = document.getElementById('itspc-panel-popout');
         var resizer   = document.getElementById('itspc-panel-resizer');
         var isOpen    = false;
+        var lastStructureSignature = '';
+        var structureSyncTimer = null;
 
         // Custom lightning bolt SVG icon
         var ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:5px;margin-top:-2px;"><path d="M13 10h7l-9 13v-9H5l9-13v9z"/></svg>';
@@ -29,7 +202,7 @@
         var btnText = btn.querySelector('.itspc-btn-text');
 
         // Set initial SVG icon on load
-        btnText.innerHTML = ICON_SVG + ' PageCraft';
+        btnText.innerHTML = ICON_SVG + ' Sekkei';
 
         // --- Toggle Panel ---
         // Inject loading bar once into the panel header
@@ -48,6 +221,10 @@
             setTimeout(function() {
                 loadingBar.style.opacity = '0';
             }, 400);
+            startStructureSync();
+            setTimeout(function() {
+                postStructureToTool(true);
+            }, 300);
         });
 
         function openPanel() {
@@ -61,6 +238,9 @@
                     loadingBar.style.width = '60%';
                 }, 50);
                 iframe.setAttribute('src', itspcData.toolUrl);
+            } else {
+                startStructureSync();
+                postStructureToTool(true);
             }
 
             // Inject current page name as a subtitle pill in the header
@@ -100,7 +280,7 @@
             panel.classList.remove('itspc-panel-open');
             panel.classList.add('itspc-panel-closed');
             btn.classList.remove('itspc-btn-active');
-            btnText.innerHTML = ICON_SVG + ' PageCraft';
+            btnText.innerHTML = ICON_SVG + ' Sekkei';
             document.body.classList.remove('itspc-is-open');
             isOpen = false;
         }
@@ -111,6 +291,35 @@
             } else {
                 openPanel();
             }
+        }
+
+        function postStructureToTool(force) {
+            if (!iframe || !iframe.contentWindow) {
+                return;
+            }
+            var elements = getElementorTopLevelElements();
+            if (!elements.length) {
+                return;
+            }
+            var signature = getStructureSignature(elements);
+            if (!force && signature === lastStructureSignature) {
+                return;
+            }
+            lastStructureSignature = signature;
+            iframe.contentWindow.postMessage({
+                type: 'itspc_elementor_structure_changed',
+                sections: elements
+            }, window.location.origin);
+        }
+
+        function startStructureSync() {
+            if (structureSyncTimer) {
+                return;
+            }
+            postStructureToTool(true);
+            structureSyncTimer = setInterval(function() {
+                postStructureToTool(false);
+            }, 1000);
         }
 
         // --- Event Handlers ---
@@ -136,21 +345,30 @@
 
 
 
-        // --- Listen for rename requests from PageCraft iframe ---
+        // --- Listen for rename requests from Sekkei iframe ---
         window.addEventListener('message', function(e) {
             // Security: only accept messages from the same origin.
             if ( e.origin !== window.location.origin ) {
                 return;
             }
+            if ( iframe && e.source !== iframe.contentWindow ) {
+                return;
+            }
             var data = e.data;
-            if (!data) return;
+            if (!data || typeof data !== 'object') return;
 
             if (data.type === 'rename_elementor_element') {
+                var safeTitle = cleanText(data.title, 120);
+                var safeId = cleanId(data.id);
+                var safeCid = cleanId(data.cid);
+                if (!safeTitle || (!safeId && !safeCid)) {
+                    return;
+                }
                 if (typeof elementor !== 'undefined' && elementor.documents) {
                     var doc = elementor.documents.getCurrent();
                     if (doc && doc.container) {
                         var container = doc.container.children.filter(function(child) {
-                            return child.model.cid === data.cid || child.model.get('id') === data.id;
+                            return child.model.cid === safeCid || child.model.get('id') === safeId;
                         })[0];
                         
                         if (container) {
@@ -158,11 +376,11 @@
                                 $e.run('document/elements/settings', {
                                     container: container,
                                     settings: {
-                                        _title: data.title
+                                        _title: safeTitle
                                     }
                                 });
                             } else {
-                                container.model.setSetting('_title', data.title);
+                                container.model.setSetting('_title', safeTitle);
                             }
                         }
                     }
@@ -171,6 +389,10 @@
 
             // Sync Colors to Elementor Globals
             if (data.type === 'itspc_sync_colors' && data.colors) {
+                data.colors = normalizeColors(data.colors);
+                if (!data.colors.length) {
+                    return;
+                }
                 if (typeof elementor !== 'undefined' && elementor.documents) {
                     var kitId = elementor.config.active_kit_id;
                     var kit = elementor.documents.get(kitId);
@@ -260,6 +482,11 @@
 
             // Sync Fonts to Elementor Globals
             if (data.type === 'itspc_sync_fonts' && data.heading && data.body) {
+                var safeHeading = cleanFontName(data.heading);
+                var safeBody = cleanFontName(data.body);
+                if (!safeHeading || !safeBody) {
+                    return;
+                }
                 if (typeof elementor !== 'undefined' && elementor.documents) {
                     var kitId = elementor.config.active_kit_id;
                     var kit = elementor.documents.get(kitId);
@@ -268,25 +495,25 @@
                             {
                                 _id: 'primary',
                                 title: 'Primary',
-                                typography_font_family: data.heading,
+                                typography_font_family: safeHeading,
                                 typography_font_weight: '700'
                             },
                             {
                                 _id: 'secondary',
                                 title: 'Secondary',
-                                typography_font_family: data.heading,
+                                typography_font_family: safeHeading,
                                 typography_font_weight: '600'
                             },
                             {
                                 _id: 'text',
                                 title: 'Text',
-                                typography_font_family: data.body,
+                                typography_font_family: safeBody,
                                 typography_font_weight: '400'
                             },
                             {
                                 _id: 'accent',
                                 title: 'Accent',
-                                typography_font_family: data.heading,
+                                typography_font_family: safeHeading,
                                 typography_font_weight: '500'
                             }
                         ];
@@ -448,7 +675,7 @@
                     }
                 });
 
-                // Send results back to PageCraft tool iframe
+                // Send results back to Sekkei tool iframe
                 var iframeEl = document.getElementById('itspc-panel-iframe');
                 if (iframeEl && iframeEl.contentWindow) {
                     iframeEl.contentWindow.postMessage({
@@ -460,10 +687,14 @@
 
             // Highlight Widget in Elementor Editor preview canvas
             if (data.type === 'itspc_highlight_element' && data.elementId) {
+                var safeElementId = cleanId(data.elementId);
+                if (!safeElementId) {
+                    return;
+                }
                 var previewIframe = document.getElementById('elementor-preview-iframe');
                 if (previewIframe) {
                     var previewDoc = previewIframe.contentDocument || previewIframe.contentWindow.document;
-                    var targetEl = previewDoc.querySelector('[data-id="' + data.elementId + '"]');
+                    var targetEl = previewDoc.querySelector('[data-id="' + escapeSelectorValue(safeElementId) + '"]');
                     if (targetEl) {
                         targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
@@ -479,9 +710,12 @@
             }
         });
 
-        // --- Listen to Elementor editor title changes and sync back to PageCraft ---
+        // --- Listen to Elementor editor title changes and sync back to Sekkei ---
         if (typeof elementor !== 'undefined' && elementor.channels && elementor.channels.editor) {
             elementor.channels.editor.on('change', function(view) {
+                setTimeout(function() {
+                    postStructureToTool(true);
+                }, 250);
                 if (view && view.elementSettingsModel && view.elementSettingsModel.changed) {
                     var changed = view.elementSettingsModel.changed;
                     if (typeof changed._title !== 'undefined') {
@@ -542,13 +776,14 @@
     // --- Wait for Elementor to be ready ---
     if (typeof elementor !== 'undefined') {
         elementor.on('panel:init', function() {
-            setTimeout(initPageCraft, 800);
+            setTimeout(initSekkei, 800);
         });
     } else {
         // Fallback: listen for elementor:init event
         window.addEventListener('elementor:init', function() {
-            setTimeout(initPageCraft, 1500);
+            setTimeout(initSekkei, 1500);
         });
     }
 
 })();
+

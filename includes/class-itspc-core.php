@@ -2,7 +2,7 @@
 /**
  * Core plugin class — singleton orchestrator.
  *
- * @package PageCraft
+ * @package Sekkei
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -82,13 +82,13 @@ class ITSPC_Core {
     public function plugin_action_links( $links ) {
         $settings_link = sprintf(
             '<a href="%s">%s</a>',
-            esc_url( admin_url( 'admin.php?page=pagecraft' ) ),
-            esc_html__( 'Settings', 'pagecraft' )
+            esc_url( admin_url( 'admin.php?page=sekkei' ) ),
+            esc_html__( 'Settings', 'sekkei' )
         );
         $tool_link = sprintf(
             '<a href="%s" style="color:#A8D800;font-weight:600">%s</a>',
-            esc_url( admin_url( 'admin.php?page=pagecraft-tool' ) ),
-            esc_html__( 'Open Tool', 'pagecraft' )
+            esc_url( admin_url( 'admin.php?page=sekkei-tool' ) ),
+            esc_html__( 'Open Tool', 'sekkei' )
         );
 
         array_unshift( $links, $settings_link, $tool_link );

@@ -1,10 +1,10 @@
 /**
- * PageCraft — Admin Page Scripts
+ * Sekkei — Admin Page Scripts
  *
  * Handles tab switching, accordion, and cache reset on the admin settings page.
  * Strings are localized via itspcAdminData (wp_localize_script).
  *
- * @package PageCraft
+ * @package Sekkei
  */
 /* global itspcAdminData */
 
@@ -38,7 +38,7 @@
             resetBtn.addEventListener( 'click', function () {
                 var confirmMsg = ( typeof itspcAdminData !== 'undefined' && itspcAdminData.confirmReset )
                     ? itspcAdminData.confirmReset
-                    : 'Are you sure you want to reset all PageCraft tool data? This will permanently delete all planner structures, palettes, and checklists from this browser.';
+                    : 'Are you sure you want to reset all Sekkei tool data? This will permanently delete all planner structures, palettes, and checklists from this browser.';
 
                 if ( confirm( confirmMsg ) ) {
                     Object.keys( localStorage ).forEach( function ( key ) {
@@ -49,7 +49,7 @@
 
                     var successMsg = ( typeof itspcAdminData !== 'undefined' && itspcAdminData.resetSuccess )
                         ? itspcAdminData.resetSuccess
-                        : 'All browser cached data for PageCraft has been successfully cleared.';
+                        : 'All browser cached data for Sekkei has been successfully cleared.';
 
                     alert( successMsg );
                     location.reload();
@@ -282,7 +282,7 @@
                 title: "Section Planner 📐",
                 what: "Helps you plan the page layout and design structure of your sections. Includes drag-and-drop section reordering, category badges, and custom CSS class assignment.",
                 how: [
-                    "Open any page in the Elementor editor and launch the PageCraft panel.",
+                    "Open any page in the Elementor editor and launch the Sekkei panel.",
                     "Click 'Add Section', name your section, and select a category badge (e.g. Hero, CTA, Features).",
                     "Drag and drop sections to rearrange them in the planner list.",
                     "Once finalized, click 'Sync to Elementor' or 'Audit' to verify and match layout sections."

@@ -1,19 +1,19 @@
 <?php
 /**
- * @package   PageCraft
+ * @package   Sekkei
  * @author    itsmanzur
  * @license   GPL-2.0+
  * @link      https://profiles.wordpress.org/itsmanzur/
  * @copyright 2026 itsmanzur
  *
  * @wordpress-plugin
- * Plugin Name:       PageCraft — Workflow Toolkit & Section Planner
- * Plugin URI:        https://wordpress.org/plugins/pagecraft/
- * Description:       The ultimate workflow tool for Elementor — section planner, design checklist, color palette, font pairing, CSS generator, and project notes.
- * Version:           1.0.0
+ * Plugin Name:       Sekkei — Section Planner & Workflow Toolkit for Elementor
+ * Plugin URI:        https://wordpress.org/plugins/sekkei/
+ * Description:       A workflow tool for Elementor — section planner, design checklist, color palette, font pairing, CSS generator, and project notes.
+ * Version:           1.0.1
  * Author:            itsmanzur
  * Author URI:        https://profiles.wordpress.org/itsmanzur/
- * Text Domain:       pagecraft
+ * Text Domain:       sekkei
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Requires at least: 5.8
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Plugin constants
  */
 if ( ! defined( 'ITSPC_VERSION' ) ) {
-    define( 'ITSPC_VERSION', '1.0.0' );
+    define( 'ITSPC_VERSION', '1.0.1' );
 }
 if ( ! defined( 'ITSPC_PLUGIN_DIR' ) ) {
     define( 'ITSPC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
