@@ -1,0 +1,217 @@
+﻿<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sekkei Market Leadership Roadmap</title>
+  <style>
+    :root{--bg:#f7f8fb;--ink:#111827;--muted:#5b6472;--line:#dfe4ec;--card:#fff;--brand:#5b8c00;--brand2:#0f766e;--warn:#b45309;--risk:#b91c1c;--blue:#1d4ed8;--shadow:0 10px 30px rgba(17,24,39,.08)}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.62 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif} a{color:var(--blue);text-decoration:none} a:hover{text-decoration:underline}
+    header{background:#111827;color:#fff;padding:34px 24px 28px} .wrap{max-width:1180px;margin:auto} h1{font-size:34px;line-height:1.15;margin:0 0 10px} h2{font-size:24px;margin:34px 0 14px} h3{font-size:17px;margin:0 0 10px} p{margin:0 0 12px}.sub{color:#d1d5db;max-width:900px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.pill{border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 10px;color:#f3f4f6;font-size:13px}.grid{display:grid;gap:16px}.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;box-shadow:var(--shadow)} main{padding:26px 24px 56px}.score{font-size:34px;font-weight:800;color:var(--brand);line-height:1}.small{font-size:13px;color:var(--muted)}.bar{height:11px;background:#e6e9ef;border-radius:999px;overflow:hidden;margin:9px 0 4px}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .2s}.phase-title{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.tag{font-size:12px;border-radius:999px;padding:3px 8px;background:#eef6dd;color:#3f6212;border:1px solid #d9e9bd}.tag.high{background:#fff7ed;color:var(--warn);border-color:#fed7aa}.tag.critical{background:#fef2f2;color:var(--risk);border-color:#fecaca}.task{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:9px 0;border-top:1px solid #eef1f5}.task:first-of-type{border-top:0}.task input{margin-top:5px}.task strong{display:block}.task span{color:var(--muted);font-size:13px} table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden} th,td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left} th{background:#f0f3f7;font-size:13px} tr:last-child td{border-bottom:0}.kpi{display:flex;gap:10px;align-items:baseline}.kpi b{font-size:24px}.note{border-left:4px solid var(--brand);background:#f8fbf2;padding:14px 16px;border-radius:4px}.sources li{margin-bottom:8px}.print{float:right;background:#fff;color:#111827;border:0;border-radius:6px;padding:9px 12px;cursor:pointer}@media(max-width:860px){.cols-2,.cols-3{grid-template-columns:1fr}h1{font-size:28px}.print{float:none;margin-top:14px}}
+  </style>
+</head>
+<body>
+<header><div class="wrap">
+  <button class="print" onclick="window.print()">Print / Save PDF</button>
+  <h1>Sekkei Market Leadership Roadmap</h1>
+  <p class="sub">Goal: Sekkei-কে আরেকটা Elementor addon না বানিয়ে, Elementor freelancer/agency-দের জন্য lightweight production workflow cockpit বানানো। Research date: 14 June 2026.</p>
+  <div class="meta"><span class="pill">Positioning: Workflow OS for Elementor</span><span class="pill">Version target: 1.1 to 2.0</span><span class="pill">Focus: Speed, planning, QA, handoff</span></div>
+</div></header>
+<main><div class="wrap">
+  <section class="grid cols-3">
+    <div class="card"><div class="score" id="overall-score">0%</div><div class="small">Overall roadmap progress</div><div class="bar"><div class="fill" id="overall-fill"></div></div></div>
+    <div class="card"><div class="kpi"><b>6</b><span>major releases</span></div><p class="small">1.1 stability, 1.2 workflow intelligence, 1.3 templates, 1.4 collaboration, 1.5 audits, 2.0 pro-ready ecosystem.</p></div>
+    <div class="card"><div class="kpi"><b>3</b><span>winning angles</span></div><p class="small">No frontend bloat, agency workflow, design QA before publish.</p></div>
+  </section>
+
+  <h2>Market Position</h2>
+  <div class="note"><strong>Core thesis:</strong> Essential Addons, ElementsKit, Premium Addons, Royal, Happy Addons, Unlimited Elements, The Plus Addons mostly compete on widgets/templates/builders. Sekkei should compete on planning, QA, notes, CSS workflow, project handoff, and client/agency operations inside Elementor.</div>
+
+  <h2>Competitor Snapshot</h2>
+  <table>
+    <thead><tr><th>Competitor</th><th>Scale / features</th><th>What they do well</th><th>Gap Sekkei can own</th></tr></thead>
+    <tbody>
+      <tr><td>Essential Addons</td><td>110+ elements, 6,500+ templates, 2M+ active installs.</td><td>Huge widget library, WooCommerce widgets, template cloud, element control.</td><td>They help build elements; Sekkei can help plan, audit, and hand off the whole build.</td></tr>
+      <tr><td>ElementsKit</td><td>110+ elements, 20+ modules, 1000+ templates, 1M+ active installs.</td><td>Header/footer, mega menu, custom widget builder, cross-domain copy, visibility conditions.</td><td>They are broad and heavy; Sekkei can stay fast and workflow-specific.</td></tr>
+      <tr><td>Premium Addons</td><td>700k+ active installs, advanced widgets/templates.</td><td>Strong widget collection, regular updates, broad language coverage.</td><td>Differentiate with agency QA, scope tracking, reusable project systems.</td></tr>
+      <tr><td>Royal Addons</td><td>100+ addons, 150+ template kits, theme/woo/popup/form/widget builders, 600k+ active installs.</td><td>Very broad builder ecosystem and WooCommerce coverage.</td><td>Avoid builder bloat; become the companion tool that works beside any builder/addon stack.</td></tr>
+      <tr><td>Happy Addons</td><td>143+ widgets/features, 500+ blocks, 70+ page templates.</td><td>Theme builder, templates, equal heights, tooltips, cross-domain copy, display conditions.</td><td>Own production process: checklist, notes, section planner, export, client sign-off.</td></tr>
+      <tr><td>Unlimited Elements</td><td>300k+ installs, large widget catalog and widget creation angle.</td><td>Specialized widgets, dynamic layouts, widget maker direction.</td><td>Sekkei can generate structure and QA instructions rather than more frontend widgets.</td></tr>
+      <tr><td>The Plus Addons</td><td>120+ widgets/extensions, 1000+ templates, 100k+ installs.</td><td>Large visual effect/widget library, templates, mega menu, WooCommerce.</td><td>Sekkei can be smaller, faster, less risky, and more process-driven.</td></tr>
+      <tr><td>Visual CSS Style Editor / YellowPencil</td><td>40k+ installs, visual CSS editing.</td><td>Frontend CSS customization and visual styling controls.</td><td>Sekkei can add safer CSS generation, selector hints, audit, and Elementor-specific snippets.</td></tr>
+      <tr><td>Elementor / Elementor Pro</td><td>Core builder with widgets, kits, Theme Builder, WooCommerce, forms, popups, AI direction.</td><td>Native editing experience and ecosystem dominance.</td><td>Sekkei should complement Elementor, not fight it: planning, QA, handoff, and documentation.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Roadmap Tracker</h2>
+  <div class="grid cols-2">
+    <section class="card phase" data-phase="1">
+      <div class="phase-title"><h3>Phase 1: Trust, polish, and retention (v1.1)</h3><span class="tag critical">Must win</span></div>
+      <div class="small phase-score">0%</div><div class="bar"><div class="fill"></div></div>
+      <label class="task"><input type="checkbox"><span><strong>First-run onboarding</strong><span>3-step guided tour: open panel, add section, run audit, export.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Empty states rewrite</strong><span>Every tab should show clear next action, not blank UI.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Performance budget</strong><span>Panel opens under 500ms after first warm load; no frontend asset loading.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Crash-safe localStorage</strong><span>Auto-backup, corrupt data recovery, import validation report.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>WP.org growth pack</strong><span>Better screenshots, FAQ, keywords, support snippets, short demo video plan.</span></span></label>
+    </section>
+
+    <section class="card phase" data-phase="2">
+      <div class="phase-title"><h3>Phase 2: Smarter section planner (v1.2)</h3><span class="tag critical">Core moat</span></div>
+      <div class="small phase-score">0%</div><div class="bar"><div class="fill"></div></div>
+      <label class="task"><input type="checkbox"><span><strong>Two-way Elementor sync</strong><span>Rename/order/type changes in Sekkei map clearly to Elementor containers.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Section health badges</strong><span>Missing title, duplicate class, empty container, no mobile note, no CTA.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Page outline export</strong><span>Export sitemap-like section outline for client approval.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Reusable section presets</strong><span>Hero, feature, pricing, FAQ, testimonial, footer planning patterns.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Section dependencies</strong><span>Mark section as waiting for copy, image, client approval, development.</span></span></label>
+    </section>
+
+    <section class="card phase" data-phase="3">
+      <div class="phase-title"><h3>Phase 3: Design system cockpit (v1.3)</h3><span class="tag high">Differentiator</span></div>
+      <div class="small phase-score">0%</div><div class="bar"><div class="fill"></div></div>
+      <label class="task"><input type="checkbox"><span><strong>Global design tokens</strong><span>Color roles, typography scale, spacing scale, radius, shadow tokens.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Contrast checker</strong><span>WCAG-style foreground/background contrast hints for saved palette roles.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Font pairing upgrade</strong><span>Industry filters, Bengali/Arabic/Latin presets, line-height and weight recommendations.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>CSS snippet library</strong><span>Save snippets by project, selector, device, and risk level.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Elementor selector helper</strong><span>Suggest class names and safe selectors from selected section/container.</span></span></label>
+    </section>
+
+    <section class="card phase" data-phase="4">
+      <div class="phase-title"><h3>Phase 4: Audit and pre-publish QA (v1.4)</h3><span class="tag critical">Marketable</span></div>
+      <div class="small phase-score">0%</div><div class="bar"><div class="fill"></div></div>
+      <label class="task"><input type="checkbox"><span><strong>Deep page audit</strong><span>Placeholder copy, empty links, missing alt, heading order, repeated IDs, oversized images.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Responsive QA checklist</strong><span>Desktop/tablet/mobile states with per-section pass/fail notes.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Accessibility hints</strong><span>Button labels, link text, heading sequence, contrast warnings.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>SEO handoff checklist</strong><span>Title, meta, H1, image alt, internal links, schema notes.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Audit report export</strong><span>Client-friendly PDF/HTML/TXT report with pass/fail summary.</span></span></label>
+    </section>
+
+    <section class="card phase" data-phase="5">
+      <div class="phase-title"><h3>Phase 5: Agency collaboration (v1.5)</h3><span class="tag high">Retention</span></div>
+      <div class="small phase-score">0%</div><div class="bar"><div class="fill"></div></div>
+      <label class="task"><input type="checkbox"><span><strong>Project status board</strong><span>Draft, design, review, revision, approved, published.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Client feedback mode</strong><span>Exportable comment list without exposing WordPress admin.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Revision log</strong><span>Date, author, change summary, client request, final status.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Templateable checklists</strong><span>Agency can save SOP checklist for landing page, Woo page, blog template.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Multi-project dashboard</strong><span>Project list with progress, blockers, last updated, export/import.</span></span></label>
+    </section>
+
+    <section class="card phase" data-phase="6">
+      <div class="phase-title"><h3>Phase 6: Ecosystem and monetization-ready (v2.0)</h3><span class="tag">Future</span></div>
+      <div class="small phase-score">0%</div><div class="bar"><div class="fill"></div></div>
+      <label class="task"><input type="checkbox"><span><strong>Optional cloud sync</strong><span>Keep free local mode; add opt-in account sync later if business model needs it.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Team workspace</strong><span>Roles: owner, designer, developer, client reviewer.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>AI assist layer</strong><span>Generate section plan, checklist, CSS starter, audit explanation. Keep it optional.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Template marketplace</strong><span>Sell/download workflow templates, not just design templates.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Freemium boundary</strong><span>Free: core workflow. Pro: team, cloud, white-label reports, advanced audits.</span></span></label>
+    </section>
+  </div>
+
+  <h2>Current Feature Upgrade Plan</h2>
+  <table>
+    <thead><tr><th>Current feature</th><th>Upgrade</th><th>Why it matters</th></tr></thead>
+    <tbody>
+      <tr><td>Section Planner</td><td>Add health badges, statuses, templates, Elementor selected-element mapping.</td><td>This becomes the flagship feature and differentiates from widget packs.</td></tr>
+      <tr><td>Design Checklist</td><td>Checklist templates, pass/fail notes, reusable SOPs, progress by project.</td><td>Agencies love repeatable process; it increases retention.</td></tr>
+      <tr><td>Color Palette</td><td>Contrast checks, color roles, export CSS variables, Elementor global color mapping notes.</td><td>Turns a simple palette into design-system value.</td></tr>
+      <tr><td>Font Pairing</td><td>Better multilingual presets, hierarchy preview, CSS variable output.</td><td>Good for Bangla/agency niche and better than generic font lists.</td></tr>
+      <tr><td>CSS Generator</td><td>Selector helper, snippet risk warning, responsive snippets, saved library.</td><td>Safer custom CSS is a strong painkiller for Elementor users.</td></tr>
+      <tr><td>Project Notes</td><td>Revision log, client feedback buckets, blockers, approval status.</td><td>Moves Sekkei from “tool” to “project memory”.</td></tr>
+      <tr><td>Pre-Publish Audit</td><td>Real DOM scan, accessibility/SEO/responsive checks, exportable report.</td><td>This can be the main marketing hook.</td></tr>
+      <tr><td>Export</td><td>HTML/PDF client report, JSON backup with schema version, import preview.</td><td>Supports agency workflow and prevents data-loss fear.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>My Strategic Advice</h2>
+  <div class="grid cols-2">
+    <div class="card"><h3>Do not become another widget pack</h3><p>That market is crowded and dominated by teams with hundreds of widgets/templates. Sekkei should stay fast, focused, and useful beside any Elementor setup.</p></div>
+    <div class="card"><h3>Own the phrase “pre-publish audit for Elementor”</h3><p>This is easy to explain, easy to demo, and painful enough that freelancers will install it.</p></div>
+    <div class="card"><h3>Build in public</h3><p>Release small weekly updates, write changelogs clearly, post short videos: “before publishing, run Sekkei audit”.</p></div>
+    <div class="card"><h3>Win Bengali + agency niche first</h3><p>Bangla-friendly typography, local freelancer workflow, and client handoff can make Sekkei memorable before going broad.</p></div>
+  </div>
+
+  <h2>90-Day Execution</h2>
+  <table>
+    <thead><tr><th>Window</th><th>Ship</th><th>Success metric</th></tr></thead>
+    <tbody>
+      <tr><td>Days 1-15</td><td>Onboarding, empty states, screenshots, WP.org page polish, 1 demo video.</td><td>Better activation-to-first-action rate; first 5 reviews.</td></tr>
+      <tr><td>Days 16-30</td><td>Section health badges, reusable section presets, import recovery.</td><td>Users can explain Sekkei in one sentence.</td></tr>
+      <tr><td>Days 31-60</td><td>Deep audit v1, responsive QA, report export.</td><td>“Run audit before publish” becomes primary CTA.</td></tr>
+      <tr><td>Days 61-90</td><td>Design tokens, contrast checker, client handoff report.</td><td>Freelancers use it across multiple projects.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Pro Version Strategy</h2>
+  <div class="note"><strong>Recommended structure:</strong> keep Sekkei free on WordPress.org and sell Sekkei Pro as a separate add-on plugin from your own site. The free plugin should stay useful; Pro should add agency-grade reporting, advanced audits, SOP templates, and collaboration.</div>
+  <table>
+    <thead><tr><th>Area</th><th>Free Sekkei</th><th>Sekkei Pro</th></tr></thead>
+    <tbody>
+      <tr><td>Section Planner</td><td>Manual sections, Elementor sync, basic presets</td><td>Advanced health, dependencies, reusable agency templates, bulk actions</td></tr>
+      <tr><td>Checklist</td><td>Built-in checklist and custom items</td><td>SOP libraries, project checklist templates, pass/fail evidence notes</td></tr>
+      <tr><td>Audit</td><td>Basic pre-publish scan</td><td>Deep audit: accessibility, SEO, responsive, image weight, broken/empty links</td></tr>
+      <tr><td>Export</td><td>TXT/JSON export</td><td>White-label HTML/PDF client reports, agency branding, audit history</td></tr>
+      <tr><td>CSS</td><td>Basic generator and snippets</td><td>Selector helper, responsive packs, risk scoring, reusable code library</td></tr>
+      <tr><td>Projects</td><td>Local multi-project storage</td><td>Status dashboard, blockers, revision log, approval workflow</td></tr>
+      <tr><td>Collaboration</td><td>Local notes</td><td>Client feedback mode, team roles, shared review links if cloud exists</td></tr>
+      <tr><td>AI</td><td>None or prompt templates</td><td>Optional assistant for section plans, checklists, CSS starters, audit explanations</td></tr>
+    </tbody>
+  </table>
+  <div class="grid cols-2">
+    <div class="card"><h3>Best first Pro feature</h3><p>White-label client report export. It is easy to understand, easy to demo, and agencies will pay for it faster than abstract settings.</p></div>
+    <div class="card"><h3>Best sales hook</h3><p>“Before you publish, run Sekkei Pro and send a clean client report.” This is clearer than selling another bundle of widgets.</p></div>
+    <div class="card"><h3>Pricing start</h3><p>Free core, Pro Solo around $39/year, Pro Agency around $79/year, and a limited founder lifetime deal around $99-$149.</p></div>
+    <div class="card"><h3>Architecture</h3><p>Build `sekkei-pro` as a separate add-on plugin. Free plugin exposes hooks for modules, audits, export formats, and checklist templates.</p></div>
+  </div>
+  <h3>Pro Build Checklist</h3>
+  <div class="grid cols-2">
+    <section class="card phase" data-phase="pro">
+      <div class="phase-title"><h3>Sekkei Pro MVP</h3><span class="tag critical">Paid MVP</span></div>
+      <div class="small phase-score">0%</div><div class="bar"><div class="fill"></div></div>
+      <label class="task"><input type="checkbox"><span><strong>Separate Pro plugin</strong><span>`sekkei-pro` add-on with license/update system outside WordPress.org.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>White-label report export</strong><span>HTML/PDF client report with agency logo and project summary.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Advanced audit checks</strong><span>Accessibility, SEO, responsive status, image weight, broken links.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Agency SOP templates</strong><span>Reusable checklist templates for landing pages, Woo pages, blog templates.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Client approval workflow</strong><span>Draft, Review, Revision, Approved, Published statuses and revision log.</span></span></label>
+    </section>
+    <section class="card phase" data-phase="pro2">
+      <div class="phase-title"><h3>Pro Growth Features</h3><span class="tag high">Later</span></div>
+      <div class="small phase-score">0%</div><div class="bar"><div class="fill"></div></div>
+      <label class="task"><input type="checkbox"><span><strong>Design token export</strong><span>Colors, fonts, spacing, CSS variables, Elementor global style notes.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Team workspace</strong><span>Owner, designer, developer, client reviewer roles.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Optional cloud sync</strong><span>Opt-in only, clear privacy policy, no tracking without consent.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>AI workflow assistant</strong><span>Optional plan/checklist/CSS/audit explanation assistant.</span></span></label>
+      <label class="task"><input type="checkbox"><span><strong>Template marketplace</strong><span>Sell workflow templates instead of competing on design templates.</span></span></label>
+    </section>
+  </div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li>Essential Addons: WordPress.org states 110+ elements, 6,500+ templates, 2M+ active installs, element control and performance messaging. <a href="https://wordpress.org/plugins/essential-addons-for-elementor-lite/">Source</a></li>
+    <li>ElementsKit: WordPress.org states 110+ elements, 20+ modules, 1000+ templates, header/footer, mega menu, custom widget builder, 1M+ active installs. <a href="https://wordpress.org/plugins/elementskit-lite/">Source</a></li>
+    <li>Happy Addons: WordPress.org lists 143+ widgets/features, 500+ blocks, 70+ templates, theme builder and cross-domain copy features. <a href="https://wordpress.org/plugins/happy-elementor-addons/">Source</a></li>
+    <li>Royal Addons: WordPress.org lists 100+ addons, 150+ template kits, builders, filters, popup/form/widget builder, 600k+ active installs. <a href="https://wordpress.org/plugins/royal-elementor-addons/">Source</a></li>
+    <li>Premium Addons: WordPress.org shows 700k+ active installs and active widget/template ecosystem. <a href="https://wordpress.org/plugins/premium-addons-for-elementor/">Source</a></li>
+    <li>Unlimited Elements and The Plus Addons: WordPress.org shows 300k+ and 100k+ active installs respectively, both competing around Elementor widgets/templates. <a href="https://wordpress.org/plugins/unlimited-elements-for-elementor/">Unlimited Elements</a>, <a href="https://wordpress.org/plugins/the-plus-addons-for-elementor-page-builder/">The Plus Addons</a></li>
+    <li>Visual CSS Style Editor / YellowPencil: WordPress.org describes a visual CSS style editor with 40k+ active installs. <a href="https://wordpress.org/plugins/yellow-pencil-visual-theme-customizer/">Source</a></li>
+  </ul>
+</div></main>
+<script>
+(function(){
+  var key='sekkei-roadmap-progress-v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[type="checkbox"]'));
+  var saved=JSON.parse(localStorage.getItem(key)||'{}');
+  boxes.forEach(function(box,i){box.checked=!!saved[i];box.addEventListener('change',update);});
+  function pct(done,total){return total?Math.round(done/total*100):0;}
+  function update(){
+    var state={};boxes.forEach(function(box,i){state[i]=box.checked;});localStorage.setItem(key,JSON.stringify(state));
+    var done=boxes.filter(function(b){return b.checked;}).length;var overall=pct(done,boxes.length);
+    document.getElementById('overall-score').textContent=overall+'%';document.getElementById('overall-fill').style.width=overall+'%';
+    [].slice.call(document.querySelectorAll('.phase')).forEach(function(phase){
+      var phaseBoxes=[].slice.call(phase.querySelectorAll('input[type="checkbox"]'));var phaseDone=phaseBoxes.filter(function(b){return b.checked;}).length;var p=pct(phaseDone,phaseBoxes.length);
+      phase.querySelector('.phase-score').textContent=p+'% complete';phase.querySelector('.fill').style.width=p+'%';
+    });
+  }
+  update();
+})();
+</script>
+</body>
+</html>

@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sekkei  Elementor Workflow Tool</title>
+<title>Sekkei - Elementor Workflow Tool</title>
+<link rel="preload" href="../vendor/tabler-icons/fonts/tabler-icons.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../vendor/fonts/dm-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../vendor/fonts/syne-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../vendor/fonts/fonts.css">
 <link rel="stylesheet" href="../vendor/tabler-icons/tabler-icons.min.css">
 <style>
@@ -388,6 +391,20 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .pro-badge{background:var(--accent-dim);color:var(--accent);font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;letter-spacing:.04em}
 .nav-badge.pro-badge-nav{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);font-weight:700;font-size:8px;padding:1px 5px}
 
+
+/* ===== V1.1 ONBOARDING & EMPTY STATES ===== */
+.onboarding-card{display:none;margin-bottom:14px;border-color:var(--accent-border);background:linear-gradient(135deg,var(--accent-dim),transparent 72%),var(--bg2)}
+.onboarding-card.show{display:block}
+.onboarding-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+.onboarding-title{font-family:var(--font-head);font-size:17px;font-weight:700;color:var(--text)}
+.onboarding-copy{font-size:13px;color:var(--text2);max-width:620px;margin-top:4px;line-height:1.55}
+.onboarding-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.onboarding-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.onboarding-step{padding:10px;border:1px solid var(--border);border-radius:var(--r-md);background:rgba(255,255,255,.02)}
+.onboarding-step i{color:var(--accent);font-size:18px;margin-bottom:6px;display:block}.onboarding-step strong{font-size:12px;display:block}.onboarding-step span{font-size:11px;color:var(--text3);display:block;margin-top:2px}
+.empty h3{font-size:14px;color:var(--text);font-family:var(--font-head);font-weight:600;margin:6px 0 4px}.empty .empty-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}.empty .mini{font-size:12px;color:var(--text3);max-width:360px;margin:4px auto 0}.recovery-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.data-note{font-size:11px;color:var(--text3);line-height:1.55;margin-top:8px}
+@media (max-width:650px){.onboarding-steps{grid-template-columns:1fr}.onboarding-head{flex-direction:column}.onboarding-actions .btn{width:100%;justify-content:center}}
+
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -400,7 +417,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 
   <!-- TOPBAR -->
   <div class="topbar">
-    <div class="logo">Page<span>Craft</span></div>
+    <div class="logo">Sek<span>kei</span></div>
     <div class="topbar-divider" style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
     <span class="topbar-subtitle" style="font-size:11px;color:var(--text3)">Elementor Workflow Tool</span>
     <div class="project-select">
@@ -457,7 +474,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       </div>
     </div>
     <div class="sidebar-footer">
-      <div style="font-size:10px;color:var(--text3);padding:8px 10px">Sekkei v1.0</div>
+      <div style="font-size:10px;color:var(--text3);padding:8px 10px">Sekkei v1.1</div>
     </div>
   </div>
 
@@ -809,8 +826,9 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
         <div style="display:flex;gap:6px;margin-bottom:10px">
           <button class="btn btn-sm" onclick="exportJSON()"><i class="ti ti-download"></i> Download JSON</button>
           <label class="btn btn-sm" style="cursor:pointer"><i class="ti ti-upload"></i> Import JSON<input type="file" accept=".json" onchange="importJSON(event)" style="display:none"></label>
+          <button class="btn btn-sm" onclick="restoreBackup()"><i class="ti ti-restore"></i> Restore Backup</button>
         </div>
-        <div style="font-size:11px;color:var(--text3)">JSON export includes all sections, colors, fonts, CSS snippets, and notes for this project.</div>
+        <div style="font-size:11px;color:var(--text3)">JSON export includes the current project data. Sekkei also keeps one local recovery backup before every save.</div>
       </div>
     </div>
 
@@ -891,6 +909,9 @@ let state = {
 let nextId = Date.now();
 let elementorSyncTimer = null;
 let lastElementorSignature = '';
+const STORAGE_KEY = 'itspc_state';
+const BACKUP_KEY = 'itspc_state_backup';
+const ONBOARDING_KEY = 'itspc_onboarding_done_v11';
 
 const SECTION_TYPES = ['hero', 'nav', 'content', 'features', 'cta', 'footer', 'container'];
 const COLOR_ROLES = ['primary', 'secondary', 'text', 'accent', 'background', 'custom', ''];
@@ -1056,6 +1077,66 @@ const defaultChecklist = {
   ],
 };
 
+function createDefaultProject(name = 'My Project') {
+  return { name, sections: [], checks: {}, colors: [], savedFontPairs: [], cssSnippets: [], notes: '' };
+}
+
+function createDefaultState() {
+  return { currentProject: 'default', projects: { default: createDefaultProject() } };
+}
+
+function getProjectStats(project) {
+  const p = normalizeProject(project || createDefaultProject());
+  let totalChecks = 0;
+  Object.values(p.checks || {}).forEach(items => { totalChecks += items.length; });
+  return {
+    sections: p.sections.length,
+    checks: totalChecks,
+    colors: p.colors.length,
+    fontPairs: p.savedFontPairs.length,
+    snippets: p.cssSnippets.length,
+    notes: p.notes ? p.notes.length : 0
+  };
+}
+
+function hasProjectActivity(project) {
+  const stats = getProjectStats(project);
+  return stats.sections || stats.colors || stats.fontPairs || stats.snippets || stats.notes;
+}
+
+function buildImportSummary(project) {
+  const stats = getProjectStats(project);
+  return 'Import "' + normalizeProject(project).name + '"?\n\nSections: ' + stats.sections + '\nChecklist items: ' + stats.checks + '\nColors: ' + stats.colors + '\nFont pairs: ' + stats.fontPairs + '\nCSS snippets: ' + stats.snippets + '\nNotes: ' + stats.notes + ' characters';
+}
+
+function parseSavedState(raw) {
+  if (!raw) return null;
+  const parsed = JSON.parse(raw);
+  return parsed && typeof parsed === 'object' ? parsed : null;
+}
+
+function normalizeState(rawState) {
+  const safe = rawState && typeof rawState === 'object' ? rawState : createDefaultState();
+  const normalized = { currentProject: cleanId(safe.currentProject, '') || 'default', projects: {} };
+  const projects = safe.projects && typeof safe.projects === 'object' ? safe.projects : {};
+  Object.keys(projects).slice(0, 80).forEach(id => {
+    const safeId = cleanId(id, 'proj_');
+    normalized.projects[safeId] = normalizeProject(projects[id]);
+    if (normalized.currentProject === id) normalized.currentProject = safeId;
+  });
+  if (!Object.keys(normalized.projects).length && safe.project) {
+    normalized.projects.default = normalizeProject(safe.project);
+    normalized.currentProject = 'default';
+  }
+  if (!Object.keys(normalized.projects).length) {
+    normalized.projects.default = createDefaultProject();
+  }
+  if (!normalized.projects[normalized.currentProject]) {
+    normalized.currentProject = Object.keys(normalized.projects)[0] || 'default';
+  }
+  return normalized;
+}
+
 // ===== INIT =====
 function init() {
   // Load saved theme
@@ -1076,39 +1157,61 @@ function init() {
   renderSnippets();
   loadNotes();
   updateBadges();
+  renderOnboarding();
+}
+
+// ===== ONBOARDING =====
+function renderOnboarding() {
+  const card = document.getElementById('onboarding-card');
+  if (!card) return;
+  const done = localStorage.getItem(ONBOARDING_KEY) === '1';
+  card.classList.toggle('show', !done && !hasProjectActivity(proj()));
+}
+
+function dismissOnboarding() {
+  localStorage.setItem(ONBOARDING_KEY, '1');
+  renderOnboarding();
+  toast('Welcome card hidden.');
+}
+
+function startGuidedSetup() {
+  openAddSection();
+  localStorage.setItem(ONBOARDING_KEY, '1');
+  renderOnboarding();
+  toast('Add your first page section.');
 }
 
 // ===== PERSISTENCE =====
 function loadState() {
+  let recovered = false;
   try {
-    const saved = localStorage.getItem('itspc_state');
-    if (saved) {
-      state = JSON.parse(saved);
+    state = normalizeState(parseSavedState(localStorage.getItem(STORAGE_KEY)) || state);
+  } catch(e) {
+    console.warn('Failed to load state', e);
+    try {
+      state = normalizeState(parseSavedState(localStorage.getItem(BACKUP_KEY)) || createDefaultState());
+      recovered = true;
+    } catch(backupErr) {
+      console.warn('Failed to load backup state', backupErr);
+      state = createDefaultState();
     }
-  } catch(e) { console.warn('Failed to load state', e); }
-  // Ensure project structure
-  if (!state.projects) state.projects = {};
-  Object.keys(state.projects).forEach(id => {
-    const safeId = cleanId(id, 'proj_');
-    const normalized = normalizeProject(state.projects[id]);
-    if (safeId !== id) {
-      delete state.projects[id];
-    }
-    state.projects[safeId] = normalized;
-    if (state.currentProject === id) {
-      state.currentProject = safeId;
-    }
-  });
-  if (!state.currentProject) state.currentProject = 'default';
-  if (!state.projects[state.currentProject]) {
-    state.projects[state.currentProject] = { name: 'My Project', sections: [], checks: {}, colors: [], savedFontPairs: [], cssSnippets: [], notes: '' };
   }
   document.getElementById('project-name-display').textContent = proj().name;
+  if (recovered) {
+    saveState({ skipBackup: true });
+    setTimeout(() => toast('Recovered from local backup.'), 300);
+  }
 }
 
-function saveState() {
+function saveState(options = {}) {
   try {
-    localStorage.setItem('itspc_state', JSON.stringify(state));
+    const current = localStorage.getItem(STORAGE_KEY);
+    if (current && !options.skipBackup) {
+      localStorage.setItem(BACKUP_KEY, current);
+    }
+    state = normalizeState(state);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem('itspc_last_saved', new Date().toISOString());
   } catch(e) { console.warn('Failed to save state', e); }
 }
 
@@ -1210,6 +1313,7 @@ function addQuickSections() {
   renderSections();
   saveState();
   updateBadges();
+  renderOnboarding();
   toast('9 sections added!');
 }
 
@@ -1258,7 +1362,7 @@ function renderSections() {
   const list = document.getElementById('section-list');
   const secs = proj().sections;
   if (!secs.length) {
-    list.innerHTML = '<div class="empty"><i class="ti ti-layout-rows"></i><p>No sections yet. Add your first section.</p></div>';
+    list.innerHTML = '<div class="empty"><i class="ti ti-layout-rows"></i><h3>Start with your page outline</h3><p class="mini">Add sections manually or scaffold a complete landing page structure.</p><div class="empty-actions"><button class="btn btn-accent btn-sm" onclick="openAddSection()"><i class="ti ti-plus"></i> Add Section</button><button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Quick Template</button></div></div>'; 
     return;
   }
   list.innerHTML = secs.map((s, i) => `
@@ -1427,7 +1531,7 @@ function renderColors() {
   const container = document.getElementById('palette-container');
   const colors = proj().colors || [];
   if (!colors.length) {
-    container.innerHTML = '<div class="card"><div class="empty"><i class="ti ti-palette"></i><p>No colors saved yet. Add your brand colors below.</p></div></div>';
+    container.innerHTML = '<div class="card"><div class="empty"><i class="ti ti-palette"></i><h3>Build your project palette</h3><p class="mini">Save brand colors with roles so handoff notes and CSS stay consistent.</p></div></div>'; 
     return;
   }
   // Group colors
@@ -1692,7 +1796,7 @@ function renderSnippets() {
   const list = document.getElementById('snippets-list');
   const snippets = proj().cssSnippets || [];
   if (!snippets.length) {
-    list.innerHTML = '<div style="font-size:12px;color:var(--text3)">No saved snippets yet.</div>';
+    list.innerHTML = '<div class="empty" style="padding:18px 10px"><i class="ti ti-code"></i><h3>No saved snippets yet</h3><p class="mini">Generate CSS, then save useful snippets for reuse.</p><div class="empty-actions"><button class="btn btn-sm" onclick="generateCSS()"><i class="ti ti-refresh"></i> Generate CSS</button></div></div>'; 
     return;
   }
   list.innerHTML = snippets.map(s => `
@@ -1833,7 +1937,7 @@ function buildExport() {
     out += p.notes.split('\n').map(l => '  ' + l).join('\n') + '\n';
   }
 
-  out += `\n\n  End of Export  Sekkei v1.0\n`;
+  out += `\n\n  End of Export  Sekkei v1.1\n`;
   document.getElementById('export-preview').textContent = out;
 }
 
@@ -1853,7 +1957,7 @@ function downloadExport() {
 }
 
 function exportJSON() {
-  const data = { version: '1.0', project: proj(), exportDate: new Date().toISOString() };
+  const data = { version: '1.1', project: normalizeProject(proj()), exportDate: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1874,15 +1978,22 @@ function importJSON(e) {
   reader.onload = function(ev) {
     try {
       const data = JSON.parse(ev.target.result);
-      if (data && data.project && typeof data.project === 'object') {
-        const id = 'imported_' + Date.now();
-        state.projects[id] = normalizeProject(data.project);
-        state.currentProject = id;
-        saveState();
-        location.reload();
-      } else {
+      const projectData = data && data.project && typeof data.project === 'object' ? data.project : null;
+      if (!projectData) {
         toast('Invalid Sekkei JSON file!');
+        return;
       }
+      const project = normalizeProject(projectData);
+      if (!confirm(buildImportSummary(project))) {
+        return;
+      }
+      const id = 'imported_' + Date.now();
+      state.projects[id] = project;
+      state.currentProject = id;
+      saveState();
+      init();
+      showPanel('planner');
+      toast('Project imported safely.');
     } catch(err) {
       toast('Invalid JSON file!');
     } finally {
@@ -1890,6 +2001,23 @@ function importJSON(e) {
     }
   };
   reader.readAsText(file);
+}
+
+function restoreBackup() {
+  const backup = localStorage.getItem(BACKUP_KEY);
+  if (!backup) {
+    toast('No local backup found.');
+    return;
+  }
+  if (!confirm('Restore the last local backup? Current unsaved changes may be replaced.')) return;
+  try {
+    state = normalizeState(parseSavedState(backup));
+    saveState({ skipBackup: true });
+    init();
+    toast('Backup restored.');
+  } catch(err) {
+    toast('Backup could not be restored.');
+  }
 }
 
 // ===== PROJECTS =====
