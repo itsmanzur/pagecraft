@@ -231,7 +231,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 }
 
 /* ===== TOPBAR ===== */
-.logo{font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--text)}
+.logo{font-family:var(--font-head);font-size:18px;font-weight:700;letter-spacing:-0.5px;color:var(--text)}
 .logo span{color:var(--accent)}
 .project-select{margin-left:auto;display:flex;align-items:center;gap:8px}
 .project-pill{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-md);padding:5px 12px;font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
@@ -404,6 +404,17 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .onboarding-step i{color:var(--accent);font-size:18px;margin-bottom:6px;display:block}.onboarding-step strong{font-size:12px;display:block}.onboarding-step span{font-size:11px;color:var(--text3);display:block;margin-top:2px}
 .empty h3{font-size:14px;color:var(--text);font-family:var(--font-head);font-weight:600;margin:6px 0 4px}.empty .empty-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}.empty .mini{font-size:12px;color:var(--text3);max-width:360px;margin:4px auto 0}.recovery-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.data-note{font-size:11px;color:var(--text3);line-height:1.55;margin-top:8px}
 @media (max-width:650px){.onboarding-steps{grid-template-columns:1fr}.onboarding-head{flex-direction:column}.onboarding-actions .btn{width:100%;justify-content:center}}
+
+/* ===== V1.1 RELEASE POLISH ===== */
+.starter-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 12px}
+.starter-card{border:1px solid var(--border);background:var(--bg3);border-radius:var(--r-md);padding:10px;cursor:pointer;transition:all .15s;text-align:left;color:var(--text2)}
+.starter-card:hover{border-color:var(--accent-border);color:var(--accent)}
+.starter-card i{display:block;font-size:18px;margin-bottom:6px;color:var(--accent)}
+.starter-card strong{display:block;font-size:12px;color:var(--text);margin-bottom:2px}.starter-card span{font-size:11px;color:var(--text3);line-height:1.45}
+.qa-points{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:520px;margin:16px auto 20px;text-align:left}
+.qa-point{border:1px solid var(--border);background:var(--bg3);border-radius:var(--r-md);padding:9px;font-size:12px;color:var(--text2)}.qa-point i{color:var(--accent);margin-right:6px}
+.data-health{border:1px solid var(--border);background:var(--bg3);border-radius:var(--r-md);padding:10px;margin-top:10px;color:var(--text2);font-size:12px;line-height:1.55}.data-health strong{color:var(--text)}.data-health .ok{color:var(--teal)}.data-health .warn{color:var(--amber)}
+@media (max-width:650px){.starter-grid,.qa-points{grid-template-columns:1fr}}
 
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar{width:4px;height:4px}
@@ -829,6 +840,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
           <button class="btn btn-sm" onclick="restoreBackup()"><i class="ti ti-restore"></i> Restore Backup</button>
         </div>
         <div style="font-size:11px;color:var(--text3)">JSON export includes the current project data. Sekkei also keeps one local recovery backup before every save.</div>
+        <div class="data-health" id="data-health-status">Checking local data health...</div>
       </div>
     </div>
 
@@ -909,6 +921,7 @@ let state = {
 let nextId = Date.now();
 let elementorSyncTimer = null;
 let lastElementorSignature = '';
+const APP_BOOT_TIME = Date.now();
 const STORAGE_KEY = 'itspc_state';
 const BACKUP_KEY = 'itspc_state_backup';
 const ONBOARDING_KEY = 'itspc_onboarding_done_v11';
@@ -1104,9 +1117,26 @@ function hasProjectActivity(project) {
   return stats.sections || stats.colors || stats.fontPairs || stats.snippets || stats.notes;
 }
 
-function buildImportSummary(project) {
+function analyzeImportProject(rawProject, normalizedProject, version) {
+  const raw = rawProject && typeof rawProject === 'object' ? rawProject : {};
+  const normalized = normalizeProject(normalizedProject || raw);
+  const allowed = ['name', 'sections', 'checks', 'colors', 'savedFontPairs', 'cssSnippets', 'notes'];
+  const unsupported = Object.keys(raw).filter(key => !allowed.includes(key));
+  const rawCounts = {
+    sections: Array.isArray(raw.sections) ? raw.sections.length : 0,
+    colors: Array.isArray(raw.colors) ? raw.colors.length : 0,
+    fontPairs: Array.isArray(raw.savedFontPairs) ? raw.savedFontPairs.length : 0,
+    snippets: Array.isArray(raw.cssSnippets) ? raw.cssSnippets.length : 0
+  };
+  const cleanCounts = getProjectStats(normalized);
+  const sanitized = Math.max(0, rawCounts.sections - cleanCounts.sections) + Math.max(0, rawCounts.colors - cleanCounts.colors) + Math.max(0, rawCounts.fontPairs - cleanCounts.fontPairs) + Math.max(0, rawCounts.snippets - cleanCounts.snippets);
+  return { version: cleanText(version || 'unknown', 20), unsupported, rawCounts, cleanCounts, sanitized };
+}
+
+function buildImportSummary(project, report = {}) {
   const stats = getProjectStats(project);
-  return 'Import "' + normalizeProject(project).name + '"?\n\nSections: ' + stats.sections + '\nChecklist items: ' + stats.checks + '\nColors: ' + stats.colors + '\nFont pairs: ' + stats.fontPairs + '\nCSS snippets: ' + stats.snippets + '\nNotes: ' + stats.notes + ' characters';
+  const unsupported = Array.isArray(report.unsupported) && report.unsupported.length ? report.unsupported.join(', ') : 'None';
+  return 'Import "' + normalizeProject(project).name + '"?\n\nSchema version: ' + (report.version || 'unknown') + '\nSections: ' + stats.sections + '\nChecklist items: ' + stats.checks + '\nColors: ' + stats.colors + '\nFont pairs: ' + stats.fontPairs + '\nCSS snippets: ' + stats.snippets + '\nNotes: ' + stats.notes + ' characters\nSanitized/dropped items: ' + (report.sanitized || 0) + '\nUnsupported fields: ' + unsupported;
 }
 
 function parseSavedState(raw) {
@@ -1158,6 +1188,7 @@ function init() {
   loadNotes();
   updateBadges();
   renderOnboarding();
+  updateDataHealthStatus();
 }
 
 // ===== ONBOARDING =====
@@ -1179,6 +1210,21 @@ function startGuidedSetup() {
   localStorage.setItem(ONBOARDING_KEY, '1');
   renderOnboarding();
   toast('Add your first page section.');
+}
+
+function updateDataHealthStatus() {
+  const el = document.getElementById('data-health-status');
+  if (!el) return;
+  const lastSaved = localStorage.getItem('itspc_last_saved');
+  const hasBackup = !!localStorage.getItem(BACKUP_KEY);
+  const loadMs = Date.now() - APP_BOOT_TIME;
+  const projectCount = state && state.projects ? Object.keys(state.projects).length : 0;
+  const savedLabel = lastSaved ? new Date(lastSaved).toLocaleString() : 'Not saved yet';
+  el.innerHTML = '<strong>Local data health</strong><br>' +
+    '<span class="' + (hasBackup ? 'ok' : 'warn') + '">' + (hasBackup ? 'Recovery backup available' : 'No recovery backup yet') + '</span><br>' +
+    'Last saved: ' + esc(savedLabel) + '<br>' +
+    'Projects: ' + projectCount + '<br>' +
+    'Panel boot check: ' + loadMs + 'ms in this session. Target warm open: under 500ms after assets are cached. No frontend assets are loaded.';
 }
 
 // ===== PERSISTENCE =====
@@ -1212,6 +1258,7 @@ function saveState(options = {}) {
     state = normalizeState(state);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     localStorage.setItem('itspc_last_saved', new Date().toISOString());
+    updateDataHealthStatus();
   } catch(e) { console.warn('Failed to save state', e); }
 }
 
@@ -1239,7 +1286,10 @@ function showPanel(id) {
   const btnNav = document.getElementById('btn-nav-' + id);
   if (btnNav) btnNav.classList.add('active');
   
-  if (id === 'export') buildExport();
+  if (id === 'export') {
+    buildExport();
+    updateDataHealthStatus();
+  }
 }
 
 function toggleTheme() {
@@ -1984,7 +2034,8 @@ function importJSON(e) {
         return;
       }
       const project = normalizeProject(projectData);
-      if (!confirm(buildImportSummary(project))) {
+      const report = analyzeImportProject(projectData, project, data.version);
+      if (!confirm(buildImportSummary(project, report))) {
         return;
       }
       const id = 'imported_' + Date.now();
@@ -1993,7 +2044,7 @@ function importJSON(e) {
       saveState();
       init();
       showPanel('planner');
-      toast('Project imported safely.');
+      toast('Project imported safely. Review the summary in Export.');
     } catch(err) {
       toast('Invalid JSON file!');
     } finally {

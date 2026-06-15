@@ -1,0 +1,1106 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sekkei — Market Leadership Roadmap 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --lime:    #C8FF00;
+  --lime-dk: #8fb300;
+  --dark:    #0E0D13;
+  --ink:     #111827;
+  --surface: #F4F4EF;
+  --card:    #ffffff;
+  --card2:   #f8f8f5;
+  --line:    #e2e2dc;
+  --muted:   #6b7280;
+  --light:   #F4F4EF;
+  --text:    #111827;
+  --dim:     #374151;
+
+  --critical: #dc2626;
+  --warn:     #d97706;
+  --ok:       #16a34a;
+  --blue:     #2563eb;
+
+  --r: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,.07);
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface);
+  color: var(--text);
+  font: 15px/1.65 var(--font);
+}
+
+a { color: var(--lime); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── HEADER ── */
+header {
+  background: var(--dark);
+  border-bottom: 1px solid var(--line);
+  padding: 40px 24px 32px;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(200,255,0,.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.wrap { max-width: 1180px; margin: auto; }
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.wordmark {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -.5px;
+  color: var(--text);
+  line-height: 1;
+}
+.wordmark em { color: var(--lime); font-style: normal; }
+.wordmark small {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 3px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -.5px;
+  margin-bottom: 10px;
+}
+h1 span { color: var(--lime); }
+
+.sub {
+  color: var(--dim);
+  max-width: 780px;
+  font-size: 15px;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.pill {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--card);
+}
+.pill.lime {
+  border-color: rgba(200,255,0,.5);
+  color: var(--lime);
+  background: rgba(200,255,0,.1);
+}
+
+.print-btn {
+  background: var(--lime);
+  color: var(--dark);
+  border: 0;
+  border-radius: 6px;
+  padding: 9px 16px;
+  font: 600 13px var(--font);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity .15s;
+}
+.print-btn:hover { opacity: .85; }
+
+/* ── MAIN ── */
+main { padding: 32px 24px 72px; }
+
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 44px 0 16px;
+  color: var(--ink);
+  letter-spacing: -.3px;
+}
+h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 20px;
+  background: #8fb300;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+h3 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+p { margin-bottom: 10px; color: var(--dim); font-size: 14px; }
+
+/* ── GRID ── */
+.grid { display: grid; gap: 14px; }
+.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card.lime-glow { border-color: rgba(200,255,0,.25); }
+
+/* ── KPI cards ── */
+.kpi-num {
+  font-size: 40px;
+  font-weight: 800;
+  color: #5a7a00;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+.kpi-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.kpi-desc { font-size: 13px; color: var(--dim); }
+
+/* ── PROGRESS BAR ── */
+.bar {
+  height: 6px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+.fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #8fb300, #b5d400);
+  border-radius: 999px;
+  transition: width .4s ease;
+}
+.phase-score { font-size: 12px; color: var(--muted); }
+
+/* ── NOTE BOX ── */
+.note {
+  border-left: 3px solid #8fb300;
+  background: #f5fbda;
+  padding: 16px 18px;
+  border-radius: 0 var(--r) var(--r) 0;
+  margin-bottom: 4px;
+}
+.note strong { color: #5a7a00; font-size: 14px; }
+.note p { margin: 6px 0 0; font-size: 14px; color: var(--dim); }
+
+/* ── ALERT BOX ── */
+.alert {
+  border: 1px solid rgba(220,38,38,.2);
+  background: #fef2f2;
+  border-radius: var(--r);
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #7f1d1d;
+  margin-bottom: 16px;
+}
+.alert strong { color: var(--critical); }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; border-radius: var(--r); margin-bottom: 4px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  font-size: 13px;
+}
+th, td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: #f0f0eb;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--muted);
+  font-weight: 600;
+}
+tr:last-child td { border-bottom: 0; }
+td { color: var(--dim); }
+td:first-child { color: var(--text); font-weight: 500; }
+
+/* ── PHASE CARDS ── */
+.phase {
+  display: flex;
+  flex-direction: column;
+}
+.phase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.phase-num {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #5a7a00;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* ── TAG ── */
+.tag {
+  font-size: 11px;
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.tag.critical { background: #fef2f2;       color: #b91c1c; border: 1px solid #fca5a5; }
+.tag.high     { background: #fff7ed;       color: #b45309; border: 1px solid #fcd34d; }
+.tag.normal   { background: #eff6ff;       color: #1d4ed8; border: 1px solid #93c5fd; }
+.tag.future   { background: #f9fafb;       color: var(--muted); border: 1px solid var(--line); }
+.tag.ok       { background: #f0fdf4;       color: #15803d; border: 1px solid #86efac; }
+
+/* ── TASK LIST ── */
+.task {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  cursor: pointer;
+  align-items: flex-start;
+}
+.task:first-of-type { border-top: 0; }
+.task input[type="checkbox"] {
+  accent-color: var(--lime);
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.task strong { display: block; font-size: 14px; color: var(--ink); font-weight: 600; }
+.task .task-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.task.done strong { text-decoration: line-through; color: var(--muted); }
+
+/* ── STRATEGY CARDS ── */
+.strategy-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px;
+}
+.strategy-card .s-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.strategy-card h3 { color: #5a7a00; margin-bottom: 8px; }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px; top: 8px; bottom: 8px;
+  width: 2px;
+  background: var(--line);
+}
+.tl-item {
+  position: relative;
+  padding: 0 0 24px 20px;
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -12px; top: 6px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--line);
+  border: 2px solid var(--surface);
+}
+.tl-item.active::before { background: #8fb300; box-shadow: 0 0 0 4px rgba(143,179,0,.15); }
+.tl-win { font-size: 11px; color: #5a7a00; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 4px; }
+.tl-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.tl-desc { font-size: 13px; color: var(--muted); }
+
+/* ── PRO TABLE ── */
+.pro-free { color: var(--muted); }
+.pro-paid { color: #5a7a00; font-weight: 500; }
+
+/* ── RISK SECTION ── */
+.risk-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 18px;
+}
+.risk-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  margin-bottom: 6px;
+}
+.risk-label.r-high   { color: #b91c1c; }
+.risk-label.r-med    { color: #b45309; }
+.risk-label.r-low    { color: #15803d; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--card);
+}
+footer span { color: #5a7a00; }
+
+/* ── PRINT ── */
+@media print {
+  body { background: #fff; color: #111; font-size: 13px; }
+  header { background: #111; }
+  .print-btn { display: none; }
+  .card, .strategy-card, .risk-card { box-shadow: none; border: 1px solid #ddd; background: #fafafa; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .cols-2, .cols-3, .cols-4 { grid-template-columns: 1fr; }
+  h1 { font-size: 26px; }
+  .header-top { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+<div class="wrap">
+  <div class="header-top">
+    <div class="wordmark">
+      Sek<em>kei</em>
+      <small>設計 · Workflow Toolkit for Elementor</small>
+    </div>
+    <button class="print-btn" onclick="window.print()">⬇ Print / PDF</button>
+  </div>
+
+  <h1>Market Leadership <span>Roadmap</span></h1>
+  <p class="sub">
+    লক্ষ্য: Sekkei-কে আরেকটা widget pack না বানিয়ে — Elementor freelancer ও agency-দের জন্য একমাত্র
+    lightweight <strong style="color:var(--ink)">production workflow cockpit</strong> বানানো।
+    Updated: জুন ২০২৬।
+  </p>
+
+  <div class="meta">
+    <span class="pill lime">🎯 Positioning: Workflow OS for Elementor</span>
+    <span class="pill">Version: 1.1 → 2.0</span>
+    <span class="pill">Focus: Speed · Planning · QA · Handoff</span>
+    <span class="pill">Status: Live on WordPress.org ✅</span>
+  </div>
+</div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main>
+<div class="wrap">
+
+  <!-- KPI ROW -->
+  <div class="grid cols-4" style="margin-top: 8px;">
+    <div class="card lime-glow">
+      <div class="kpi-num" id="overall-score">0%</div>
+      <div class="kpi-label">Overall Progress</div>
+      <div class="bar"><div class="fill" id="overall-fill"></div></div>
+    </div>
+    <div class="card">
+      <div class="kpi-num">6</div>
+      <div class="kpi-label">Major Releases</div>
+      <div class="kpi-desc">v1.1 stability → v2.0 pro-ready ecosystem</div>
+    </div>
+    <div class="card">
+      <div class="kpi-num">8</div>
+      <div class="kpi-label">Core Modules</div>
+      <div class="kpi-desc">Section Planner to Export &amp; Handover</div>
+    </div>
+    <div class="card">
+      <div class="kpi-num">0</div>
+      <div class="kpi-label">Widget Count</div>
+      <div class="kpi-desc">No frontend bloat — workflow only. This is the moat.</div>
+    </div>
+  </div>
+
+  <!-- THESIS -->
+  <h2>Core Thesis</h2>
+  <div class="note">
+    <strong>Sekkei-র positioning statement —</strong>
+    <p>Essential Addons, ElementsKit, Royal, Happy Addons — এরা সবাই widget/template-এ compete করছে।
+    Sekkei সেখানে যাবে না। আমরা compete করবো <strong style="color:var(--ink)">planning, QA, CSS workflow, project handoff, আর client/agency operations</strong>-এ।
+    "Widget pack"-এর বাজার crowded আর dominated। "Workflow cockpit"-এর বাজার খালি।</p>
+  </div>
+
+  <!-- NEW: UNIQUE SELLING ANGLES -->
+  <h2>Sekkei-র ৩টি Winning Angle</h2>
+  <div class="grid cols-3">
+    <div class="strategy-card">
+      <div class="s-icon">🏗️</div>
+      <h3>No Frontend Bloat</h3>
+      <p>Zero widget, zero CSS inject on frontend। যে site-এ install করো, page speed unchanged।
+      এটা বড় plugins-এর সবচেয়ে বড় দুর্বলতা — আর Sekkei-র সবচেয়ে বড় strength।</p>
+    </div>
+    <div class="strategy-card">
+      <div class="s-icon">✅</div>
+      <h3>Pre-Publish Audit</h3>
+      <p>"Publish করার আগে Sekkei run করো" — এই একটা sentence দিয়ে পুরো product sell হয়।
+      এটা easy to explain, easy to demo, আর freelancer-দের real pain-point।</p>
+    </div>
+    <div class="strategy-card">
+      <div class="s-icon">📋</div>
+      <h3>Agency Workflow Memory</h3>
+      <p>Section planner, checklist, notes, export — একসাথে এটা একটা "project memory"।
+      Client handoff, revision log, SOP templates — agencies এর জন্য pay করবে।</p>
+    </div>
+  </div>
+
+  <!-- NEW: ADDED strategic risk alert -->
+  <div class="alert" style="margin-top: 20px;">
+    <strong>⚠ Strategic Risk to Watch:</strong> Elementor নিজেই AI-assisted planning features আনতে পারে।
+    Sekkei-কে এমন deep করতে হবে যেন Elementor-এর native tools দিয়ে replace না হয় — workflow memory, SOP, client handoff এই দিকে focus রাখতে হবে।
+  </div>
+
+  <!-- COMPETITOR TABLE -->
+  <h2>Competitor Landscape</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Competitor</th>
+          <th>Scale</th>
+          <th>তারা কী ভালো করে</th>
+          <th>Sekkei কোন gap own করবে</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Essential Addons</td>
+          <td>110+ elements, 2M+ installs</td>
+          <td>Widget library, WooCommerce, template cloud, element control</td>
+          <td>তারা elements build করে; Sekkei পুরো build plan, audit, আর handoff করবে</td>
+        </tr>
+        <tr>
+          <td>ElementsKit</td>
+          <td>110+ elements, 1M+ installs</td>
+          <td>Header/footer, mega menu, custom widget builder, cross-domain copy</td>
+          <td>তারা broad আর heavy; Sekkei fast আর workflow-specific থাকবে</td>
+        </tr>
+        <tr>
+          <td>Happy Addons</td>
+          <td>143+ widgets, 500+ blocks</td>
+          <td>Theme builder, templates, display conditions</td>
+          <td>Production process own করো: checklist, notes, section planner, export, client sign-off</td>
+        </tr>
+        <tr>
+          <td>Royal Addons</td>
+          <td>100+ addons, 600k+ installs</td>
+          <td>Broad builder ecosystem, WooCommerce coverage</td>
+          <td>Builder bloat avoid করো; যে কোনো addon stack-এর পাশে কাজ করার companion হও</td>
+        </tr>
+        <tr>
+          <td>Premium Addons</td>
+          <td>700k+ installs</td>
+          <td>Strong widget collection, multilingual</td>
+          <td>Agency QA, scope tracking, reusable project systems-এ differentiate করো</td>
+        </tr>
+        <tr>
+          <td>YellowPencil / Visual CSS</td>
+          <td>40k+ installs</td>
+          <td>Frontend visual CSS editing</td>
+          <td>Safer CSS generation, selector hints, audit, Elementor-specific snippets</td>
+        </tr>
+        <tr>
+          <td>Elementor Pro</td>
+          <td>Core builder, dominant</td>
+          <td>Native editing, Theme Builder, AI direction</td>
+          <td>Complement করো, compete করো না — planning, QA, handoff, documentation</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ROADMAP PHASES -->
+  <h2>Roadmap Tracker</h2>
+  <div class="grid cols-2">
+
+    <!-- Phase 1 -->
+    <section class="card phase" data-phase="1">
+      <div class="phase-num">Phase 1 · v1.1</div>
+      <div class="phase-header">
+        <h3>Trust, Polish &amp; Retention</h3>
+        <span class="tag critical">Must Win</span>
+      </div>
+      <div class="phase-score small">0% complete</div>
+      <div class="bar"><div class="fill"></div></div>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>First-run onboarding</strong>
+        <span class="task-desc">3-step guided tour: panel খোলো → section যোগ করো → audit run করো → export।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Empty states rewrite</strong>
+        <span class="task-desc">প্রতিটি tab-এ clear next action দেখাও, blank UI না।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Performance budget</strong>
+        <span class="task-desc">Panel warm load under 500ms; frontend-এ কোনো asset load নেই।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Crash-safe localStorage</strong>
+        <span class="task-desc">Auto-backup, corrupt data recovery, import validation report।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>WP.org growth pack</strong>
+        <span class="task-desc">Better screenshots, FAQ polish, 1টি short demo video, support snippet templates।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Screenshot-8 (Project Notes)</strong>
+        <span class="task-desc">Missing screenshot capture করো → branded canvas-এ frame করো → SVN commit।</span>
+      </span></label>
+    </section>
+
+    <!-- Phase 2 -->
+    <section class="card phase" data-phase="2">
+      <div class="phase-num">Phase 2 · v1.2</div>
+      <div class="phase-header">
+        <h3>Smarter Section Planner</h3>
+        <span class="tag critical">Core Moat</span>
+      </div>
+      <div class="phase-score small">0% complete</div>
+      <div class="bar"><div class="fill"></div></div>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Two-way Elementor sync</strong>
+        <span class="task-desc">Sekkei-তে rename/reorder করলে Elementor containers-এ reflect করে।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Section health badges</strong>
+        <span class="task-desc">Missing title, duplicate class, empty container, no CTA warning।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Page outline export</strong>
+        <span class="task-desc">Client approval-এর জন্য sitemap-like section outline export।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Reusable section presets</strong>
+        <span class="task-desc">Hero, feature, pricing, FAQ, testimonial, footer — planning patterns।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Section dependencies</strong>
+        <span class="task-desc">Mark as "waiting for copy / image / client approval / development"।</span>
+      </span></label>
+    </section>
+
+    <!-- Phase 3 -->
+    <section class="card phase" data-phase="3">
+      <div class="phase-num">Phase 3 · v1.3</div>
+      <div class="phase-header">
+        <h3>Design System Cockpit</h3>
+        <span class="tag high">Differentiator</span>
+      </div>
+      <div class="phase-score small">0% complete</div>
+      <div class="bar"><div class="fill"></div></div>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Global design tokens</strong>
+        <span class="task-desc">Color roles, typography scale, spacing, radius, shadow tokens।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Contrast checker</strong>
+        <span class="task-desc">WCAG-style foreground/background contrast hints for saved palette।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Font pairing upgrade</strong>
+        <span class="task-desc">Bengali/Arabic/Latin presets, line-height + weight recommendations।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>CSS snippet library</strong>
+        <span class="task-desc">Project-এ snippets save করো by selector, device, risk level।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Elementor selector helper</strong>
+        <span class="task-desc">Selected section/container থেকে safe class names suggest করো।</span>
+      </span></label>
+    </section>
+
+    <!-- Phase 4 -->
+    <section class="card phase" data-phase="4">
+      <div class="phase-num">Phase 4 · v1.4</div>
+      <div class="phase-header">
+        <h3>Audit &amp; Pre-Publish QA</h3>
+        <span class="tag critical">Main Marketing Hook</span>
+      </div>
+      <div class="phase-score small">0% complete</div>
+      <div class="bar"><div class="fill"></div></div>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Deep page audit</strong>
+        <span class="task-desc">Placeholder copy, empty links, missing alt, heading order, oversized images।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Responsive QA checklist</strong>
+        <span class="task-desc">Desktop/tablet/mobile per-section pass/fail notes।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Accessibility hints</strong>
+        <span class="task-desc">Button labels, link text, heading sequence, contrast warnings।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>SEO handoff checklist</strong>
+        <span class="task-desc">Title, meta, H1, image alt, internal links, schema notes।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Audit report export</strong>
+        <span class="task-desc">Client-friendly HTML/TXT pass/fail summary report।</span>
+      </span></label>
+    </section>
+
+    <!-- Phase 5 -->
+    <section class="card phase" data-phase="5">
+      <div class="phase-num">Phase 5 · v1.5</div>
+      <div class="phase-header">
+        <h3>Agency Collaboration</h3>
+        <span class="tag high">Retention</span>
+      </div>
+      <div class="phase-score small">0% complete</div>
+      <div class="bar"><div class="fill"></div></div>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Project status board</strong>
+        <span class="task-desc">Draft → Design → Review → Revision → Approved → Published।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Client feedback mode</strong>
+        <span class="task-desc">WordPress admin expose না করে exportable comment list।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Revision log</strong>
+        <span class="task-desc">Date, author, change summary, client request, final status।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Templateable SOPs</strong>
+        <span class="task-desc">Landing page, Woo page, blog template-এর জন্য reusable checklist।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Multi-project dashboard</strong>
+        <span class="task-desc">Project list with progress, blockers, last updated, export/import।</span>
+      </span></label>
+    </section>
+
+    <!-- Phase 6 -->
+    <section class="card phase" data-phase="6">
+      <div class="phase-num">Phase 6 · v2.0</div>
+      <div class="phase-header">
+        <h3>Ecosystem &amp; Monetization Ready</h3>
+        <span class="tag future">Future</span>
+      </div>
+      <div class="phase-score small">0% complete</div>
+      <div class="bar"><div class="fill"></div></div>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Optional cloud sync</strong>
+        <span class="task-desc">Free local mode রাখো; opt-in account sync পরে add করো।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Team workspace</strong>
+        <span class="task-desc">Roles: owner, designer, developer, client reviewer।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>AI assist layer</strong>
+        <span class="task-desc">Section plan, checklist, CSS, audit explanation generate করো। Optional রাখো।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Template marketplace</strong>
+        <span class="task-desc">Design templates না, workflow templates sell করো।</span>
+      </span></label>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Freemium boundary finalize</strong>
+        <span class="task-desc">Free: core workflow। Pro: team, cloud, white-label, advanced audits।</span>
+      </span></label>
+    </section>
+
+  </div><!-- /grid -->
+
+  <!-- FEATURE UPGRADE TABLE -->
+  <h2>Current Feature Upgrade Plan</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Module</th><th>কী upgrade করতে হবে</th><th>কেন দরকার</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Section Planner</td>
+          <td>Health badges, statuses, templates, Elementor element mapping</td>
+          <td>Flagship feature হবে — widget pack থেকে সবচেয়ে বড় differentiator</td>
+        </tr>
+        <tr>
+          <td>Design Checklist</td>
+          <td>Checklist templates, pass/fail notes, reusable SOPs, project-wise progress</td>
+          <td>Agencies repeatable process ভালোবাসে — retention বাড়ে</td>
+        </tr>
+        <tr>
+          <td>Color Palette</td>
+          <td>Contrast checks, color roles, export CSS variables, Elementor global color mapping</td>
+          <td>Simple palette থেকে design-system value-তে উন্নীত হবে</td>
+        </tr>
+        <tr>
+          <td>Font Pairing</td>
+          <td>Better multilingual presets, Bengali support, hierarchy preview, CSS variable output</td>
+          <td>Bangla/agency niche-এ strong — generic font list থেকে আলাদা</td>
+        </tr>
+        <tr>
+          <td>CSS Generator</td>
+          <td>Selector helper, risk warning, responsive snippets, saved library</td>
+          <td>Safer custom CSS Elementor user-দের real pain-killer</td>
+        </tr>
+        <tr>
+          <td>Project Notes</td>
+          <td>Revision log, client feedback buckets, blockers, approval status</td>
+          <td>"Tool" থেকে "project memory"-তে পরিণত হবে</td>
+        </tr>
+        <tr>
+          <td>Pre-Publish Audit</td>
+          <td>Real DOM scan, accessibility/SEO/responsive checks, exportable report</td>
+          <td>Main marketing hook — এটাই primary CTA হবে</td>
+        </tr>
+        <tr>
+          <td>Export &amp; Handover</td>
+          <td>HTML/PDF client report, JSON backup with schema version, import preview</td>
+          <td>Agency workflow support করে; data-loss fear দূর করে</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 90-DAY EXECUTION -->
+  <h2>90-Day Execution Plan</h2>
+  <div class="timeline">
+    <div class="tl-item active">
+      <div class="tl-win">✅ এখনই (Days 1–15)</div>
+      <div class="tl-title">Onboarding + WP.org Polish</div>
+      <div class="tl-desc">Screenshot-8, onboarding tour, empty states, 1টি demo video, better FAQ। <br>
+      <strong style="color:#5a7a00">Success:</strong> প্রথম 5টি genuine review পাওয়া।</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-win">⚡ Days 16–30</div>
+      <div class="tl-title">Section Health + Import Recovery</div>
+      <div class="tl-desc">Section health badges, reusable presets, localStorage crash recovery।<br>
+      <strong style="color:#5a7a00">Success:</strong> Users একটি sentence-এ Sekkei explain করতে পারে।</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-win">🚀 Days 31–60</div>
+      <div class="tl-title">Deep Audit v1 + Report Export</div>
+      <div class="tl-desc">DOM scan, responsive QA, accessibility hints, HTML report।<br>
+      <strong style="color:#5a7a00">Success:</strong> "Publish করার আগে Sekkei audit চালাও" — primary CTA হয়।</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-win">🎯 Days 61–90</div>
+      <div class="tl-title">Design Tokens + Client Handoff</div>
+      <div class="tl-desc">Contrast checker, CSS token export, white-label client report।<br>
+      <strong style="color:#5a7a00">Success:</strong> Freelancers multiple projects-এ use করছে।</div>
+    </div>
+  </div>
+
+  <!-- NEW: USER FIRST SECTION -->
+  <h2>User-First Priority Framework</h2>
+  <div class="grid cols-3">
+    <div class="card">
+      <div class="tag ok" style="margin-bottom: 12px;">Level 1 · Must Have</div>
+      <h3 style="color:#15803d; margin-bottom:10px;">দ্রুত জিতিয়ে দাও</h3>
+      <p>First 30 seconds-এ user যেন "wow" feel করে। Onboarding, empty states, performance।
+      Plugin install করার পর যদি confused হয় — সে uninstall করবে। এটাই সবচেয়ে বড় risk।</p>
+    </div>
+    <div class="card">
+      <div class="tag high" style="margin-bottom: 12px;">Level 2 · Should Have</div>
+      <h3 style="color:#b45309; margin-bottom:10px;">Daily habit বানাও</h3>
+      <p>Section planner + checklist + audit — এই trio যদি daily use করে, তাহলে Sekkei তাদের
+      workflow-এর part হয়ে যাবে। Habit = retention = word of mouth।</p>
+    </div>
+    <div class="card">
+      <div class="tag normal" style="margin-bottom: 12px;">Level 3 · Nice to Have</div>
+      <h3 style="color:#1d4ed8; margin-bottom:10px;">Pro-তে upgrade করাও</h3>
+      <p>White-label report, SOP templates, revision log — এগুলো free-তে taste করাও,
+      Pro-তে full access দাও। "I need this for my agency" — এই sentence trigger করতে হবে।</p>
+    </div>
+  </div>
+
+  <!-- NEW: RISKS -->
+  <h2>Risk Register</h2>
+  <div class="grid cols-3">
+    <div class="risk-card">
+      <div class="risk-label r-high">🔴 High Risk</div>
+      <h3 style="margin-bottom: 6px;">Elementor native features</h3>
+      <p>Elementor নিজেই planning/AI features আনতে পারে। Counter: deeper workflow memory, SOP, client handoff-এ যাও — এগুলো Elementor করবে না।</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label r-med">🟡 Medium Risk</div>
+      <h3 style="margin-bottom: 6px;">localStorage dependency</h3>
+      <p>User অন্য browser বা device-এ যাওয়ার পর data হারায়। Pro-তে cloud sync দিলে solve হয়। Free-তে export/import সহজ করো।</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label r-med">🟡 Medium Risk</div>
+      <h3 style="margin-bottom: 6px;">Solo developer bottleneck</h3>
+      <p>Manzur একা build করছে। Gemini/Cursor দিয়ে vibe-coding ভালো, কিন্তু scope creep avoid করো। Phase 1 শেষ না হলে Phase 2 শুরু না।</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label r-low">🟢 Low Risk</div>
+      <h3 style="margin-bottom: 6px;">WP.org guidelines</h3>
+      <p>v1.0.0 approved হয়েছে — guidelines জানা আছে। Future updates-এ promotional wording, license system সব সতর্কভাবে করতে হবে।</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label r-low">🟢 Low Risk</div>
+      <h3 style="margin-bottom: 6px;">Elementor Pro dependency</h3>
+      <p>আমরা free hooks-ই use করছি। Elementor Pro ছাড়াও সব feature কাজ করে — এটা একটা positioning advantage।</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label r-med">🟡 Medium Risk</div>
+      <h3 style="margin-bottom: 6px;">Market awareness</h3>
+      <p>"Workflow OS for Elementor" concept নতুন — educate করতে হবে। Short videos, changelogs, build-in-public content দিয়ে awareness build করো।</p>
+    </div>
+  </div>
+
+  <!-- PRO STRATEGY -->
+  <h2>Pro Version Strategy</h2>
+  <div class="note">
+    <strong>Recommended structure:</strong>
+    <p>Sekkei free রাখো WordPress.org-এ। Sekkei Pro আলাদা add-on plugin হিসেবে নিজের site থেকে sell করো।
+    Free plugin useful থাকবে; Pro-তে agency-grade reporting, advanced audits, SOP templates, আর collaboration।</p>
+  </div>
+
+  <div class="table-wrap" style="margin-top: 14px;">
+    <table>
+      <thead>
+        <tr><th>Area</th><th>Free Sekkei</th><th>Sekkei Pro</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Section Planner</td><td class="pro-free">Manual sections, Elementor sync, basic presets</td><td class="pro-paid">Advanced health, dependencies, agency templates, bulk actions</td></tr>
+        <tr><td>Checklist</td><td class="pro-free">Built-in checklist + custom items</td><td class="pro-paid">SOP libraries, project templates, pass/fail evidence notes</td></tr>
+        <tr><td>Audit</td><td class="pro-free">Basic pre-publish scan</td><td class="pro-paid">Deep: accessibility, SEO, responsive, image weight, broken links</td></tr>
+        <tr><td>Export</td><td class="pro-free">TXT / JSON export</td><td class="pro-paid">White-label HTML/PDF client reports, agency branding, audit history</td></tr>
+        <tr><td>CSS</td><td class="pro-free">Basic generator + snippets</td><td class="pro-paid">Selector helper, responsive packs, risk scoring, reusable library</td></tr>
+        <tr><td>Projects</td><td class="pro-free">Local multi-project storage</td><td class="pro-paid">Status dashboard, blockers, revision log, approval workflow</td></tr>
+        <tr><td>Collaboration</td><td class="pro-free">Local notes</td><td class="pro-paid">Client feedback mode, team roles, shared review links</td></tr>
+        <tr><td>AI</td><td class="pro-free">—</td><td class="pro-paid">Optional assistant for section plans, checklists, CSS starters, audit explanations</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pro checklist -->
+  <div class="grid cols-2" style="margin-top: 16px;">
+    <section class="card phase" data-phase="pro">
+      <div class="phase-num">Sekkei Pro MVP</div>
+      <div class="phase-header">
+        <h3>Paid MVP Features</h3>
+        <span class="tag critical">Paid MVP</span>
+      </div>
+      <div class="phase-score small">0% complete</div>
+      <div class="bar"><div class="fill"></div></div>
+
+      <label class="task"><input type="checkbox"><span>
+        <strong>Separate Pro plugin</strong>
+        <span class="task-desc">sekkei-pro add-on with license/update system outside WordPress.org।</span>
+      </span></label>
+      <label class="task"><input type="checkbox"><span>
+        <strong>White-label report export</strong>
+        <span class="task-desc">HTML/PDF client report with agency logo + project summary।</span>
+      </span></label>
+      <label class="task"><input type="checkbox"><span>
+        <strong>Advanced audit checks</strong>
+        <span class="task-desc">Accessibility, SEO, responsive status, image weight, broken links।</span>
+      </span></label>
+      <label class="task"><input type="checkbox"><span>
+        <strong>Agency SOP templates</strong>
+        <span class="task-desc">Reusable checklist templates for landing pages, Woo, blog।</span>
+      </span></label>
+      <label class="task"><input type="checkbox"><span>
+        <strong>Client approval workflow</strong>
+        <span class="task-desc">Draft → Review → Revision → Approved → Published + revision log।</span>
+      </span></label>
+    </section>
+
+    <div class="grid" style="gap: 14px;">
+      <div class="card">
+        <h3 style="color:#5a7a00; margin-bottom:8px;">💡 Best First Pro Feature</h3>
+        <p>White-label client report export। Easy to understand, easy to demo, আর agencies এর জন্য সবার আগে pay করবে।</p>
+      </div>
+      <div class="card">
+        <h3 style="color:#5a7a00; margin-bottom:8px;">🎯 Best Sales Hook</h3>
+        <p>"Publish করার আগে Sekkei Pro চালাও আর client-কে clean report পাঠাও।" Widget bundle sell করার চেয়ে এটা অনেক clear।</p>
+      </div>
+      <div class="card">
+        <h3 style="color:#5a7a00; margin-bottom:8px;">💰 Pricing Start</h3>
+        <p>Free core → Pro Solo ~$39/year → Pro Agency ~$79/year → Founder Lifetime ~$99–$149।</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW: BUILD IN PUBLIC CHECKLIST -->
+  <h2>Growth &amp; Marketing Actions</h2>
+  <div class="grid cols-2">
+    <div class="strategy-card">
+      <div class="s-icon">📢</div>
+      <h3>Build in Public</h3>
+      <p>Weekly small updates release করো। Changelog clearly লেখো। Short videos: "before publishing, run Sekkei audit।" Twitter/X, Facebook groups, Reddit r/Wordpress-এ share করো।</p>
+    </div>
+    <div class="strategy-card">
+      <div class="s-icon">🇧🇩</div>
+      <h3>Bengali + Agency Niche First</h3>
+      <p>Bangla-friendly typography, local freelancer workflow, আর client handoff — এই niche-এ আগে memorable হও। Global-এ পরে যাও। Local community-তে trust build করা সহজ।</p>
+    </div>
+    <div class="strategy-card">
+      <div class="s-icon">💬</div>
+      <h3>Support Fast Response</h3>
+      <p>WP.org-এ প্রথম support thread-এ দ্রুত respond করো। Reviews-এর reply দাও। একটা 5-star review-এর জন্য great support প্রায়ই বড় feature-এর চেয়ে বেশি কাজ করে।</p>
+    </div>
+    <div class="strategy-card">
+      <div class="s-icon">🎬</div>
+      <h3>Demo Video Plan</h3>
+      <p>"Sekkei দিয়ে Elementor site publish করার আগে কী করবেন?" — একটা 3-minute screen record video। Landing page + WP.org উভয় জায়গায় embed করো।</p>
+    </div>
+    <div class="strategy-card">
+      <div class="s-icon">🔗</div>
+      <h3>Landing Page SEO</h3>
+      <p>sekkei-landing.html host করো। Rank Math দিয়ে title: "Sekkei — Elementor Workflow Toolkit | Free WordPress Plugin"। OG image = banner-1544x500.png।</p>
+    </div>
+    <div class="strategy-card">
+      <div class="s-icon">🤝</div>
+      <h3>Elementor Community</h3>
+      <p>Elementor Facebook groups, Discord-এ helpful হও — product সরাসরি promote না করে workflow tips share করো। Sekkei-র নাম naturally আসবে।</p>
+    </div>
+  </div>
+
+  <!-- SOURCES -->
+  <h2 style="margin-top: 44px;">Sources</h2>
+  <div class="card" style="font-size: 13px; color: var(--muted);">
+    <ul style="list-style: none; display: grid; gap: 8px;">
+      <li>📦 Essential Addons — <a href="https://wordpress.org/plugins/essential-addons-for-elementor-lite/">wordpress.org</a> · 110+ elements, 6,500+ templates, 2M+ active installs</li>
+      <li>📦 ElementsKit — <a href="https://wordpress.org/plugins/elementskit-lite/">wordpress.org</a> · 110+ elements, 1M+ active installs, cross-domain copy</li>
+      <li>📦 Happy Addons — <a href="https://wordpress.org/plugins/happy-elementor-addons/">wordpress.org</a> · 143+ widgets, 500+ blocks, 70+ templates</li>
+      <li>📦 Royal Addons — <a href="https://wordpress.org/plugins/royal-elementor-addons/">wordpress.org</a> · 100+ addons, 150+ template kits, 600k+ installs</li>
+      <li>📦 Premium Addons — <a href="https://wordpress.org/plugins/premium-addons-for-elementor/">wordpress.org</a> · 700k+ active installs</li>
+      <li>📦 Unlimited Elements — <a href="https://wordpress.org/plugins/unlimited-elements-for-elementor/">wordpress.org</a> · 300k+ installs</li>
+      <li>📦 The Plus Addons — <a href="https://wordpress.org/plugins/the-plus-addons-for-elementor-page-builder/">wordpress.org</a> · 100k+ installs</li>
+      <li>📦 YellowPencil — <a href="https://wordpress.org/plugins/yellow-pencil-visual-theme-customizer/">wordpress.org</a> · 40k+ installs, visual CSS editor</li>
+    </ul>
+  </div>
+
+</div><!-- /wrap -->
+</main>
+
+<footer>
+  <div class="wrap">
+    Sek<span>kei</span> · Market Roadmap 2026 · itsmanzur · Updated জুন ২০২৬
+  </div>
+</footer>
+
+<script>
+(function () {
+  var STORAGE_KEY = 'sekkei-roadmap-v2';
+  var boxes = Array.from(document.querySelectorAll('input[type="checkbox"]'));
+
+  // load saved state
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) {}
+  boxes.forEach(function (box, i) {
+    box.checked = !!saved[i];
+    updateTaskStyle(box);
+    box.addEventListener('change', function () { updateTaskStyle(box); update(); });
+  });
+
+  function updateTaskStyle(box) {
+    var task = box.closest('.task');
+    if (!task) return;
+    if (box.checked) task.classList.add('done');
+    else task.classList.remove('done');
+  }
+
+  function pct(done, total) { return total ? Math.round(done / total * 100) : 0; }
+
+  function update() {
+    var state = {};
+    boxes.forEach(function (b, i) { state[i] = b.checked; });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    var overall = pct(done, boxes.length);
+    document.getElementById('overall-score').textContent = overall + '%';
+    document.getElementById('overall-fill').style.width = overall + '%';
+
+    Array.from(document.querySelectorAll('.phase')).forEach(function (phase) {
+      var pb = Array.from(phase.querySelectorAll('input[type="checkbox"]'));
+      var pd = pb.filter(function (b) { return b.checked; }).length;
+      var p = pct(pd, pb.length);
+      var scoreEl = phase.querySelector('.phase-score');
+      var fillEl = phase.querySelector('.fill');
+      if (scoreEl) scoreEl.textContent = p + '% complete';
+      if (fillEl) fillEl.style.width = p + '%';
+    });
+  }
+
+  update();
+})();
+</script>
+</body>
+</html>

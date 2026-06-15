@@ -50,7 +50,7 @@
 
 .itspc-header-logo {
     font-size: 26px;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -1px;
     color: #FFFFFF;
 }
@@ -615,7 +615,7 @@
 
 .itspc-about-logo {
     font-size: 32px;
-    font-weight: 800;
+    font-weight: 700;
     color: #111827;
     letter-spacing: -1px;
 }
@@ -658,7 +658,7 @@
     background: #C8FF00;
     color: #0D0D0F;
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
