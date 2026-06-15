@@ -311,6 +311,28 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .section-note{font-size:12px;color:var(--text2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
 .section-css{font-size:10px;font-family:var(--font-mono);color:var(--accent);opacity:.6;margin-top:1px}
 .section-actions{display:flex;gap:3px;flex-shrink:0}
+.section-meta-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+/* Health badges */
+.health-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;letter-spacing:0.02em;white-space:nowrap}
+.health-warn{background:#FF6B0015;color:#FF6B00;border:1px solid #FF6B0030}
+.health-dup{background:#FF3B3B15;color:#FF4444;border:1px solid #FF444430}
+/* Status badges */
+.status-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;letter-spacing:0.02em;white-space:nowrap;flex-shrink:0}
+.status-ready{background:#00E5CC15;color:#00C4AE;border:1px solid #00E5CC30}
+.status-waiting-copy{background:#C8FF0018;color:#8aaf00;border:1px solid #C8FF0035}
+.status-waiting-image{background:#4D9EFF18;color:#4D9EFF;border:1px solid #4D9EFF35}
+.status-waiting-client{background:#9B6FFF18;color:#9B6FFF;border:1px solid #9B6FFF35}
+.status-waiting-dev{background:#FF6B9D18;color:#FF6B9D;border:1px solid #FF6B9D35}
+/* Preset modal */
+.preset-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center}
+.preset-modal-overlay.open{display:flex}
+.preset-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-xl);padding:20px;width:min(420px,92vw);max-height:80vh;overflow-y:auto}
+.preset-modal-title{font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.preset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.preset-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;cursor:pointer;transition:all .15s;text-align:left}
+.preset-item:hover{border-color:var(--accent-border);background:var(--accent-dim)}
+.preset-item strong{display:block;font-size:13px;color:var(--text);margin-bottom:2px}
+.preset-item span{font-size:11px;color:var(--text3);line-height:1.4}
 
 /* ===== CHECKLIST ===== */
 .progress-wrap{margin-bottom:20px}
@@ -533,8 +555,9 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
           <div class="panel-title">Section <span>Planner</span></div>
           <div class="panel-sub">Drag to reorder - Click edit to rename - Label every section</div>
         </div>
-        <div style="display:flex;gap:6px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Quick Template</button>
+          <button class="btn btn-sm" onclick="exportOutline()" title="Export page outline as text file"><i class="ti ti-download"></i> Export Outline</button>
           <button class="btn btn-accent btn-sm" onclick="openAddSection()"><i class="ti ti-plus"></i> Add Section</button>
         </div>
       </div>
@@ -589,14 +612,35 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
             <option value="custom">Custom</option>
           </select>
         </div>
-        <div class="form-grid-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div class="form-grid-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
           <input type="text" id="new-sec-note" placeholder="Note (e.g. 2-column layout, video bg...)" />
           <input type="text" id="new-sec-css" placeholder="CSS class or ID (e.g. .hero-section)" />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;align-items:center">
+          <select id="new-sec-status">
+            <option value="ready">✅ Ready</option>
+            <option value="waiting-copy">📝 Waiting for copy</option>
+            <option value="waiting-image">🖼 Waiting for image/asset</option>
+            <option value="waiting-client">👤 Waiting for client approval</option>
+            <option value="waiting-dev">⚙️ Waiting for development</option>
+          </select>
+          <button class="btn btn-sm" onclick="openPresetPicker()" title="Use a preset template"><i class="ti ti-bookmark"></i> Preset</button>
         </div>
         <div style="display:flex;gap:6px">
           <button class="btn btn-accent" onclick="addSection()"><i class="ti ti-plus"></i> Add Section</button>
           <button class="btn" onclick="closeAddSection()">Cancel</button>
         </div>
+      </div>
+    </div>
+
+    <!-- ===== PRESET MODAL ===== -->
+    <div class="preset-modal-overlay" id="preset-modal-overlay" onclick="if(event.target===this)closePresetPicker()">
+      <div class="preset-modal">
+        <div class="preset-modal-title">
+          <span><i class="ti ti-bookmark" style="margin-right:6px"></i>Section Presets</span>
+          <button class="btn btn-icon btn-sm" onclick="closePresetPicker()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="preset-grid" id="preset-grid"></div>
       </div>
     </div>
 
@@ -1359,16 +1403,109 @@ function closeAddSection() {
   document.getElementById('add-section-card').style.display = 'none';
 }
 
+// ===== SECTION PRESETS =====
+const SECTION_PRESETS = [
+  { name: 'Navigation Bar',      type: 'nav',     note: 'Logo + menu + CTA button',                    css: '.nav-section',           status: 'ready' },
+  { name: 'Hero Section',        type: 'hero',    note: 'Main headline + subheadline + CTA + visual',   css: '.hero-section',          status: 'ready' },
+  { name: 'Features / Services', type: 'content', note: 'Icon boxes or feature cards',                  css: '.features-section',      status: 'waiting-copy' },
+  { name: 'About / Story',       type: 'content', note: 'Company intro, mission, team',                 css: '.about-section',         status: 'waiting-copy' },
+  { name: 'Portfolio / Work',    type: 'content', note: 'Project gallery or case studies',              css: '.portfolio-section',     status: 'waiting-image' },
+  { name: 'Testimonials',        type: 'content', note: 'Client reviews and social proof',              css: '.testimonials-section',  status: 'waiting-client' },
+  { name: 'Pricing Plans',       type: 'content', note: 'Pricing comparison table or cards',            css: '.pricing-section',       status: 'waiting-client' },
+  { name: 'FAQ Section',         type: 'content', note: 'Accordion-style frequently asked questions',   css: '.faq-section',           status: 'ready' },
+  { name: 'CTA Section',         type: 'cta',     note: 'Final call to action with form or button',     css: '.cta-section',           status: 'ready' },
+  { name: 'Footer',              type: 'footer',  note: 'Links, contact, social, copyright',            css: '.footer-section',        status: 'ready' },
+];
+
+function openPresetPicker() {
+  const overlay = document.getElementById('preset-modal-overlay');
+  const grid = document.getElementById('preset-grid');
+  grid.innerHTML = SECTION_PRESETS.map((p, i) => `
+    <button class="preset-item" onclick="applyPreset(${i})">
+      <strong>${esc(p.name)}</strong>
+      <span>${esc(p.note)}</span>
+    </button>
+  `).join('');
+  overlay.classList.add('open');
+}
+
+function closePresetPicker() {
+  document.getElementById('preset-modal-overlay').classList.remove('open');
+}
+
+function applyPreset(idx) {
+  const p = SECTION_PRESETS[idx];
+  if (!p) return;
+  document.getElementById('new-sec-name').value = p.name;
+  document.getElementById('new-sec-type').value = p.type;
+  document.getElementById('new-sec-note').value = p.note;
+  document.getElementById('new-sec-css').value = p.css;
+  document.getElementById('new-sec-status').value = p.status;
+  closePresetPicker();
+  document.getElementById('new-sec-name').focus();
+}
+
+// ===== SECTION HEALTH BADGES =====
+const STATUS_LABELS = {
+  'ready':          { label: '✅ Ready',                  cls: 'status-ready' },
+  'waiting-copy':   { label: '📝 Waiting for copy',       cls: 'status-waiting-copy' },
+  'waiting-image':  { label: '🖼 Waiting for image',      cls: 'status-waiting-image' },
+  'waiting-client': { label: '👤 Waiting for client',     cls: 'status-waiting-client' },
+  'waiting-dev':    { label: '⚙️ Waiting for dev',        cls: 'status-waiting-dev' },
+};
+
+function healthBadges(s, allSecs) {
+  const badges = [];
+  if (!s.note) badges.push('<span class="health-badge health-warn">No note</span>');
+  if (!s.css)  badges.push('<span class="health-badge health-warn">No CSS class</span>');
+  if (s.css) {
+    const dup = allSecs.filter(o => o.id !== s.id && o.css && o.css === s.css);
+    if (dup.length) badges.push('<span class="health-badge health-dup">Duplicate CSS</span>');
+  }
+  return badges.join('');
+}
+
+// ===== PAGE OUTLINE EXPORT =====
+function exportOutline() {
+  const secs = proj().sections;
+  const title = proj().name || 'Untitled Page';
+  const date  = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  const sep   = '='.repeat(48);
+  let txt = `PAGE OUTLINE — ${title}\nGenerated by Sekkei · ${date}\n${sep}\n\n`;
+  if (!secs.length) { txt += '(No sections yet)\n'; }
+  secs.forEach((s, i) => {
+    const num    = String(i + 1).padStart(2, '0');
+    const type   = s.type ? s.type.toUpperCase() : 'CONTENT';
+    const status = STATUS_LABELS[s.status]?.label ?? '✅ Ready';
+    txt += `${num}. ${s.name} [${type}]\n`;
+    if (s.note) txt += `    Note   : ${s.note}\n`;
+    txt += `    Status : ${status}\n`;
+    if (s.css)  txt += `    CSS    : ${s.css}\n`;
+    txt += '\n';
+  });
+  txt += `${sep}\nTotal sections: ${secs.length}\n`;
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = (title.replace(/[^a-z0-9]/gi, '-').toLowerCase() || 'outline') + '-sekkei.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Outline exported!');
+}
+
 function addSection() {
-  const name = cleanText(document.getElementById('new-sec-name').value, 120);
+  const name   = cleanText(document.getElementById('new-sec-name').value, 120);
   if (!name) return;
-  const type = SECTION_TYPES.includes(document.getElementById('new-sec-type').value) ? document.getElementById('new-sec-type').value : 'content';
-  const note = cleanText(document.getElementById('new-sec-note').value, 600);
-  const css = cleanCssClass(document.getElementById('new-sec-css').value);
-  proj().sections.push({ id: 's' + (nextId++), name, type, note, css });
+  const type   = SECTION_TYPES.includes(document.getElementById('new-sec-type').value) ? document.getElementById('new-sec-type').value : 'content';
+  const note   = cleanText(document.getElementById('new-sec-note').value, 600);
+  const css    = cleanCssClass(document.getElementById('new-sec-css').value);
+  const status = document.getElementById('new-sec-status')?.value || 'ready';
+  proj().sections.push({ id: 's' + (nextId++), name, type, note, css, status });
   document.getElementById('new-sec-name').value = '';
   document.getElementById('new-sec-note').value = '';
   document.getElementById('new-sec-css').value = '';
+  document.getElementById('new-sec-status').value = 'ready';
   renderSections();
   saveState();
   updateBadges();
@@ -1420,11 +1557,21 @@ function editSection(id) {
   const newName = prompt('Section name:', sec.name);
   if (newName !== null && newName.trim()) {
     sec.name = cleanText(newName, 120);
-    const newNote = prompt('Note:', sec.note || '');
+    const newNote = prompt('Note (leave blank to clear):', sec.note || '');
     if (newNote !== null) sec.note = cleanText(newNote, 600);
+    const newCss = prompt('CSS class (e.g. .hero-section):', sec.css || '');
+    if (newCss !== null) sec.css = cleanCssClass(newCss);
+    // Status edit
+    const statusOpts = Object.keys(STATUS_LABELS).map((k, i) => `${i+1}. ${STATUS_LABELS[k].label}`).join('\n');
+    const statusKeys = Object.keys(STATUS_LABELS);
+    const curIdx = statusKeys.indexOf(sec.status || 'ready');
+    const newStatusInput = prompt(`Status (enter number):\n${statusOpts}`, String(curIdx + 1));
+    if (newStatusInput !== null) {
+      const idx = parseInt(newStatusInput, 10) - 1;
+      if (idx >= 0 && idx < statusKeys.length) sec.status = statusKeys[idx];
+    }
     renderSections();
     saveState();
-    
     // Sync rename to Elementor
     if (sec.elementorCid || sec.elementorId) {
       window.parent.postMessage({
@@ -1444,7 +1591,11 @@ function renderSections() {
     list.innerHTML = '<div class="empty"><i class="ti ti-layout-rows"></i><h3>Start with your page outline</h3><p class="mini">Add sections manually or scaffold a complete landing page structure.</p><div class="empty-actions"><button class="btn btn-accent btn-sm" onclick="openAddSection()"><i class="ti ti-plus"></i> Add Section</button><button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Quick Template</button></div></div>'; 
     return;
   }
-  list.innerHTML = secs.map((s, i) => `
+  list.innerHTML = secs.map((s, i) => {
+    const statusInfo  = STATUS_LABELS[s.status || 'ready'] || STATUS_LABELS['ready'];
+    const showStatus  = (s.status && s.status !== 'ready');
+    const badges      = healthBadges(s, secs);
+    return `
     <div class="section-card" draggable="true" data-id="${s.id}"
          ondragstart="onDragStart(event,'${s.id}')"
          ondragover="onDragOver(event)"
@@ -1459,8 +1610,14 @@ function renderSections() {
           ${esc(s.name)}
           ${(s.elementorId || s.elementorCid) ? ` <span class="sync-badge" title="Linked with Elementor Element"><i class="ti ti-link" style="font-size:11px;color:var(--teal)"></i></span>` : ''}
         </div>
-        ${s.note ? `<div class="section-note">${esc(s.note)}</div>` : ''}
-        ${s.css ? `<div class="section-css">${esc(s.css)}</div>` : ''}
+        <div class="section-meta-row">
+          ${s.note ? `<div class="section-note">${esc(s.note)}</div>` : ''}
+        </div>
+        <div class="section-meta-row">
+          ${s.css ? `<div class="section-css">${esc(s.css)}</div>` : ''}
+          ${showStatus ? `<span class="status-badge ${statusInfo.cls}">${statusInfo.label}</span>` : ''}
+          ${badges}
+        </div>
       </div>
       <div class="section-actions">
         <button class="btn btn-icon btn-sm" onclick="moveSection('${s.id}',-1)" title="Move up"><i class="ti ti-arrow-up"></i></button>
@@ -1469,7 +1626,8 @@ function renderSections() {
         <button class="btn btn-icon btn-sm" onclick="deleteSection('${s.id}')" title="Delete"><i class="ti ti-trash"></i></button>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // Drag & Drop

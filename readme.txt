@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,6 +113,14 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 7. Settings Page  Configure panel position, width, and behavior
 
 == Changelog ==
+
+= 1.2.0 =
+* Added section health badges: live warnings for missing note, missing CSS class, and duplicate CSS selectors
+* Added section dependency status: mark sections as Waiting for copy, image, client approval, or development
+* Added reusable section presets: 10 one-click templates (Hero, Nav, Pricing, FAQ, Footer and more)
+* Added Export Outline: download a clean plain-text page outline for client approval
+* Improved Edit Section dialog: now edits CSS class and status in addition to name and note
+* Elementor linked sections show a chain-link badge on the section card
 
 = 1.1.1 =
 * Fixed onboarding welcome card not appearing on first install
