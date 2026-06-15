@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,6 +113,10 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 7. Settings Page  Configure panel position, width, and behavior
 
 == Changelog ==
+
+= 1.1.1 =
+* Fixed onboarding welcome card not appearing on first install
+* Removed redundant font preload tags causing browser console warnings
 
 = 1.1.0 =
 * Added first-run onboarding with guided setup actions

@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sekkei - Elementor Workflow Tool</title>
-<link rel="preload" href="../vendor/tabler-icons/fonts/tabler-icons.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../vendor/fonts/dm-sans-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../vendor/fonts/syne-700.woff2" as="font" type="font/woff2" crossorigin>
+
 <link rel="stylesheet" href="../vendor/fonts/fonts.css">
 <link rel="stylesheet" href="../vendor/tabler-icons/tabler-icons.min.css">
 <style>
@@ -538,6 +536,37 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
         <div style="display:flex;gap:6px">
           <button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Quick Template</button>
           <button class="btn btn-accent btn-sm" onclick="openAddSection()"><i class="ti ti-plus"></i> Add Section</button>
+        </div>
+      </div>
+
+      <div class="card onboarding-card" id="onboarding-card">
+        <div class="onboarding-head">
+          <div>
+            <div class="onboarding-title">👋 Welcome to Sekkei</div>
+            <div class="onboarding-copy">Plan your Elementor page before you build. Add sections, run a pre-publish audit, and hand off clean projects to clients.</div>
+          </div>
+          <button class="btn btn-ghost" onclick="dismissOnboarding()" title="Dismiss"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="onboarding-steps">
+          <div class="onboarding-step">
+            <i class="ti ti-layout-rows"></i>
+            <strong>1. Plan sections</strong>
+            <span>Add your page sections here in the Planner tab</span>
+          </div>
+          <div class="onboarding-step">
+            <i class="ti ti-checklist"></i>
+            <strong>2. Run checklist</strong>
+            <span>Go to Checklist tab and tick off design checkpoints</span>
+          </div>
+          <div class="onboarding-step">
+            <i class="ti ti-shield-check"></i>
+            <strong>3. Audit &amp; publish</strong>
+            <span>Run Pre-Publish Audit before going live</span>
+          </div>
+        </div>
+        <div class="onboarding-actions">
+          <button class="btn btn-primary" onclick="startGuidedSetup()"><i class="ti ti-plus"></i> Add First Section</button>
+          <button class="btn btn-ghost" onclick="dismissOnboarding()">Dismiss</button>
         </div>
       </div>
 
