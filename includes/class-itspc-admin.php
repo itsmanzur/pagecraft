@@ -36,7 +36,7 @@ class ITSPC_Admin {
             'manage_options',
             'sekkei',
             array( $this, 'render_settings_page' ),
-            'dashicons-layout',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj4KICA8ZyBmaWxsPSIjYTdhYWFkIj4KICAgIDxyZWN0IHg9IjMiIHk9IjMuNCIgd2lkdGg9IjExIiBoZWlnaHQ9IjIuNiIgcng9IjEuMyIvPgogICAgPHJlY3QgeD0iMyIgeT0iNy42IiB3aWR0aD0iMTQiIGhlaWdodD0iMy4yIiByeD0iMS42Ii8+CiAgICA8cmVjdCB4PSIzIiB5PSIxMi40IiB3aWR0aD0iOSIgaGVpZ2h0PSIyLjYiIHJ4PSIxLjMiLz4KICAgIDxyZWN0IHg9IjMiIHk9IjE2IiB3aWR0aD0iNiIgaGVpZ2h0PSIyLjQiIHJ4PSIxLjIiLz4KICA8L2c+Cjwvc3ZnPgo=',
             59
         );
 
