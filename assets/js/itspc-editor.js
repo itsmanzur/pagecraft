@@ -251,6 +251,7 @@
         var isOpen    = false;
         var lastStructureSignature = '';
         var structureSyncTimer = null;
+        var structureSyncDebounce = null;
 
         // Custom lightning bolt SVG icon
         var ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:5px;margin-top:-2px;"><path d="M13 10h7l-9 13v-9H5l9-13v9z"/></svg>';
@@ -264,6 +265,24 @@
 
         // Set initial SVG icon on load
         btnText.innerHTML = ICON_SVG + ' Sekkei';
+
+        function postDisplaySettingsToTool() {
+            if (!iframe || !iframe.contentWindow || typeof itspcData === 'undefined') {
+                return;
+            }
+            var src = iframe.getAttribute('src') || '';
+            if (!src || src === 'about:blank') {
+                return;
+            }
+            try {
+                iframe.contentWindow.postMessage({
+                    type: 'itspc_display_settings',
+                    display: itspcData.display || {}
+                }, window.location.origin);
+            } catch (err) {
+                // Query-string settings are the primary path; postMessage is a live-refresh helper.
+            }
+        }
 
         // --- Toggle Panel ---
         // Inject loading bar once into the panel header
@@ -282,6 +301,7 @@
             setTimeout(function() {
                 loadingBar.style.opacity = '0';
             }, 400);
+            postDisplaySettingsToTool();
             startStructureSync();
             setTimeout(function() {
                 postStructureToTool(true);
@@ -301,6 +321,7 @@
                 iframe.setAttribute('src', itspcData.toolUrl);
             } else {
                 startStructureSync();
+                postDisplaySettingsToTool();
                 postStructureToTool(true);
             }
 
@@ -344,6 +365,7 @@
             btnText.innerHTML = ICON_SVG + ' Sekkei';
             document.body.classList.remove('itspc-is-open');
             isOpen = false;
+            stopStructureSync();
         }
 
         function togglePanel() {
@@ -355,6 +377,9 @@
         }
 
         function postStructureToTool(force) {
+            if (!isOpen && !force) {
+                return;
+            }
             if (!iframe || !iframe.contentWindow) {
                 return;
             }
@@ -380,7 +405,31 @@
             postStructureToTool(true);
             structureSyncTimer = setInterval(function() {
                 postStructureToTool(false);
-            }, 1000);
+            }, 2500);
+        }
+
+        function stopStructureSync() {
+            if (structureSyncTimer) {
+                clearInterval(structureSyncTimer);
+                structureSyncTimer = null;
+            }
+            if (structureSyncDebounce) {
+                clearTimeout(structureSyncDebounce);
+                structureSyncDebounce = null;
+            }
+        }
+
+        function scheduleStructureSync(delay) {
+            if (!isOpen) {
+                return;
+            }
+            if (structureSyncDebounce) {
+                clearTimeout(structureSyncDebounce);
+            }
+            structureSyncDebounce = setTimeout(function() {
+                structureSyncDebounce = null;
+                postStructureToTool(false);
+            }, delay || 250);
         }
 
         // --- Event Handlers ---
@@ -770,9 +819,7 @@
         // --- Listen to Elementor editor title changes and sync back to Sekkei ---
         if (typeof elementor !== 'undefined' && elementor.channels && elementor.channels.editor) {
             elementor.channels.editor.on('change', function(view) {
-                setTimeout(function() {
-                    postStructureToTool(true);
-                }, 250);
+                scheduleStructureSync(250);
                 if (view && view.elementSettingsModel && view.elementSettingsModel.changed) {
                     var changed = view.elementSettingsModel.changed;
                     if (typeof changed._title !== 'undefined') {

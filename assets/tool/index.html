@@ -71,30 +71,56 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   background: var(--bg2);
   border-top: 1px solid var(--border);
   align-items: center;
-  justify-content: space-around;
+  gap: 6px;
+  justify-content: flex-start;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 7px 9px calc(7px + env(safe-area-inset-bottom, 0px));
+  scrollbar-width: none;
   z-index: 10;
+  box-shadow: 0 -8px 24px rgba(0,0,0,.18);
+}
+.bottom-nav::-webkit-scrollbar {
+  display: none;
 }
 .bottom-nav-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   color: var(--text2);
   cursor: pointer;
-  flex: 1;
-  height: 100%;
-  gap: 3px;
+  flex: 0 0 auto;
+  min-width: 48px;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: transparent;
   transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 .bottom-nav-item i {
   font-size: 18px;
+  flex-shrink: 0;
 }
 .bottom-nav-item span {
-  font-size: 9px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
 }
-.bottom-nav-item:hover, .bottom-nav-item.active {
+.bottom-nav-item:hover {
   color: var(--accent);
+  background: var(--bg3);
+  border-color: var(--border);
+}
+.bottom-nav-item.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  box-shadow: inset 0 0 0 1px rgba(200,255,0,.04);
 }
 
 /* ===== RESPONSIVE MEDIA QUERIES ===== */
@@ -139,6 +165,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     justify-content: flex-start;
     width: 100%;
   }
+  .planner-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px !important;
+  }
+  .planner-actions select {
+    grid-column: 1 / -1;
+  }
   .panel-header button, .panel-header .btn {
     flex: 1;
     justify-content: center;
@@ -151,11 +185,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     display: none !important;
   }
   
-  /* Stack panel header buttons vertically */
-  .panel-header div[style*="display:flex"], .panel-header div[style*="display: flex"] {
-    flex-direction: column !important;
-    width: 100% !important;
-  }
+  /* Keep planner actions compact in the narrow Elementor panel */
+  .panel-header div[style*="display:flex"], .panel-header div[style*="display: flex"] { width: 100% !important; }
   .panel-header button, .panel-header .btn {
     width: 100% !important;
     justify-content: center !important;
@@ -174,9 +205,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   /* Section Card Layout responsive wrapping */
   .section-card {
     display: grid !important;
-    grid-template-columns: auto auto auto 1fr !important;
-    gap: 8px !important;
-    padding: 12px !important;
+    grid-template-columns: 16px 24px minmax(62px,auto) 1fr auto !important;
+    gap: 7px !important;
+    padding: 10px 11px !important;
+    align-items: start !important;
   }
   .drag-handle {
     grid-column: 1;
@@ -199,13 +231,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     min-width: 0;
   }
   .section-actions {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    justify-content: flex-end;
-    border-top: 1px solid var(--border);
-    padding-top: 8px;
-    margin-top: 4px;
-    width: 100%;
+    grid-column: 5;
+    grid-row: 1;
+    display: grid !important;
+    grid-template-columns: repeat(2, 28px);
+    gap: 4px !important;
+    justify-content: end;
+    border-top: 0;
+    padding-top: 0;
+    margin-top: 0;
+    width: auto;
+  }
+  .section-actions .btn-icon {
+    width: 28px;
+    height: 28px;
   }
 
   /* Colors form stack vertically */
@@ -220,12 +259,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 }
 
 @media (max-width: 480px) {
-  .bottom-nav-item span {
-    display: none !important;
-  }
-  .bottom-nav-item i {
-    font-size: 20px !important;
-  }
+  .bottom-nav { padding-left: 8px; padding-right: 8px; }
+  .bottom-nav-item { height: 38px; padding: 0 9px; }
+  .bottom-nav-item span { font-size: 10px !important; }
+  .bottom-nav-item i { font-size: 17px !important; }
 }
 
 /* ===== TOPBAR ===== */
@@ -288,8 +325,15 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-xl);padding:24px;width:440px;max-width:90vw}
+.modal-large{width:560px}
 .modal-title{font-family:var(--font-head);font-size:18px;font-weight:700;margin-bottom:16px}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.modal-grid{display:grid;gap:10px}
+.modal-grid.two{grid-template-columns:1fr 160px}
+.field-label{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px}
+.check-option{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text2);line-height:1.45;padding:8px 0}
+.check-option input{margin-top:2px}
+@media (max-width: 500px){.modal{padding:18px}.modal-grid.two{grid-template-columns:1fr}.modal-actions{flex-direction:column-reverse}.modal-actions .btn{justify-content:center;width:100%}}
 
 /* ===== SECTION PLANNER ===== */
 .section-list{display:flex;flex-direction:column;gap:6px}
@@ -306,12 +350,13 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .badge-cta{background:#C8FF0022;color:#A8D800;border:1px solid #C8FF0033}
 .badge-footer{background:#9896A022;color:#9896A0;border:1px solid #9896A033}
 .badge-nav{background:#4D9EFF22;color:#4D9EFF;border:1px solid #4D9EFF33}
+.badge-container{background:#FFB02022;color:#D48806;border:1px solid #FFB02044}
 .badge-custom{background:#FF6B9D22;color:#FF6B9D;border:1px solid #FF6B9D33}
 .section-info{flex:1;min-width:0}
 .section-name{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
 .section-note{font-size:12px;color:var(--text2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
 .section-css{font-size:10px;font-family:var(--font-mono);color:var(--accent);opacity:.6;margin-top:1px}
-.section-meta-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:6px}.section-health{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.health-pill{font-size:10px;line-height:1;padding:4px 6px;border-radius:999px;border:1px solid var(--border);color:var(--text3);background:var(--bg4)}.health-pill.ok{color:var(--teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.08)}.health-pill.warn{color:var(--amber);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}.health-pill.risk{color:var(--red);border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.08)}.health-pill.info{color:var(--text2)}.dependency-select{font-size:10px;border-radius:999px;padding:4px 7px;height:auto;min-height:0;background:var(--bg4);color:var(--text2);border:1px solid var(--border);width:auto}.planner-health-summary{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:12px}.planner-health-summary .summary-copy{font-size:12px;color:var(--text2);line-height:1.5}.planner-health-summary .summary-score{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--accent)}
+.section-status-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:7px}.section-meta-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center}.section-health{display:flex;gap:4px;flex-wrap:wrap;margin-top:0}.health-pill{font-size:10px;line-height:1;padding:4px 6px;border-radius:999px;border:1px solid var(--border);color:var(--text3);background:var(--bg4)}.health-pill.ok{color:var(--teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.08)}.health-pill.warn{color:var(--amber);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}.health-pill.risk{color:var(--red);border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.08)}.health-pill.info{color:var(--text2)}.dependency-select{font-size:10px;border-radius:999px;padding:4px 7px;height:auto;min-height:0;background:var(--bg4);color:var(--text2);border:1px solid var(--border);width:auto;max-width:150px}.planner-health-summary{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-bottom:12px}.planner-health-summary .summary-copy{font-size:12px;color:var(--text2);line-height:1.45;max-width:280px}.planner-health-summary .summary-score{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--accent)}
 .section-actions{display:flex;gap:3px;flex-shrink:0}
 
 /* ===== CHECKLIST ===== */
@@ -535,7 +580,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
           <div class="panel-title">Section <span>Planner</span></div>
           <div class="panel-sub">Drag to reorder - Click edit to rename - Label every section</div>
         </div>
-        <div style="display:flex;gap:6px">
+        <div class="planner-actions" style="display:flex;gap:6px">
           <select id="planner-preset" class="dependency-select" title="Section preset">
             <option value="landing">Landing</option>
             <option value="service">Service</option>
@@ -550,7 +595,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       <div class="card onboarding-card" id="onboarding-card">
         <div class="onboarding-head">
           <div>
-            <div class="onboarding-title">👋 Welcome to Sekkei</div>
+            <div class="onboarding-title">Welcome to Sekkei</div>
             <div class="onboarding-copy">Plan your Elementor page before you build. Add sections, run a pre-publish audit, and hand off clean projects to clients.</div>
           </div>
           <button class="btn btn-ghost" onclick="dismissOnboarding()" title="Dismiss"><i class="ti ti-x"></i></button>
@@ -945,6 +990,47 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
   </div>
 </div>
 
+<!-- SECTION EDIT MODAL -->
+<div class="modal-overlay" id="section-modal" onclick="if(event.target===this)closeSectionModal()">
+  <div class="modal modal-large" role="dialog" aria-modal="true" aria-labelledby="section-modal-title">
+    <div class="modal-title" id="section-modal-title">Edit Section</div>
+    <div class="modal-grid">
+      <div class="modal-grid two">
+        <label>
+          <span class="field-label">Section name</span>
+          <input type="text" id="edit-sec-name" maxlength="120" placeholder="Hero, Features, FAQ..." onkeydown="if(event.key==='Enter')saveSectionModal()" />
+        </label>
+        <label>
+          <span class="field-label">Type</span>
+          <select id="edit-sec-type"></select>
+        </label>
+      </div>
+      <label>
+        <span class="field-label">Note</span>
+        <textarea id="edit-sec-note" maxlength="600" placeholder="Layout, client note, content status..."></textarea>
+      </label>
+      <div class="modal-grid two">
+        <label>
+          <span class="field-label">CSS class or ID</span>
+          <input type="text" id="edit-sec-css" maxlength="120" placeholder=".hero-section or #hero" />
+        </label>
+        <label>
+          <span class="field-label">Dependency</span>
+          <select id="edit-sec-dependency"></select>
+        </label>
+      </div>
+      <label class="check-option" id="edit-sec-sync-wrap">
+        <input type="checkbox" id="edit-sec-sync" checked />
+        <span>Apply section name to the linked Elementor container title</span>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeSectionModal()">Cancel</button>
+      <button class="btn btn-accent" onclick="saveSectionModal()"><i class="ti ti-device-floppy"></i> Save Section</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"><i class="ti ti-check"></i> <span id="toast-msg">Copied!</span></div>
 
@@ -969,6 +1055,8 @@ let state = {
 let nextId = Date.now();
 let elementorSyncTimer = null;
 let lastElementorSignature = '';
+let editingSectionId = null;
+let displaySettings = normalizeDisplaySettings(getInitialDisplaySettings());
 const APP_BOOT_TIME = Date.now();
 const STORAGE_KEY = 'itspc_state';
 const BACKUP_KEY = 'itspc_state_backup';
@@ -985,6 +1073,30 @@ const DEPENDENCY_LABELS = {
 };
 const GENERIC_SECTION_NAMES = ['section', 'container', 'untitled section', 'inner section'];
 const COLOR_ROLES = ['primary', 'secondary', 'text', 'accent', 'background', 'custom', ''];
+
+function normalizeDisplaySettings(settings) {
+  const safe = settings && typeof settings === 'object' ? settings : {};
+  return {
+    plannerShowHealth: safe.plannerShowHealth !== false,
+    plannerShowNotes: safe.plannerShowNotes !== false,
+    plannerShowCss: safe.plannerShowCss !== false,
+    plannerShowBadges: safe.plannerShowBadges !== false
+  };
+}
+
+function getInitialDisplaySettings() {
+  try {
+    const raw = new URLSearchParams(window.location.search).get('display');
+    if (!raw) return {};
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      return JSON.parse(decodeURIComponent(raw));
+    }
+  } catch (e) {
+    return {};
+  }
+}
 
 function cleanText(value, maxLen = 500) {
   return String(value || '').replace(/[\u0000-\u001F\u007F]/g, '').trim().slice(0, maxLen);
@@ -1344,7 +1456,12 @@ function showPanel(id) {
   if (nav) nav.classList.add('active');
   
   const btnNav = document.getElementById('btn-nav-' + id);
-  if (btnNav) btnNav.classList.add('active');
+  if (btnNav) {
+    btnNav.classList.add('active');
+    if (typeof btnNav.scrollIntoView === 'function') {
+      btnNav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
   
   if (id === 'export') {
     buildExport();
@@ -1481,27 +1598,67 @@ function moveSection(id, dir) {
 }
 
 function editSection(id) {
+  openSectionModal(id);
+}
+
+function sectionTypeOptions(value) {
+  return SECTION_TYPES.map(type => '<option value="' + type + '"' + (type === value ? ' selected' : '') + '>' + type.charAt(0).toUpperCase() + type.slice(1) + '</option>').join('');
+}
+
+function openSectionModal(id) {
   const sec = proj().sections.find(s => s.id === id);
   if (!sec) return;
-  const newName = prompt('Section name:', sec.name);
-  if (newName !== null && newName.trim()) {
-    sec.name = cleanText(newName, 120);
-    const newNote = prompt('Note:', sec.note || '');
-    if (newNote !== null) sec.note = cleanText(newNote, 600);
-    const dep = prompt('Dependency: ready, copy, image, approval, development', sec.dependency || 'ready');
-    if (dep !== null) sec.dependency = SECTION_DEPENDENCIES.includes(dep.trim()) ? dep.trim() : 'ready';
-    renderSections();
-    saveState();
-    
-    // Sync rename to Elementor
-    if (sec.elementorCid || sec.elementorId) {
-      window.parent.postMessage({
-        type: 'rename_elementor_element',
-        id: sec.elementorId,
-        cid: sec.elementorCid,
-        title: sec.name
-      }, window.location.origin);
-    }
+  editingSectionId = id;
+  document.getElementById('edit-sec-name').value = sec.name || '';
+  document.getElementById('edit-sec-type').innerHTML = sectionTypeOptions(sec.type || 'content');
+  document.getElementById('edit-sec-note').value = sec.note || '';
+  document.getElementById('edit-sec-css').value = sec.css || '';
+  document.getElementById('edit-sec-dependency').innerHTML = dependencyOptions(sec.dependency || 'ready');
+  const linked = !!(sec.elementorCid || sec.elementorId);
+  document.getElementById('edit-sec-sync-wrap').style.display = linked ? 'flex' : 'none';
+  document.getElementById('edit-sec-sync').checked = linked;
+  document.getElementById('section-modal').classList.add('open');
+  setTimeout(() => document.getElementById('edit-sec-name').focus(), 40);
+}
+
+function closeSectionModal() {
+  editingSectionId = null;
+  document.getElementById('section-modal').classList.remove('open');
+}
+
+function postElementorRename(section) {
+  if (!(section.elementorCid || section.elementorId)) return;
+  window.parent.postMessage({
+    type: 'rename_elementor_element',
+    id: section.elementorId,
+    cid: section.elementorCid,
+    title: section.name
+  }, window.location.origin);
+}
+
+function saveSectionModal() {
+  const sec = proj().sections.find(s => s.id === editingSectionId);
+  if (!sec) return;
+  const name = cleanText(document.getElementById('edit-sec-name').value, 120);
+  if (!name) {
+    toast('Section name is required.');
+    document.getElementById('edit-sec-name').focus();
+    return;
+  }
+  const type = cleanText(document.getElementById('edit-sec-type').value, 20).toLowerCase();
+  sec.name = name;
+  sec.type = SECTION_TYPES.includes(type) ? type : 'content';
+  sec.note = cleanText(document.getElementById('edit-sec-note').value, 600);
+  sec.css = cleanCssClass(document.getElementById('edit-sec-css').value);
+  const dep = cleanText(document.getElementById('edit-sec-dependency').value, 24);
+  sec.dependency = SECTION_DEPENDENCIES.includes(dep) ? dep : 'ready';
+  const shouldRenameElementor = document.getElementById('edit-sec-sync').checked && (sec.elementorCid || sec.elementorId);
+  renderSections();
+  saveState();
+  updateBadges();
+  closeSectionModal();
+  if (shouldRenameElementor) {
+    postElementorRename(sec);
   }
 }
 
@@ -1540,7 +1697,7 @@ function getPageHealth(sections) {
 function renderSectionHealthSummary(sections) {
   const el = document.getElementById('section-health-summary');
   if (!el) return;
-  if (!sections.length) { el.innerHTML = ''; return; }
+  if (!displaySettings.plannerShowHealth || !sections.length) { el.innerHTML = ''; return; }
   const health = getPageHealth(sections);
   const score = Math.max(0, Math.round(100 - Math.min(health.totalIssues, 8) * 12.5));
   const cta = health.hasCta ? '<span class="health-pill ok">CTA ready</span>' : '<span class="health-pill warn">No CTA section</span>';
@@ -1560,6 +1717,11 @@ function setSectionDependency(id, value) {
   saveState();
 }
 
+function applyDisplaySettings(settings) {
+  displaySettings = normalizeDisplaySettings(settings);
+  renderSections();
+}
+
 function renderSections() {
   const list = document.getElementById('section-list');
   const secs = proj().sections;
@@ -1570,7 +1732,9 @@ function renderSections() {
   }
   list.innerHTML = secs.map((s, i) => {
     const health = getSectionHealth(s, secs);
-    const healthHtml = health.length ? '<div class="section-health">' + health.map(item => '<span class="health-pill ' + item.level + '">' + esc(item.label) + '</span>').join('') + '</div>' : '<div class="section-health"><span class="health-pill ok">Healthy</span></div>';
+    const healthHtml = displaySettings.plannerShowBadges
+      ? (health.length ? '<div class="section-health">' + health.map(item => '<span class="health-pill ' + item.level + '">' + esc(item.label) + '</span>').join('') + '</div>' : '<div class="section-health"><span class="health-pill ok">Healthy</span></div>')
+      : '';
     return `
     <div class="section-card" draggable="true" data-id="${s.id}"
          ondragstart="onDragStart(event,'${s.id}')"
@@ -1586,10 +1750,12 @@ function renderSections() {
           ${esc(s.name)}
           ${(s.elementorId || s.elementorCid) ? ` <span class="sync-badge" title="Linked with Elementor element"><i class="ti ti-link" style="font-size:11px;color:var(--teal)"></i></span>` : ''}
         </div>
-        ${s.note ? `<div class="section-note">${esc(s.note)}</div>` : ''}
-        ${s.css ? `<div class="section-css">${esc(s.css)}</div>` : ''}
-        <div class="section-meta-row"><select class="dependency-select" title="Dependency" onclick="event.stopPropagation()" onchange="setSectionDependency('${s.id}',this.value)">${dependencyOptions(s.dependency || 'ready')}</select></div>
-        ${healthHtml}
+        ${displaySettings.plannerShowNotes && s.note ? `<div class="section-note">${esc(s.note)}</div>` : ''}
+        ${displaySettings.plannerShowCss && s.css ? `<div class="section-css">${esc(s.css)}</div>` : ''}
+        <div class="section-status-row">
+          <div class="section-meta-row"><select class="dependency-select" title="Dependency" onclick="event.stopPropagation()" onchange="setSectionDependency('${s.id}',this.value)">${dependencyOptions(s.dependency || 'ready')}</select></div>
+          ${healthHtml}
+        </div>
       </div>
       <div class="section-actions">
         <button class="btn btn-icon btn-sm" onclick="moveSection('${s.id}',-1)" title="Move up"><i class="ti ti-arrow-up"></i></button>
@@ -2505,7 +2671,7 @@ function startElementorAutoSync() {
       lastElementorSignature = signature;
       syncWithElementor({ render: true });
     }
-  }, 1000);
+  }, 3000);
 }
 
 // Run Audit Scan
@@ -2535,6 +2701,10 @@ window.addEventListener('message', function(event) {
 
   if (event.data.type === 'itspc_sync_error') {
     toast(event.data.message || 'Sync failed.');
+  }
+
+  if (event.data.type === 'itspc_display_settings') {
+    applyDisplaySettings(event.data.display);
   }
 
   if (event.data.type === 'itspc_elementor_structure_changed') {
@@ -2681,6 +2851,15 @@ window.addEventListener('message', function(event) {
     });
     
     resultsCard.style.display = 'block';
+  }
+});
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const sectionModal = document.getElementById('section-modal');
+    if (sectionModal && sectionModal.classList.contains('open')) {
+      closeSectionModal();
+    }
   }
 });
 

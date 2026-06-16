@@ -78,12 +78,26 @@ class ITSPC_Elementor {
             true
         );
 
+        $display_settings = array(
+            'plannerShowHealth' => isset( $settings['planner_show_health'] ) ? (bool) $settings['planner_show_health'] : true,
+            'plannerShowNotes'  => isset( $settings['planner_show_notes'] ) ? (bool) $settings['planner_show_notes'] : true,
+            'plannerShowCss'    => isset( $settings['planner_show_css'] ) ? (bool) $settings['planner_show_css'] : true,
+            'plannerShowBadges' => isset( $settings['planner_show_badges'] ) ? (bool) $settings['planner_show_badges'] : true,
+        );
+
         wp_localize_script( 'itspc-editor', 'itspcData', array(
-            'toolUrl'       => add_query_arg( 'v', ITSPC_VERSION, ITSPC_PLUGIN_URI . '/assets/tool/index.html' ),
+            'toolUrl'       => add_query_arg(
+                array(
+                    'v'       => ITSPC_VERSION,
+                    'display' => rawurlencode( wp_json_encode( $display_settings ) ),
+                ),
+                ITSPC_PLUGIN_URI . '/assets/tool/index.html'
+            ),
             'assetBaseUrl'  => ITSPC_PLUGIN_URI . '/assets',
             'panelPosition' => isset( $settings['panel_position'] ) ? $settings['panel_position'] : 'right',
             'panelWidth'    => isset( $settings['panel_width'] ) ? absint( $settings['panel_width'] ) : 420,
             'pluginVersion' => ITSPC_VERSION,
+            'display'       => $display_settings,
         ) );
     }
 
@@ -130,8 +144,16 @@ class ITSPC_Elementor {
             <div id="itspc-panel-resizer"></div>
             <div class="itspc-panel-header">
                 <span class="itspc-panel-title">Sek<span>kei</span></span>
-                <button id="itspc-panel-popout" class="itspc-panel-btn" title="<?php esc_attr_e( 'Open in new window', 'sekkei' ); ?>">Open</button>
-                <button id="itspc-panel-close" class="itspc-panel-btn" title="<?php esc_attr_e( 'Close', 'sekkei' ); ?>">x</button>
+                <button id="itspc-panel-popout" class="itspc-panel-btn" aria-label="<?php esc_attr_e( 'Open in new window', 'sekkei' ); ?>">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 17L17 7"></path><path d="M8 7h9v9"></path>
+                    </svg>
+                </button>
+                <button id="itspc-panel-close" class="itspc-panel-btn" aria-label="<?php esc_attr_e( 'Close', 'sekkei' ); ?>">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M18 6L6 18"></path><path d="M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
             <iframe id="itspc-panel-iframe" src="" loading="lazy" title="<?php esc_attr_e( 'Sekkei Tool', 'sekkei' ); ?>"></iframe>
         </div>

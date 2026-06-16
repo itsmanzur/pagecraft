@@ -72,6 +72,10 @@ class ITSPC_Admin {
         $sanitized = array();
 
         $sanitized['show_in_editor'] = ! empty( $input['show_in_editor'] );
+        $sanitized['planner_show_health'] = ! empty( $input['planner_show_health'] );
+        $sanitized['planner_show_notes']  = ! empty( $input['planner_show_notes'] );
+        $sanitized['planner_show_css']    = ! empty( $input['planner_show_css'] );
+        $sanitized['planner_show_badges'] = ! empty( $input['planner_show_badges'] );
 
         $sanitized['panel_position'] = 'right';
         if ( isset( $input['panel_position'] ) && in_array( $input['panel_position'], array( 'left', 'right' ), true ) ) {
@@ -107,6 +111,10 @@ class ITSPC_Admin {
             'show_in_editor'        => true,
             'panel_position'        => 'right',
             'panel_width'           => 420,
+            'planner_show_health'   => true,
+            'planner_show_notes'    => true,
+            'planner_show_css'      => true,
+            'planner_show_badges'   => true,
             'show_welcome_widget'   => false,
             'welcome_widget_agency' => '',
             'welcome_widget_logo'   => '',
@@ -216,6 +224,81 @@ class ITSPC_Admin {
                       </div>
                     </div>
              
+                  </div>
+                </div>
+
+                <!-- Planner Display Settings Card -->
+                <div class="itspc-card">
+                  <div class="itspc-card-header">
+                    <div class="itspc-card-icon"></div>
+                    <div class="itspc-card-title"><?php esc_html_e( 'Planner Display', 'sekkei' ); ?></div>
+                  </div>
+                  <div class="itspc-card-body">
+
+                    <div class="itspc-form-row">
+                      <div class="itspc-form-label-wrap">
+                        <label class="itspc-form-label"><?php esc_html_e( 'Planner Health Summary', 'sekkei' ); ?></label>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Show the score and page-level warnings above the section list.', 'sekkei' ); ?></div>
+                      </div>
+                      <div class="itspc-form-control">
+                        <div class="itspc-toggle-control">
+                          <label class="itspc-switch">
+                            <input type="checkbox" name="planner_show_health" value="1" <?php checked( ! empty( $settings['planner_show_health'] ), true ); ?>>
+                            <span class="itspc-switch-slider"></span>
+                          </label>
+                          <span class="itspc-switch-label-text"><?php esc_html_e( 'Show health summary', 'sekkei' ); ?></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="itspc-form-row">
+                      <div class="itspc-form-label-wrap">
+                        <label class="itspc-form-label"><?php esc_html_e( 'Section Notes', 'sekkei' ); ?></label>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Show section notes inside each planner card.', 'sekkei' ); ?></div>
+                      </div>
+                      <div class="itspc-form-control">
+                        <div class="itspc-toggle-control">
+                          <label class="itspc-switch">
+                            <input type="checkbox" name="planner_show_notes" value="1" <?php checked( ! empty( $settings['planner_show_notes'] ), true ); ?>>
+                            <span class="itspc-switch-slider"></span>
+                          </label>
+                          <span class="itspc-switch-label-text"><?php esc_html_e( 'Show notes', 'sekkei' ); ?></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="itspc-form-row">
+                      <div class="itspc-form-label-wrap">
+                        <label class="itspc-form-label"><?php esc_html_e( 'CSS Labels', 'sekkei' ); ?></label>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Show saved CSS classes or IDs in planner cards.', 'sekkei' ); ?></div>
+                      </div>
+                      <div class="itspc-form-control">
+                        <div class="itspc-toggle-control">
+                          <label class="itspc-switch">
+                            <input type="checkbox" name="planner_show_css" value="1" <?php checked( ! empty( $settings['planner_show_css'] ), true ); ?>>
+                            <span class="itspc-switch-slider"></span>
+                          </label>
+                          <span class="itspc-switch-label-text"><?php esc_html_e( 'Show CSS labels', 'sekkei' ); ?></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="itspc-form-row" style="border-bottom:none">
+                      <div class="itspc-form-label-wrap">
+                        <label class="itspc-form-label"><?php esc_html_e( 'Section Health Badges', 'sekkei' ); ?></label>
+                        <div class="itspc-form-desc"><?php esc_html_e( 'Show Healthy, Planner only, Empty, Title, and dependency badges per section.', 'sekkei' ); ?></div>
+                      </div>
+                      <div class="itspc-form-control">
+                        <div class="itspc-toggle-control">
+                          <label class="itspc-switch">
+                            <input type="checkbox" name="planner_show_badges" value="1" <?php checked( ! empty( $settings['planner_show_badges'] ), true ); ?>>
+                            <span class="itspc-switch-slider"></span>
+                          </label>
+                          <span class="itspc-switch-label-text"><?php esc_html_e( 'Show section badges', 'sekkei' ); ?></span>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
 
