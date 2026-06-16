@@ -8,7 +8,7 @@ Version path: v1.1 stability -> v2.0 pro-ready ecosystem
 ## Overall Progress
 
 - [ ] Phase 1: Trust, polish, and retention (v1.1)
-- [ ] Phase 2: Smarter section planner (v1.2)
+- [x] Phase 2: Smarter section planner (v1.2)
 - [ ] Phase 3: Design system cockpit (v1.3)
 - [ ] Phase 4: Audit and pre-publish QA (v1.4)
 - [ ] Phase 5: Agency collaboration (v1.5)

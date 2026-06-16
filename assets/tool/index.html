@@ -302,6 +302,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .type-badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;flex-shrink:0;letter-spacing:0.02em}
 .badge-hero{background:#9B6FFF22;color:#9B6FFF;border:1px solid #9B6FFF33}
 .badge-content{background:#00E5CC22;color:#00E5CC;border:1px solid #00E5CC33}
+.badge-features{background:#00E5CC22;color:#00E5CC;border:1px solid #00E5CC33}
 .badge-cta{background:#C8FF0022;color:#A8D800;border:1px solid #C8FF0033}
 .badge-footer{background:#9896A022;color:#9896A0;border:1px solid #9896A033}
 .badge-nav{background:#4D9EFF22;color:#4D9EFF;border:1px solid #4D9EFF33}
@@ -310,6 +311,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .section-name{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
 .section-note{font-size:12px;color:var(--text2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
 .section-css{font-size:10px;font-family:var(--font-mono);color:var(--accent);opacity:.6;margin-top:1px}
+.section-meta-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:6px}.section-health{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.health-pill{font-size:10px;line-height:1;padding:4px 6px;border-radius:999px;border:1px solid var(--border);color:var(--text3);background:var(--bg4)}.health-pill.ok{color:var(--teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.08)}.health-pill.warn{color:var(--amber);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}.health-pill.risk{color:var(--red);border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.08)}.health-pill.info{color:var(--text2)}.dependency-select{font-size:10px;border-radius:999px;padding:4px 7px;height:auto;min-height:0;background:var(--bg4);color:var(--text2);border:1px solid var(--border);width:auto}.planner-health-summary{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:12px}.planner-health-summary .summary-copy{font-size:12px;color:var(--text2);line-height:1.5}.planner-health-summary .summary-score{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--accent)}
 .section-actions{display:flex;gap:3px;flex-shrink:0}
 
 /* ===== CHECKLIST ===== */
@@ -390,7 +392,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .nav-badge.pro-badge-nav{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);font-weight:700;font-size:8px;padding:1px 5px}
 
 
-/* ===== V1.1 ONBOARDING & EMPTY STATES ===== */
+/* ===== V1.2 ONBOARDING & EMPTY STATES ===== */
 .onboarding-card{display:none;margin-bottom:14px;border-color:var(--accent-border);background:linear-gradient(135deg,var(--accent-dim),transparent 72%),var(--bg2)}
 .onboarding-card.show{display:block}
 .onboarding-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
@@ -403,7 +405,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 .empty h3{font-size:14px;color:var(--text);font-family:var(--font-head);font-weight:600;margin:6px 0 4px}.empty .empty-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}.empty .mini{font-size:12px;color:var(--text3);max-width:360px;margin:4px auto 0}.recovery-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.data-note{font-size:11px;color:var(--text3);line-height:1.55;margin-top:8px}
 @media (max-width:650px){.onboarding-steps{grid-template-columns:1fr}.onboarding-head{flex-direction:column}.onboarding-actions .btn{width:100%;justify-content:center}}
 
-/* ===== V1.1 RELEASE POLISH ===== */
+/* ===== V1.2 RELEASE POLISH ===== */
 .starter-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 12px}
 .starter-card{border:1px solid var(--border);background:var(--bg3);border-radius:var(--r-md);padding:10px;cursor:pointer;transition:all .15s;text-align:left;color:var(--text2)}
 .starter-card:hover{border-color:var(--accent-border);color:var(--accent)}
@@ -483,7 +485,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       </div>
     </div>
     <div class="sidebar-footer">
-      <div style="font-size:10px;color:var(--text3);padding:8px 10px">Sekkei v1.1</div>
+      <div style="font-size:10px;color:var(--text3);padding:8px 10px">Sekkei v1.2</div>
     </div>
   </div>
 
@@ -534,7 +536,13 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
           <div class="panel-sub">Drag to reorder - Click edit to rename - Label every section</div>
         </div>
         <div style="display:flex;gap:6px">
-          <button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Quick Template</button>
+          <select id="planner-preset" class="dependency-select" title="Section preset">
+            <option value="landing">Landing</option>
+            <option value="service">Service</option>
+            <option value="woo">Woo</option>
+            <option value="blog">Blog</option>
+          </select>
+          <button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Add Preset</button>
           <button class="btn btn-accent btn-sm" onclick="openAddSection()"><i class="ti ti-plus"></i> Add Section</button>
         </div>
       </div>
@@ -571,6 +579,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       </div>
 
       <div class="card">
+        <div id="section-health-summary" class="planner-health-summary"></div>
         <div id="section-list" class="section-list">
           <div class="empty"><i class="ti ti-layout-rows"></i><p>No sections yet. Add your first section.</p></div>
         </div>
@@ -589,9 +598,18 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
             <option value="custom">Custom</option>
           </select>
         </div>
-        <div class="form-grid-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div class="form-grid-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
           <input type="text" id="new-sec-note" placeholder="Note (e.g. 2-column layout, video bg...)" />
           <input type="text" id="new-sec-css" placeholder="CSS class or ID (e.g. .hero-section)" />
+        </div>
+        <div class="form-grid-row" style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px">
+          <select id="new-sec-dependency" title="Section dependency">
+            <option value="ready">Ready to build</option>
+            <option value="copy">Waiting for copy</option>
+            <option value="image">Waiting for images</option>
+            <option value="approval">Waiting for client approval</option>
+            <option value="development">Needs development</option>
+          </select>
         </div>
         <div style="display:flex;gap:6px">
           <button class="btn btn-accent" onclick="addSection()"><i class="ti ti-plus"></i> Add Section</button>
@@ -856,6 +874,7 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
           <button class="btn btn-accent" onclick="buildExport()"><i class="ti ti-refresh"></i> Refresh</button>
           <button class="btn" onclick="copyExport()"><i class="ti ti-copy"></i> Copy All</button>
           <button class="btn" onclick="downloadExport()"><i class="ti ti-download"></i> Download .txt</button>
+          <button class="btn" onclick="copyOutlineExport()"><i class="ti ti-layout-rows"></i> Copy Outline</button>
         </div>
       </div>
       <div class="card">
@@ -955,7 +974,16 @@ const STORAGE_KEY = 'itspc_state';
 const BACKUP_KEY = 'itspc_state_backup';
 const ONBOARDING_KEY = 'itspc_onboarding_done_v11';
 
-const SECTION_TYPES = ['hero', 'nav', 'content', 'features', 'cta', 'footer', 'container'];
+const SECTION_TYPES = ['hero', 'nav', 'content', 'features', 'cta', 'footer', 'container', 'custom'];
+const SECTION_DEPENDENCIES = ['ready', 'copy', 'image', 'approval', 'development'];
+const DEPENDENCY_LABELS = {
+  ready: 'Ready',
+  copy: 'Copy needed',
+  image: 'Images needed',
+  approval: 'Approval',
+  development: 'Dev needed'
+};
+const GENERIC_SECTION_NAMES = ['section', 'container', 'untitled section', 'inner section'];
 const COLOR_ROLES = ['primary', 'secondary', 'text', 'accent', 'background', 'custom', ''];
 
 function cleanText(value, maxLen = 500) {
@@ -995,7 +1023,10 @@ function normalizeSection(section) {
     name: cleanText(section && section.name, 120) || 'Untitled Section',
     type: SECTION_TYPES.includes(type) ? type : 'content',
     note: cleanText(section && section.note, 600),
-    css: cleanCssClass(section && section.css)
+    css: cleanCssClass(section && section.css),
+    dependency: SECTION_DEPENDENCIES.includes(cleanText(section && section.dependency, 24)) ? cleanText(section && section.dependency, 24) : 'ready',
+    elementorChildren: Math.max(0, parseInt(section && section.elementorChildren, 10) || 0),
+    lastElementorTitle: cleanText(section && section.lastElementorTitle, 120)
   };
 }
 
@@ -1365,35 +1396,69 @@ function addSection() {
   const type = SECTION_TYPES.includes(document.getElementById('new-sec-type').value) ? document.getElementById('new-sec-type').value : 'content';
   const note = cleanText(document.getElementById('new-sec-note').value, 600);
   const css = cleanCssClass(document.getElementById('new-sec-css').value);
-  proj().sections.push({ id: 's' + (nextId++), name, type, note, css });
+  const dependency = SECTION_DEPENDENCIES.includes(document.getElementById('new-sec-dependency').value) ? document.getElementById('new-sec-dependency').value : 'ready';
+  proj().sections.push({ id: 's' + (nextId++), name, type, note, css, dependency });
   document.getElementById('new-sec-name').value = '';
   document.getElementById('new-sec-note').value = '';
   document.getElementById('new-sec-css').value = '';
+  document.getElementById('new-sec-dependency').value = 'ready';
   renderSections();
   saveState();
   updateBadges();
 }
 
+function getPresetSections(preset) {
+  const presets = {
+    landing: [
+      { name: 'Navigation Bar', type: 'nav', note: 'Logo + menu + CTA button', css: '.nav-section' },
+      { name: 'Hero Section', type: 'hero', note: 'Main headline + CTA + hero image/video', css: '.hero-section' },
+      { name: 'Features / Services', type: 'features', note: 'Icon boxes or feature cards', css: '.features-section' },
+      { name: 'About / Story', type: 'content', note: 'Company intro, mission, team', css: '.about-section' },
+      { name: 'Testimonials', type: 'content', note: 'Client reviews and social proof', css: '.testimonials-section' },
+      { name: 'Pricing', type: 'content', note: 'Pricing plans comparison', css: '.pricing-section' },
+      { name: 'FAQ', type: 'content', note: 'Answer common objections', css: '.faq-section' },
+      { name: 'CTA Section', type: 'cta', note: 'Final call to action with form or button', css: '.cta-section' },
+      { name: 'Footer', type: 'footer', note: 'Links, contact, social, copyright', css: '.footer-section' }
+    ],
+    service: [
+      { name: 'Hero', type: 'hero', note: 'Service promise + booking CTA', css: '.service-hero' },
+      { name: 'Problems', type: 'content', note: 'Client pain points', css: '.problems-section', dependency: 'copy' },
+      { name: 'Services', type: 'features', note: 'Core service cards', css: '.services-section' },
+      { name: 'Process', type: 'content', note: 'Step-by-step delivery', css: '.process-section' },
+      { name: 'Proof', type: 'content', note: 'Results, testimonials, badges', css: '.proof-section', dependency: 'image' },
+      { name: 'Contact CTA', type: 'cta', note: 'Lead form or calendar link', css: '.contact-cta' }
+    ],
+    woo: [
+      { name: 'Shop Hero', type: 'hero', note: 'Offer + category links', css: '.shop-hero' },
+      { name: 'Featured Products', type: 'features', note: 'Best sellers grid', css: '.featured-products' },
+      { name: 'Categories', type: 'content', note: 'Product category cards', css: '.category-section', dependency: 'image' },
+      { name: 'Trust Badges', type: 'content', note: 'Shipping, returns, secure checkout', css: '.trust-badges' },
+      { name: 'Reviews', type: 'content', note: 'Customer reviews', css: '.reviews-section', dependency: 'approval' },
+      { name: 'Footer CTA', type: 'cta', note: 'Newsletter or sale CTA', css: '.shop-cta' }
+    ],
+    blog: [
+      { name: 'Archive Header', type: 'hero', note: 'Topic intro + search', css: '.archive-header' },
+      { name: 'Featured Post', type: 'content', note: 'Pinned editorial card', css: '.featured-post', dependency: 'copy' },
+      { name: 'Post Grid', type: 'features', note: 'Article cards and filters', css: '.post-grid' },
+      { name: 'Sidebar / CTA', type: 'cta', note: 'Newsletter, lead magnet, socials', css: '.blog-cta' },
+      { name: 'Footer', type: 'footer', note: 'Archive links and copyright', css: '.footer-section' }
+    ]
+  };
+  return presets[preset] || presets.landing;
+}
+
 function addQuickSections() {
-  const templates = [
-    { name: 'Navigation Bar', type: 'nav', note: 'Logo + menu + CTA button', css: '.nav-section' },
-    { name: 'Hero Section', type: 'hero', note: 'Main headline + CTA + hero image/video', css: '.hero-section' },
-    { name: 'Features / Services', type: 'content', note: 'Icon boxes or feature cards', css: '.features-section' },
-    { name: 'About / Story', type: 'content', note: 'Company intro, mission, team', css: '.about-section' },
-    { name: 'Portfolio / Work', type: 'content', note: 'Project gallery or case studies', css: '.portfolio-section' },
-    { name: 'Testimonials', type: 'content', note: 'Client reviews and social proof', css: '.testimonials-section' },
-    { name: 'Pricing', type: 'content', note: 'Pricing plans comparison', css: '.pricing-section' },
-    { name: 'CTA Section', type: 'cta', note: 'Final call to action with form or button', css: '.cta-section' },
-    { name: 'Footer', type: 'footer', note: 'Links, contact, social, copyright', css: '.footer-section' },
-  ];
+  const presetEl = document.getElementById('planner-preset');
+  const preset = presetEl ? presetEl.value : 'landing';
+  const templates = getPresetSections(preset);
   templates.forEach(t => {
-    proj().sections.push({ id: 's' + (nextId++), ...t });
+    proj().sections.push(normalizeSection({ id: 's' + (nextId++), dependency: 'ready', ...t }));
   });
   renderSections();
   saveState();
   updateBadges();
   renderOnboarding();
-  toast('9 sections added!');
+  toast(templates.length + ' preset sections added!');
 }
 
 function deleteSection(id) {
@@ -1412,6 +1477,7 @@ function moveSection(id, dir) {
   [secs[idx], secs[newIdx]] = [secs[newIdx], secs[idx]];
   renderSections();
   saveState();
+  toast('Planner order updated. Elementor canvas order is unchanged.');
 }
 
 function editSection(id) {
@@ -1422,6 +1488,8 @@ function editSection(id) {
     sec.name = cleanText(newName, 120);
     const newNote = prompt('Note:', sec.note || '');
     if (newNote !== null) sec.note = cleanText(newNote, 600);
+    const dep = prompt('Dependency: ready, copy, image, approval, development', sec.dependency || 'ready');
+    if (dep !== null) sec.dependency = SECTION_DEPENDENCIES.includes(dep.trim()) ? dep.trim() : 'ready';
     renderSections();
     saveState();
     
@@ -1437,14 +1505,73 @@ function editSection(id) {
   }
 }
 
+function isGenericSectionName(name) {
+  const normalized = cleanText(name, 120).toLowerCase();
+  return !normalized || GENERIC_SECTION_NAMES.includes(normalized);
+}
+
+function getSectionHealth(section, sections) {
+  const items = [];
+  const name = cleanText(section.name, 120);
+  if (isGenericSectionName(name)) items.push({ level: 'warn', label: 'Title' });
+  if (section.css) {
+    const css = section.css.toLowerCase();
+    const duplicates = sections.filter(s => s.css && s.css.toLowerCase() === css).length;
+    if (duplicates > 1) items.push({ level: 'risk', label: 'Duplicate CSS' });
+  }
+  if ((section.elementorId || section.elementorCid) && section.elementorChildren === 0) {
+    items.push({ level: 'warn', label: 'Empty' });
+  }
+  if (!(section.elementorId || section.elementorCid)) {
+    items.push({ level: 'info', label: 'Planner only' });
+  }
+  if (section.dependency && section.dependency !== 'ready') {
+    items.push({ level: 'warn', label: DEPENDENCY_LABELS[section.dependency] || 'Waiting' });
+  }
+  return items;
+}
+
+function getPageHealth(sections) {
+  const sectionIssues = sections.reduce((count, section) => count + getSectionHealth(section, sections).filter(i => i.level !== 'info').length, 0);
+  const hasCta = sections.some(s => s.type === 'cta' || /\b(cta|contact|book|buy|checkout|quote)\b/i.test((s.name || '') + ' ' + (s.note || '') + ' ' + (s.css || '')));
+  return { sectionIssues, hasCta, totalIssues: sectionIssues + (hasCta ? 0 : 1) };
+}
+
+function renderSectionHealthSummary(sections) {
+  const el = document.getElementById('section-health-summary');
+  if (!el) return;
+  if (!sections.length) { el.innerHTML = ''; return; }
+  const health = getPageHealth(sections);
+  const score = Math.max(0, Math.round(100 - Math.min(health.totalIssues, 8) * 12.5));
+  const cta = health.hasCta ? '<span class="health-pill ok">CTA ready</span>' : '<span class="health-pill warn">No CTA section</span>';
+  const issue = health.sectionIssues ? '<span class="health-pill warn">' + health.sectionIssues + ' section warnings</span>' : '<span class="health-pill ok">Sections clean</span>';
+  el.innerHTML = '<div><div class="summary-score">' + score + '% planner health</div><div class="summary-copy">Checks titles, duplicate CSS, linked empty containers, dependencies, and CTA coverage.</div></div><div class="section-health">' + cta + issue + '</div>';
+}
+
+function dependencyOptions(value) {
+  return SECTION_DEPENDENCIES.map(dep => '<option value="' + dep + '"' + (dep === value ? ' selected' : '') + '>' + DEPENDENCY_LABELS[dep] + '</option>').join('');
+}
+
+function setSectionDependency(id, value) {
+  const sec = proj().sections.find(s => s.id === id);
+  if (!sec) return;
+  sec.dependency = SECTION_DEPENDENCIES.includes(value) ? value : 'ready';
+  renderSections();
+  saveState();
+}
+
 function renderSections() {
   const list = document.getElementById('section-list');
   const secs = proj().sections;
+  renderSectionHealthSummary(secs);
   if (!secs.length) {
-    list.innerHTML = '<div class="empty"><i class="ti ti-layout-rows"></i><h3>Start with your page outline</h3><p class="mini">Add sections manually or scaffold a complete landing page structure.</p><div class="empty-actions"><button class="btn btn-accent btn-sm" onclick="openAddSection()"><i class="ti ti-plus"></i> Add Section</button><button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Quick Template</button></div></div>'; 
+    list.innerHTML = '<div class="empty"><i class="ti ti-layout-rows"></i><h3>Start with your page outline</h3><p class="mini">Add sections manually or scaffold a complete page structure from a preset.</p><div class="empty-actions"><button class="btn btn-accent btn-sm" onclick="openAddSection()"><i class="ti ti-plus"></i> Add Section</button><button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Add Preset</button></div></div>'; 
     return;
   }
-  list.innerHTML = secs.map((s, i) => `
+  list.innerHTML = secs.map((s, i) => {
+    const health = getSectionHealth(s, secs);
+    const healthHtml = health.length ? '<div class="section-health">' + health.map(item => '<span class="health-pill ' + item.level + '">' + esc(item.label) + '</span>').join('') + '</div>' : '<div class="section-health"><span class="health-pill ok">Healthy</span></div>';
+    return `
     <div class="section-card" draggable="true" data-id="${s.id}"
          ondragstart="onDragStart(event,'${s.id}')"
          ondragover="onDragOver(event)"
@@ -1457,10 +1584,12 @@ function renderSections() {
       <div class="section-info">
         <div class="section-name">
           ${esc(s.name)}
-          ${(s.elementorId || s.elementorCid) ? ` <span class="sync-badge" title="Linked with Elementor Element"><i class="ti ti-link" style="font-size:11px;color:var(--teal)"></i></span>` : ''}
+          ${(s.elementorId || s.elementorCid) ? ` <span class="sync-badge" title="Linked with Elementor element"><i class="ti ti-link" style="font-size:11px;color:var(--teal)"></i></span>` : ''}
         </div>
         ${s.note ? `<div class="section-note">${esc(s.note)}</div>` : ''}
         ${s.css ? `<div class="section-css">${esc(s.css)}</div>` : ''}
+        <div class="section-meta-row"><select class="dependency-select" title="Dependency" onclick="event.stopPropagation()" onchange="setSectionDependency('${s.id}',this.value)">${dependencyOptions(s.dependency || 'ready')}</select></div>
+        ${healthHtml}
       </div>
       <div class="section-actions">
         <button class="btn btn-icon btn-sm" onclick="moveSection('${s.id}',-1)" title="Move up"><i class="ti ti-arrow-up"></i></button>
@@ -1468,8 +1597,8 @@ function renderSections() {
         <button class="btn btn-icon btn-sm" onclick="editSection('${s.id}')" title="Edit"><i class="ti ti-edit"></i></button>
         <button class="btn btn-icon btn-sm" onclick="deleteSection('${s.id}')" title="Delete"><i class="ti ti-trash"></i></button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 // Drag & Drop
@@ -1492,6 +1621,7 @@ function onDrop(e, targetId) {
   secs.splice(toIdx, 0, item);
   renderSections();
   saveState();
+  toast('Planner order updated. Elementor canvas order is unchanged.');
   dragSrcId = null;
 }
 
@@ -1960,6 +2090,9 @@ function buildExport() {
       out += `  ${String(i+1).padStart(2,'0')}. [${s.type.toUpperCase()}] ${s.name}\n`;
       if (s.note) out += `      Note: ${s.note}\n`;
       if (s.css) out += `      CSS: ${s.css}\n`;
+      if (s.dependency && s.dependency !== 'ready') out += `      Dependency: ${DEPENDENCY_LABELS[s.dependency] || s.dependency}\n`;
+      const health = getSectionHealth(s, p.sections || []).filter(item => item.level !== 'info');
+      if (health.length) out += `      Warnings: ${health.map(item => item.label).join(', ')}\n`;
       out += '\n';
     });
   }
@@ -2016,8 +2149,37 @@ function buildExport() {
     out += p.notes.split('\n').map(l => '  ' + l).join('\n') + '\n';
   }
 
-  out += `\n\n  End of Export  Sekkei v1.1\n`;
+  out += `\n\n  End of Export  Sekkei v1.2\n`;
   document.getElementById('export-preview').textContent = out;
+}
+
+function buildOutlineExport() {
+  const p = proj();
+  const sections = p.sections || [];
+  let out = 'SEKKEI PAGE OUTLINE\n';
+  out += p.name + '\n';
+  out += 'Generated: ' + new Date().toLocaleString() + '\n\n';
+  if (!sections.length) {
+    out += 'No sections planned yet.\n';
+    return out;
+  }
+  const pageHealth = getPageHealth(sections);
+  out += 'Planner health: ' + Math.max(0, Math.round(100 - Math.min(pageHealth.totalIssues, 8) * 12.5)) + '%\n';
+  out += 'CTA coverage: ' + (pageHealth.hasCta ? 'Ready' : 'No CTA section') + '\n\n';
+  sections.forEach((s, i) => {
+    out += String(i + 1).padStart(2, '0') + '. ' + s.name + ' [' + s.type.toUpperCase() + ']\n';
+    if (s.note) out += '    Goal: ' + s.note + '\n';
+    if (s.css) out += '    CSS: ' + s.css + '\n';
+    if (s.dependency && s.dependency !== 'ready') out += '    Waiting: ' + (DEPENDENCY_LABELS[s.dependency] || s.dependency) + '\n';
+    const warnings = getSectionHealth(s, sections).filter(item => item.level !== 'info');
+    if (warnings.length) out += '    Review: ' + warnings.map(item => item.label).join(', ') + '\n';
+    out += '\n';
+  });
+  return out;
+}
+
+function copyOutlineExport() {
+  copyText(buildOutlineExport());
 }
 
 function copyExport() {
@@ -2036,7 +2198,7 @@ function downloadExport() {
 }
 
 function exportJSON() {
-  const data = { version: '1.1', project: normalizeProject(proj()), exportDate: new Date().toISOString() };
+  const data = { version: '1.2', project: normalizeProject(proj()), exportDate: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -2220,7 +2382,8 @@ function getParentSections() {
                 id,
                 cid,
                 title: cleanText(getModelSetting(child, '_title') || (elType.charAt(0).toUpperCase() + elType.slice(1)), 120),
-                type: elType
+                type: elType,
+                children: getContainerChildren(child).length
               });
             }
             walk(child);
@@ -2247,7 +2410,8 @@ function getParentSections() {
             id,
             cid: '',
             title: cleanText(node.getAttribute('data-element_type') || (isSection ? 'Section' : 'Container'), 120),
-            type: isSection ? 'section' : 'container'
+            type: isSection ? 'section' : 'container',
+            children: node.querySelectorAll('.elementor-widget, .e-con, .elementor-column').length
           });
         });
         return found;
@@ -2268,7 +2432,8 @@ function syncWithElementor(options = {}) {
     id: cleanId(es && es.id, ''),
     cid: cleanId(es && es.cid, ''),
     title: cleanText(es && es.title, 120) || 'Container',
-    type: cleanText(es && es.type, 20) === 'section' ? 'section' : 'container'
+    type: cleanText(es && es.type, 20) === 'section' ? 'section' : 'container',
+    children: Math.max(0, parseInt(es && es.children, 10) || 0)
   })).filter(es => es.id || es.cid) : getParentSections();
   if (!elSecs.length) return;
 
@@ -2281,13 +2446,6 @@ function syncWithElementor(options = {}) {
       (es.cid && ps.elementorCid === es.cid)
     );
 
-    if (!existing && plannerSecs[idx] && !plannerSecs[idx].elementorId && !plannerSecs[idx].elementorCid) {
-      existing = plannerSecs[idx];
-      existing.elementorId = es.id;
-      existing.elementorCid = es.cid;
-      changed = true;
-    }
-
     if (existing) {
       if (existing.elementorId !== es.id) {
         existing.elementorId = es.id;
@@ -2297,8 +2455,16 @@ function syncWithElementor(options = {}) {
         existing.elementorCid = es.cid;
         changed = true;
       }
-      if (es.title && existing.name !== es.title) {
+      if (existing.elementorChildren !== es.children) {
+        existing.elementorChildren = es.children;
+        changed = true;
+      }
+      if (es.title && existing.name !== es.title && (isGenericSectionName(existing.name) || existing.name === existing.lastElementorTitle)) {
         existing.name = es.title;
+        changed = true;
+      }
+      if (existing.lastElementorTitle !== es.title) {
+        existing.lastElementorTitle = es.title;
         changed = true;
       }
       return;
@@ -2311,7 +2477,10 @@ function syncWithElementor(options = {}) {
       name: es.title,
       type: es.type === 'section' ? 'content' : es.type,
       note: '',
-      css: ''
+      css: '',
+      dependency: 'ready',
+      elementorChildren: es.children,
+      lastElementorTitle: es.title
     }));
     changed = true;
   });
@@ -2377,6 +2546,7 @@ window.addEventListener('message', function(event) {
     const sec = proj().sections.find(s => s.elementorCid === cid || s.elementorId === id);
     if (sec && sec.name !== title) {
       sec.name = cleanText(title, 120);
+      sec.lastElementorTitle = sec.name;
       if (cid) sec.elementorCid = cleanId(cid, '');
       renderSections();
       saveState();

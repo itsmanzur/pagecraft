@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ Stop switching between apps and browser tabs - plan, design, and organize everyt
 
 =  Key Features =
 
-**Section Planner** - Plan your page structure before building. Add sections with names, types (hero/nav/content/CTA/footer/custom), CSS classes, and notes. Drag-and-drop to reorder. Quick template to scaffold common pages.
+**Section Planner** - Plan your page structure before building. Add sections with names, types, CSS classes, notes, dependencies, and health warnings. Sync Elementor containers into the planner, rename linked sections safely, and export a clean page outline for client approval.
 
 **Design Checklist** - Never miss a step. 30+ checklist items across 5 categories: Before Design, Structure, Design, Mobile, and Handover. Add custom items and groups. Track progress with a live progress bar.
 
@@ -114,6 +114,12 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 
 == Changelog ==
 
+= 1.2.0 =
+* Added smarter Section Planner health warnings for titles, duplicate CSS classes, empty linked containers, dependencies, and CTA coverage
+* Added reusable section presets for landing, service, WooCommerce, and blog page planning
+* Added client-ready page outline copy export
+* Improved Elementor structure sync with safer linking and nested container rename support
+
 = 1.1.1 =
 * Fixed onboarding welcome card not appearing on first install
 * Removed redundant font preload tags causing browser console warnings
@@ -140,6 +146,9 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 * Settings page for panel configuration
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Adds smarter Section Planner health, dependencies, reusable presets, page outline export, and safer Elementor sync.
 
 = 1.1.0 =
 Improves the first-run workflow, local data recovery, JSON import safety, and editor panel asset loading.

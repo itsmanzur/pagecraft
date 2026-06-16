@@ -130,6 +130,28 @@
         return settings && settings[key] ? settings[key] : '';
     }
 
+    function findElementorContainer(container, id, cid) {
+        if (!container) {
+            return null;
+        }
+        var model = container.model;
+        if (model) {
+            var modelId = cleanId(typeof model.get === 'function' ? model.get('id') : model.id);
+            var modelCid = cleanId(model.cid || '');
+            if ((id && modelId === id) || (cid && modelCid === cid)) {
+                return container;
+            }
+        }
+        var children = getContainerChildren(container);
+        for (var i = 0; i < children.length; i++) {
+            var found = findElementorContainer(children[i], id, cid);
+            if (found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
     function getElementorLayoutElements() {
         if (typeof elementor === 'undefined' || !elementor.documents) {
             return [];
@@ -154,7 +176,8 @@
                             id: id,
                             cid: cid,
                             title: cleanText(getModelSetting(child, '_title') || (elType.charAt(0).toUpperCase() + elType.slice(1)), 120),
-                            type: elType
+                            type: elType,
+                            children: getContainerChildren(child).length
                         });
                     }
 
@@ -193,7 +216,8 @@
                     id: id,
                     cid: '',
                     title: cleanText(node.getAttribute('data-element_type') || (isSection ? 'Section' : 'Container'), 120),
-                    type: isSection ? 'section' : 'container'
+                    type: isSection ? 'section' : 'container',
+                    children: node.querySelectorAll('.elementor-widget, .e-con, .elementor-column').length
                 });
             });
             return found;
@@ -404,9 +428,7 @@
                 if (typeof elementor !== 'undefined' && elementor.documents) {
                     var doc = elementor.documents.getCurrent();
                     if (doc && doc.container) {
-                        var container = doc.container.children.filter(function(child) {
-                            return child.model.cid === safeCid || child.model.get('id') === safeId;
-                        })[0];
+                        var container = findElementorContainer(doc.container, safeId, safeCid);
                         
                         if (container) {
                             if (typeof $e !== 'undefined') {
@@ -610,9 +632,7 @@
                     if (id && typeof elementor !== 'undefined' && elementor.documents) {
                         var doc = elementor.documents.getCurrent();
                         if (doc && doc.container) {
-                            var container = doc.container.children.filter(function(child) {
-                                return child.model.get('id') === id;
-                            })[0];
+                            var container = findElementorContainer(doc.container, cleanId(id), '');
                             if (container) {
                                 title = container.model.getSetting('_title') || '';
                             }
