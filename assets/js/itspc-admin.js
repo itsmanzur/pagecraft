@@ -334,6 +334,17 @@
                     "Quickly insert tags like `[Feedback]` or `[Todo]` and use date stamps to keep logs organized."
                 ],
                 tip: "Insert a date stamp (`Ctrl+D` shortcut or the date tag button) at the start of each client feedback session to log revisions chronologically."
+            },
+            audit: {
+                title: "Pre-Publish Audit ",
+                what: "Automatically scans the Elementor builder preview canvas for content and structural layout issues, accessibility warnings, and SEO metadata gaps.",
+                how: [
+                    "Open the Pre-Publish Audit tab inside the Sekkei tool panel.",
+                    "Click 'Run Scan' to scan the active Elementor document canvas.",
+                    "Review issues classified by severity (Critical link failures, color contrast accessibility warnings, heading level skips, oversized image alerts, or missing meta titles/descriptions).",
+                    "Click 'Locate' on any issue to automatically scroll to and highlight the element in your canvas, or click 'Export Report' to download a text report for client handoff."
+                ],
+                tip: "Run a full scan right before scheduling client walkthroughs or launching live websites to verify all components are fully polished."
             }
         };
 

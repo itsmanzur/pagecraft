@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Sekkei  Elementor Editor Integration
  *
  * Injects floating button and sliding iframe panel into the Elementor editor.
@@ -252,6 +252,16 @@
         var lastStructureSignature = '';
         var structureSyncTimer = null;
         var structureSyncDebounce = null;
+        var position   = (typeof itspcData !== 'undefined' && itspcData.panelPosition) ? itspcData.panelPosition : 'right';
+
+        function updateToggleBtnPosition() {
+            if (isOpen && position === 'right') {
+                var panelWidth = panel.offsetWidth;
+                btn.style.right = (panelWidth + 16) + 'px';
+            } else {
+                btn.style.right = '';
+            }
+        }
 
         // Custom lightning bolt SVG icon
         var ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:5px;margin-top:-2px;"><path d="M13 10h7l-9 13v-9H5l9-13v9z"/></svg>';
@@ -356,6 +366,7 @@
             btnText.innerHTML = ICON_SVG + ' Close';
             document.body.classList.add('itspc-is-open');
             isOpen = true;
+            updateToggleBtnPosition();
         }
 
         function closePanel() {
@@ -366,6 +377,7 @@
             document.body.classList.remove('itspc-is-open');
             isOpen = false;
             stopStructureSync();
+            updateToggleBtnPosition();
         }
 
         function togglePanel() {
@@ -781,6 +793,203 @@
                     }
                 });
 
+                // 5. Scan for Oversized Images (naturalWidth vs display clientWidth)
+                images.forEach(function(img) {
+                    if (img.closest('.elementor-editor-element-setting')) return;
+                    if (img.naturalWidth && img.clientWidth) {
+                        if (img.clientWidth > 50 && img.naturalWidth > img.clientWidth * 2) {
+                            var info = getElementInfo(img);
+                            results.push({
+                                type: 'oversized',
+                                title: 'Oversized Image',
+                                description: 'Image asset width is ' + img.naturalWidth + 'px but displayed at ' + img.clientWidth + 'px. Consider scaling down to save bandwidth.',
+                                elementId: info.id,
+                                previewText: img.naturalWidth + 'px vs ' + img.clientWidth + 'px'
+                            });
+                        }
+                    }
+                });
+
+                // 6. Scan Heading Sequence and Counts
+                var headings = previewDoc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                var h1Count = 0;
+                var headingList = [];
+                headings.forEach(function(h) {
+                    if (h.closest('.elementor-editor-element-setting')) return;
+                    var tag = h.tagName.toLowerCase();
+                    var level = parseInt(tag.charAt(1), 10);
+                    if (tag === 'h1') h1Count++;
+                    var info = getElementInfo(h);
+                    headingList.push({ level: level, elementId: info.id, title: info.title, text: (h.textContent || '').trim() });
+                });
+
+                // H1 SEO Warnings
+                if (h1Count === 0) {
+                    results.push({
+                        type: 'seo',
+                        title: 'Missing H1 Heading',
+                        description: 'Your page does not contain any H1 heading. An H1 is crucial for SEO and screen readers.',
+                        elementId: '',
+                        previewText: 'No H1'
+                    });
+                } else if (h1Count > 1) {
+                    results.push({
+                        type: 'seo',
+                        title: 'Multiple H1 Headings',
+                        description: 'Your page contains ' + h1Count + ' H1 headings. Best practice is to have exactly one H1 per page.',
+                        elementId: '',
+                        previewText: h1Count + ' H1s'
+                    });
+                }
+
+                // Heading Hierarchy Skips
+                for (var k = 1; k < headingList.length; k++) {
+                    var prev = headingList[k - 1];
+                    var curr = headingList[k];
+                    if (curr.level > prev.level + 1) {
+                        results.push({
+                            type: 'accessibility',
+                            title: 'Skipped Heading Level',
+                            description: 'Heading level skipped from H' + prev.level + ' ("' + prev.text.substring(0, 20) + '") directly to H' + curr.level + ' ("' + curr.text.substring(0, 20) + '"). Use consecutive heading levels.',
+                            elementId: curr.elementId,
+                            previewText: 'H' + prev.level + ' to H' + curr.level
+                        });
+                    }
+                }
+
+                // 7. SEO Page Meta Scan
+                var pageTitle = previewDoc.title || '';
+                if (!pageTitle) {
+                    results.push({
+                        type: 'seo',
+                        title: 'Missing Page Title',
+                        description: 'The document title is empty. A page title is required for browser tabs and search engine listing.',
+                        elementId: '',
+                        previewText: 'No title'
+                    });
+                } else if (pageTitle.length < 10 || pageTitle.length > 60) {
+                    results.push({
+                        type: 'seo',
+                        title: 'SEO Title Length Warning',
+                        description: 'Page title ("' + pageTitle.substring(0, 20) + '...") is ' + pageTitle.length + ' characters. Optimal length is between 10 and 60 characters.',
+                        elementId: '',
+                        previewText: pageTitle.length + ' chars'
+                    });
+                }
+
+                var metaDescEl = previewDoc.querySelector('meta[name="description"]');
+                var metaDesc = metaDescEl ? (metaDescEl.getAttribute('content') || '') : '';
+                if (!metaDesc) {
+                    results.push({
+                        type: 'seo',
+                        title: 'Missing Meta Description',
+                        description: 'No meta description found. Add a meta description to summarize page content for search results.',
+                        elementId: '',
+                        previewText: 'No description'
+                    });
+                } else if (metaDesc.length < 50 || metaDesc.length > 160) {
+                    results.push({
+                        type: 'seo',
+                        title: 'SEO Meta Description Length',
+                        description: 'Meta description is ' + metaDesc.length + ' characters. Optimal length is between 50 and 160 characters for search listings.',
+                        elementId: '',
+                        previewText: metaDesc.length + ' chars'
+                    });
+                }
+
+                // 8. Accessibility Checks (Empty buttons, vague links, contrast)
+                var buttons = previewDoc.querySelectorAll('button');
+                buttons.forEach(function(btn) {
+                    if (btn.closest('.elementor-editor-element-setting')) return;
+                    var text = (btn.textContent || '').trim();
+                    var aria = btn.getAttribute('aria-label') || btn.getAttribute('aria-labelledby') || '';
+                    if (!text && !aria) {
+                        var info = getElementInfo(btn);
+                        results.push({
+                            type: 'accessibility',
+                            title: 'Empty Button Label',
+                            description: 'Button has no visible text label or aria-label attribute. This is inaccessible to screen readers.',
+                            elementId: info.id,
+                            previewText: 'Empty button'
+                        });
+                    }
+                });
+
+                var vagueTextRegex = /^(click here|read more|learn more|more|go|link|here|view details|view more|find out more)$/i;
+                links.forEach(function(link) {
+                    if (link.closest('.elementor-editor-element-setting')) return;
+                    var text = (link.textContent || '').trim().replace(/\s+/g, ' ');
+                    if (text && vagueTextRegex.test(text)) {
+                        var info = getElementInfo(link);
+                        results.push({
+                            type: 'accessibility',
+                            title: 'Vague Link Text',
+                            description: 'Link text "' + text + '" is too vague out of context. Screen reader users need descriptive link text (e.g. "Learn more about our services").',
+                            elementId: info.id,
+                            previewText: '"' + text + '"'
+                        });
+                    }
+                });
+
+                var parseColor = function(colorStr) {
+                    if (colorStr.indexOf('rgb') === 0) {
+                        var parts = colorStr.match(/\d+/g);
+                        if (parts && parts.length >= 3) {
+                            return { r: parseInt(parts[0], 10), g: parseInt(parts[1], 10), b: parseInt(parts[2], 10) };
+                        }
+                    }
+                    return null;
+                };
+
+                var getLuminanceVal = function(r, g, b) {
+                    var a = [r, g, b].map(function(v) {
+                        v /= 255;
+                        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+                    });
+                    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+                };
+
+                var textElements = previewDoc.querySelectorAll('p, span, a, h1, h2, h3, h4, h5, h6, button');
+                textElements.forEach(function(el) {
+                    if (el.closest('.elementor-editor-element-setting')) return;
+                    var style = window.getComputedStyle(el);
+                    var color = style.color;
+                    var bgColor = style.backgroundColor;
+
+                    var rgbColor = parseColor(color);
+                    var rgbBg = parseColor(bgColor);
+
+                    if (rgbColor && rgbBg && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
+                        var l1 = getLuminanceVal(rgbColor.r, rgbColor.g, rgbColor.b);
+                        var l2 = getLuminanceVal(rgbBg.r, rgbBg.g, rgbBg.b);
+                        var brightest = Math.max(l1, l2);
+                        var darkest = Math.min(l1, l2);
+                        var ratio = (brightest + 0.05) / (darkest + 0.05);
+
+                        if (ratio < 4.5) {
+                            var fontSize = parseFloat(style.fontSize) || 16;
+                            var fontWeight = style.fontWeight || '400';
+                            var isLarge = fontSize >= 24 || (fontSize >= 18 && (fontWeight === 'bold' || fontWeight === '700' || fontWeight === '800' || fontWeight === '900'));
+                            
+                            if ((isLarge && ratio < 3.0) || (!isLarge && ratio < 4.5)) {
+                                var info = getElementInfo(el);
+                                var alreadyFlagged = results.some(function(r) {
+                                    return r.elementId === info.id && r.type === 'contrast';
+                                });
+                                if (!alreadyFlagged && info.id) {
+                                    results.push({
+                                        type: 'contrast',
+                                        title: 'Low Color Contrast',
+                                        description: 'Text element has low contrast ratio (' + ratio.toFixed(2) + ':1) against its background. Recommended ratio is at least 4.5:1 (3.0:1 for large text).',
+                                        elementId: info.id,
+                                        previewText: ratio.toFixed(2) + ':1 ratio'
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
+
                 // Send results back to Sekkei tool iframe
                 var iframeEl = document.getElementById('itspc-panel-iframe');
                 if (iframeEl && iframeEl.contentWindow) {
@@ -844,11 +1053,46 @@
             });
         }
 
+        // --- Listen to Elementor element selection and send to Sekkei Selector Helper ---
+        if (typeof elementor !== 'undefined' && elementor.channels && elementor.channels.editor) {
+            elementor.channels.editor.on('selected:container', function(container) {
+                if (container && container.model) {
+                    var model = container.model;
+                    var id = model.get('id');
+                    var cid = model.cid;
+                    var settings = model.get('settings');
+                    var cssClasses = '';
+                    var elementId = '';
+                    var title = '';
+                    var elementType = model.get('elType') || '';
+                    
+                    if (settings) {
+                        cssClasses = typeof settings.get === 'function' ? settings.get('css_classes') : (settings.css_classes || '');
+                        elementId = typeof settings.get === 'function' ? settings.get('_element_id') : (settings._element_id || '');
+                        title = typeof settings.get === 'function' ? settings.get('_title') : (settings._title || '');
+                    }
+                    
+                    var iframeEl = document.getElementById('itspc-panel-iframe');
+                    if (iframeEl && iframeEl.contentWindow) {
+                        iframeEl.contentWindow.postMessage({
+                            type: 'itspc_element_selected',
+                            id: id,
+                            cid: cid,
+                            title: title || (elementType.charAt(0).toUpperCase() + elementType.slice(1)),
+                            cssClasses: cssClasses,
+                            elementId: elementId,
+                            elementType: elementType
+                        }, window.location.origin);
+                    }
+                }
+            });
+        }
+
+
         // --- Resize Handle ---
         var isResizing = false;
         var startX     = 0;
         var startWidth = 0;
-        var position   = (typeof itspcData !== 'undefined' && itspcData.panelPosition) ? itspcData.panelPosition : 'right';
 
         resizer.addEventListener('mousedown', function(e) {
             isResizing = true;
@@ -857,6 +1101,7 @@
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
             iframe.style.pointerEvents = 'none';
+            btn.style.transition = 'none'; // Disable transition during drag for real-time tracking
             e.preventDefault();
         });
 
@@ -865,6 +1110,7 @@
             var diff     = (position === 'right') ? (startX - e.clientX) : (e.clientX - startX);
             var newWidth = Math.min(700, Math.max(350, startWidth + diff));
             panel.style.width = newWidth + 'px';
+            updateToggleBtnPosition();
         });
 
         document.addEventListener('mouseup', function() {
@@ -873,6 +1119,7 @@
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
                 iframe.style.pointerEvents = 'auto';
+                btn.style.transition = ''; // Restore CSS transition
             }
         });
     }

@@ -575,6 +575,11 @@ class ITSPC_Admin {
                     <div class="itspc-feature-name"><?php esc_html_e( 'Project Notes', 'sekkei' ); ?></div>
                   </div>
  
+                  <div class="itspc-feature-card" data-feature="audit">
+                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Pre-Publish Audit', 'sekkei' ); ?></div>
+                  </div>
+ 
                 </div>
 
                 <!-- Feature Details Explorer Panel -->

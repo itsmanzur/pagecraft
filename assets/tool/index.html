@@ -513,6 +513,9 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
         <i class="ti ti-typography"></i> Font Pairs
         <span class="nav-badge" id="badge-fonts" style="display:none">PRO</span>
       </div>
+      <div class="nav-item" onclick="showPanel('tokens')" id="nav-tokens">
+        <i class="ti ti-settings-automation"></i> Design Tokens
+      </div>
       <div class="nav-item" onclick="showPanel('css')" id="nav-css">
         <i class="ti ti-code"></i> CSS Generator
       </div>
@@ -551,6 +554,10 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
     <div class="bottom-nav-item" onclick="showPanel('fonts')" id="btn-nav-fonts">
       <i class="ti ti-typography"></i>
       <span>Fonts</span>
+    </div>
+    <div class="bottom-nav-item" onclick="showPanel('tokens')" id="btn-nav-tokens">
+      <i class="ti ti-settings-automation"></i>
+      <span>Tokens</span>
     </div>
     <div class="bottom-nav-item" onclick="showPanel('css')" id="btn-nav-css">
       <i class="ti ti-code"></i>
@@ -717,6 +724,33 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 
       <div id="palette-container"></div>
 
+      <!-- WCAG Contrast Checker -->
+      <div class="card" style="margin-top:12px">
+        <div class="card-title">WCAG Contrast Checker</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Text Color (Foreground)</div>
+            <select id="contrast-fg" onchange="checkContrast()"></select>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Background Color</div>
+            <select id="contrast-bg" onchange="checkContrast()"></select>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:14px">
+          <div id="contrast-preview-box" style="flex:1;padding:12px;border-radius:var(--r-md);font-weight:500;text-align:center;font-size:14px">
+            Aa Bb Cc — Sample Text
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:13px;color:var(--text);font-weight:600">Ratio: <span id="contrast-ratio-val">1.00:1</span></div>
+            <div style="font-size:11px;line-height:1.4">
+              Normal Text: <span id="contrast-normal-aa" class="health-pill">AA</span> <span id="contrast-normal-aaa" class="health-pill">AAA</span><br>
+              Large Text: <span id="contrast-large-aa" class="health-pill">AA</span> <span id="contrast-large-aaa" class="health-pill">AAA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="card" style="margin-top:12px">
         <div class="card-title">Add Color</div>
         <div class="add-color-form">
@@ -766,18 +800,33 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
 
       <div class="card" style="margin-top:16px">
         <div class="card-title">Add Custom Pair</div>
-        <div class="form-grid-row" style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
-          <div>
-            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Heading font</div>
-            <input type="text" id="custom-heading-font" placeholder="e.g. Playfair Display" />
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Heading Font</div>
+              <input type="text" id="custom-heading-font" placeholder="e.g. Playfair Display" />
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Body Font</div>
+              <input type="text" id="custom-body-font" placeholder="e.g. Source Sans Pro" />
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Heading Recommendation</div>
+              <input type="text" id="custom-heading-rec" placeholder="e.g. Wt 700, Lh 1.2" value="Wt 700, Lh 1.2" />
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Body Recommendation</div>
+              <input type="text" id="custom-body-rec" placeholder="e.g. Wt 400, Lh 1.6" value="Wt 400, Lh 1.6" />
+            </div>
           </div>
           <div>
-            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Body font</div>
-            <input type="text" id="custom-body-font" placeholder="e.g. Source Sans Pro" />
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Note</div>
+            <input type="text" id="custom-pair-note" placeholder="Note (e.g. Great for law firms, serious tone)" style="font-size:12px" />
           </div>
-          <button class="btn btn-accent" onclick="addCustomPair()"><i class="ti ti-plus"></i> Save</button>
+          <button class="btn btn-accent" onclick="addCustomPair()" style="align-self:flex-end"><i class="ti ti-plus"></i> Save Pair</button>
         </div>
-        <input type="text" id="custom-pair-note" placeholder="Note (e.g. Great for law firms, serious tone)" style="margin-top:8px;font-size:12px" />
       </div>
     </div>
 
@@ -809,6 +858,10 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
               <div>
                 <div style="font-size:11px;color:var(--text3);margin-bottom:4px">CSS Selector</div>
                 <input type="text" id="css-sel" value=".my-section" />
+                <div id="selector-helper-wrap" style="margin-top:6px;display:none;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:8px">
+                  <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Suggested Selectors from Elementor:</div>
+                  <div id="selector-helper-options" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+                </div>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
                 <div>
@@ -847,6 +900,25 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
                   <input type="number" id="css-radius" value="0" />
                 </div>
               </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Device Target</div>
+                  <select id="css-device">
+                    <option value="all">All Devices</option>
+                    <option value="desktop">Desktop Only</option>
+                    <option value="tablet">Tablet Only</option>
+                    <option value="mobile">Mobile Only</option>
+                  </select>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">CSS Risk Level</div>
+                  <select id="css-risk">
+                    <option value="low">Low Risk</option>
+                    <option value="medium">Medium Risk</option>
+                    <option value="high">High Risk</option>
+                  </select>
+                </div>
+              </div>
               <div>
                 <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Section Label (comment)</div>
                 <input type="text" id="css-comment" placeholder="e.g. Hero Section" />
@@ -874,8 +946,121 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
       </div>
 
       <div class="card" style="margin-top:12px" id="snippets-card">
-        <div class="card-title">Saved Snippets</div>
+        <div class="card-title" style="margin-bottom:8px">Saved Snippets</div>
+        <div class="snippets-filters" style="display:grid;grid-template-columns:1fr 100px 100px;gap:6px;margin-bottom:10px">
+          <input type="text" id="snippet-search" placeholder="Search selector/name..." oninput="renderSnippets()" style="font-size:12px;padding:6px 10px" />
+          <select id="snippet-filter-device" onchange="renderSnippets()" style="font-size:12px;padding:6px 10px;height:auto">
+            <option value="all">All Devices</option>
+            <option value="desktop">Desktop</option>
+            <option value="tablet">Tablet</option>
+            <option value="mobile">Mobile</option>
+          </select>
+          <select id="snippet-filter-risk" onchange="renderSnippets()" style="font-size:12px;padding:6px 10px;height:auto">
+            <option value="all">All Risks</option>
+            <option value="low">Low Risk</option>
+            <option value="medium">Medium</option>
+            <option value="high">High Risk</option>
+          </select>
+        </div>
         <div id="snippets-list"><div style="font-size:12px;color:var(--text3)">No saved snippets yet.</div></div>
+      </div>
+    </div>
+
+    <!-- ===== DESIGN TOKENS ===== -->
+    <div class="panel" id="panel-tokens">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Design <span>Tokens</span></div>
+          <div class="panel-sub">Manage global design variables for consistency</div>
+        </div>
+        <button class="btn btn-accent btn-sm" onclick="copyCSSVariables()"><i class="ti ti-copy"></i> Copy CSS Variables</button>
+      </div>
+
+      <div class="css-generator-grid">
+        <div>
+          <!-- Typography Scale Card -->
+          <div class="card">
+            <div class="card-title">Typography Scale</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Base Size (px)</div>
+                  <input type="number" id="token-typo-base" value="16" min="10" max="32" oninput="updateTypoScale()" />
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Scale Ratio</div>
+                  <select id="token-typo-ratio" onchange="updateTypoScale()">
+                    <option value="1.067">1.067 — Minor Second</option>
+                    <option value="1.125">1.125 — Major Second</option>
+                    <option value="1.200">1.200 — Minor Third</option>
+                    <option value="1.250" selected>1.250 — Major Third</option>
+                    <option value="1.333">1.333 — Perfect Fourth</option>
+                    <option value="1.414">1.414 — Augmented Fourth</option>
+                    <option value="1.500">1.500 — Perfect Fifth</option>
+                    <option value="1.618">1.618 — Golden Ratio</option>
+                  </select>
+                </div>
+              </div>
+              <div class="code-block" id="typo-scale-preview" style="font-size:12px;min-height:160px;max-height:220px"></div>
+            </div>
+          </div>
+
+          <!-- Spacing tokens -->
+          <div class="card" style="margin-top:12px">
+            <div class="card-title">Spacing Scale</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div>
+                <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Base Spacing Unit (px)</div>
+                <input type="number" id="token-space-base" value="8" min="2" max="24" oninput="updateSpacingScale()" />
+              </div>
+              <div class="code-block" id="space-scale-preview" style="font-size:12px;min-height:140px;max-height:200px"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Border Radius & Shadows -->
+          <div class="card">
+            <div class="card-title">Radius &amp; Shadows</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:11px;color:var(--text2);font-weight:600;margin-bottom:2px">Border Radius (px)</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Small (sm)</div>
+                  <input type="number" id="token-radius-sm" value="4" oninput="updateRadiusShadows()" />
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Medium (md)</div>
+                  <input type="number" id="token-radius-md" value="8" oninput="updateRadiusShadows()" />
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Large (lg)</div>
+                  <input type="number" id="token-radius-lg" value="12" oninput="updateRadiusShadows()" />
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Extra Large (xl)</div>
+                  <input type="number" id="token-radius-xl" value="16" oninput="updateRadiusShadows()" />
+                </div>
+              </div>
+
+              <div style="font-size:11px;color:var(--text2);font-weight:600;margin-top:8px;margin-bottom:2px">Box Shadows</div>
+              <div>
+                <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Soft Shadow</div>
+                <input type="text" id="token-shadow-soft" value="0 2px 8px rgba(0,0,0,0.05)" oninput="updateRadiusShadows()" />
+              </div>
+              <div>
+                <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Medium Shadow</div>
+                <input type="text" id="token-shadow-medium" value="0 8px 24px rgba(0,0,0,0.08)" oninput="updateRadiusShadows()" />
+              </div>
+              <div>
+                <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Hard Shadow</div>
+                <input type="text" id="token-shadow-hard" value="0 16px 40px rgba(0,0,0,0.12)" oninput="updateRadiusShadows()" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -944,7 +1129,10 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
           <div class="panel-title">Pre-Publish <span>Audit</span></div>
           <div class="panel-sub">Scan your active Elementor canvas for layout and SEO issues before launching</div>
         </div>
-        <button class="btn btn-accent btn-sm" onclick="runAudit()"><i class="ti ti-scan"></i> Run Scan</button>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm" id="btn-export-audit-report" onclick="exportAuditReport()" style="display:none"><i class="ti ti-download"></i> Export Report</button>
+          <button class="btn btn-accent btn-sm" onclick="runAudit()"><i class="ti ti-scan"></i> Run Scan</button>
+        </div>
       </div>
 
       <div id="audit-placeholder" class="card" style="text-align: center; padding: 40px; border-style: dashed;">
@@ -1023,6 +1211,37 @@ input[type=color]{width:36px;height:36px;padding:2px;border-radius:var(--r-md);b
         <input type="checkbox" id="edit-sec-sync" checked />
         <span>Apply section name to the linked Elementor container title</span>
       </label>
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text2); margin-top: 12px; margin-bottom: 6px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Responsive QA Status</div>
+      <div class="modal-grid" style="grid-template-columns: repeat(3, 1fr); gap: 8px;">
+        <label>
+          <span class="field-label">Desktop QA</span>
+          <select id="edit-sec-qa-desktop">
+            <option value="pending">Pending</option>
+            <option value="pass">Pass</option>
+            <option value="fail">Fail</option>
+          </select>
+        </label>
+        <label>
+          <span class="field-label">Tablet QA</span>
+          <select id="edit-sec-qa-tablet">
+            <option value="pending">Pending</option>
+            <option value="pass">Pass</option>
+            <option value="fail">Fail</option>
+          </select>
+        </label>
+        <label>
+          <span class="field-label">Mobile QA</span>
+          <select id="edit-sec-qa-mobile">
+            <option value="pending">Pending</option>
+            <option value="pass">Pass</option>
+            <option value="fail">Fail</option>
+          </select>
+        </label>
+      </div>
+      <label style="margin-top: 8px; display: block;">
+        <span class="field-label">QA Notes</span>
+        <input type="text" id="edit-sec-qa-notes" placeholder="e.g. Layout checks out on all screen sizes" maxlength="600" />
+      </label>
     </div>
     <div class="modal-actions">
       <button class="btn" onclick="closeSectionModal()">Cancel</button>
@@ -1048,7 +1267,17 @@ let state = {
       colors: [],
       savedFontPairs: [],
       cssSnippets: [],
-      notes: ''
+      notes: '',
+      designTokens: {
+        typography: { base: 16, ratio: 1.250 },
+        spacing: { base: 8 },
+        radius: { sm: 4, md: 8, lg: 12, xl: 16 },
+        shadows: {
+          soft: '0 2px 8px rgba(0,0,0,0.05)',
+          medium: '0 8px 24px rgba(0,0,0,0.08)',
+          hard: '0 16px 40px rgba(0,0,0,0.12)'
+        }
+      }
     }
   }
 };
@@ -1128,6 +1357,9 @@ function cleanDate(value) {
 
 function normalizeSection(section) {
   const type = cleanText(section && section.type, 20).toLowerCase();
+  const qad = cleanText(section && section.qa_desktop, 20).toLowerCase();
+  const qat = cleanText(section && section.qa_tablet, 20).toLowerCase();
+  const qam = cleanText(section && section.qa_mobile, 20).toLowerCase();
   return {
     id: cleanId(section && section.id, 's'),
     elementorId: cleanId(section && section.elementorId, ''),
@@ -1138,7 +1370,11 @@ function normalizeSection(section) {
     css: cleanCssClass(section && section.css),
     dependency: SECTION_DEPENDENCIES.includes(cleanText(section && section.dependency, 24)) ? cleanText(section && section.dependency, 24) : 'ready',
     elementorChildren: Math.max(0, parseInt(section && section.elementorChildren, 10) || 0),
-    lastElementorTitle: cleanText(section && section.lastElementorTitle, 120)
+    lastElementorTitle: cleanText(section && section.lastElementorTitle, 120),
+    qa_desktop: ['pending', 'pass', 'fail'].includes(qad) ? qad : 'pending',
+    qa_tablet: ['pending', 'pass', 'fail'].includes(qat) ? qat : 'pending',
+    qa_mobile: ['pending', 'pass', 'fail'].includes(qam) ? qam : 'pending',
+    qa_notes: cleanText(section && section.qa_notes, 600)
   };
 }
 
@@ -1151,7 +1387,37 @@ function normalizeProject(project) {
     colors: Array.isArray(safe.colors) ? safe.colors.slice(0, 200).map(normalizeColor) : [],
     savedFontPairs: Array.isArray(safe.savedFontPairs) ? safe.savedFontPairs.slice(0, 100).map(normalizeFontPair).filter(p => p.heading && p.body) : [],
     cssSnippets: Array.isArray(safe.cssSnippets) ? safe.cssSnippets.slice(0, 100).map(normalizeSnippet) : [],
-    notes: cleanText(safe.notes, 20000)
+    notes: cleanText(safe.notes, 20000),
+    designTokens: normalizeDesignTokens(safe.designTokens)
+  };
+}
+
+function normalizeDesignTokens(tokens) {
+  const safe = tokens && typeof tokens === 'object' ? tokens : {};
+  const typo = safe.typography && typeof safe.typography === 'object' ? safe.typography : {};
+  const spacing = safe.spacing && typeof safe.spacing === 'object' ? safe.spacing : {};
+  const radius = safe.radius && typeof safe.radius === 'object' ? safe.radius : {};
+  const shadows = safe.shadows && typeof safe.shadows === 'object' ? safe.shadows : {};
+
+  return {
+    typography: {
+      base: parseInt(typo.base, 10) || 16,
+      ratio: parseFloat(typo.ratio) || 1.250
+    },
+    spacing: {
+      base: parseInt(spacing.base, 10) || 8
+    },
+    radius: {
+      sm: parseInt(radius.sm, 10) || 4,
+      md: parseInt(radius.md, 10) || 8,
+      lg: parseInt(radius.lg, 10) || 12,
+      xl: parseInt(radius.xl, 10) || 16
+    },
+    shadows: {
+      soft: cleanText(shadows.soft, 120) || '0 2px 8px rgba(0,0,0,0.05)',
+      medium: cleanText(shadows.medium, 120) || '0 8px 24px rgba(0,0,0,0.08)',
+      hard: cleanText(shadows.hard, 120) || '0 16px 40px rgba(0,0,0,0.12)'
+    }
   };
 }
 
@@ -1187,16 +1453,23 @@ function normalizeFontPair(pair) {
     body: cleanFontName(pair && pair.body),
     previewText: cleanText(pair && pair.previewText, 120),
     tags,
-    note: cleanText(pair && pair.note, 240)
+    note: cleanText(pair && pair.note, 240),
+    headingRec: cleanText(pair && pair.headingRec, 80) || 'Wt 700, Lh 1.2',
+    bodyRec: cleanText(pair && pair.bodyRec, 80) || 'Wt 400, Lh 1.6'
   };
 }
 
 function normalizeSnippet(snippet) {
+  const device = cleanText(snippet && snippet.device, 20).toLowerCase();
+  const risk = cleanText(snippet && snippet.risk, 20).toLowerCase();
   return {
     id: cleanId(snippet && snippet.id, 'snip'),
     name: cleanText(snippet && snippet.name, 120) || 'Snippet',
     code: cleanText(snippet && snippet.code, 20000),
-    date: cleanDate(snippet && snippet.date)
+    date: cleanDate(snippet && snippet.date),
+    selector: cleanCssClass(snippet && snippet.selector),
+    device: ['all', 'desktop', 'tablet', 'mobile'].includes(device) ? device : 'all',
+    risk: ['low', 'medium', 'high'].includes(risk) ? risk : 'low'
   };
 }
 
@@ -1210,8 +1483,10 @@ const fontPairsDB = [
   {id:'f6',heading:'Bebas Neue',body:'Open Sans',tags:['bold'],note:'High-impact display  fitness, sports, events',previewText:'PUSH YOUR LIMITS'},
   {id:'f7',heading:'DM Serif Display',body:'DM Sans',tags:['minimal','modern'],note:'Balanced, approachable  marketing, landing pages',previewText:'Simple. Powerful. Yours.'},
   {id:'f8',heading:'Libre Baskerville',body:'Libre Franklin',tags:['editorial'],note:'Traditional authority  news, education, NGO',previewText:'The Truth, Clearly Told'},
-  {id:'f9',heading:'Noto Serif Bengali',body:'Noto Sans Bengali',tags:['bengali'],note:'Bengali-friendly serif and sans pairing',previewText:'Bengali typography preview'},
-  {id:'f10',heading:'Hind Siliguri',body:'Noto Sans Bengali',tags:['bengali'],note:'Clean Bengali UI pairing for modern designs',previewText:'Bengali brand identity'},
+  {id:'f9',heading:'Noto Serif Bengali',body:'Noto Sans Bengali',tags:['bengali'],note:'Bengali-friendly serif and sans pairing',previewText:'বাংলা ফন্ট প্রিভিউ'},
+  {id:'f10',heading:'Hind Siliguri',body:'Noto Sans Bengali',tags:['bengali'],note:'Clean Bengali UI pairing for modern designs',previewText:'আধুনিক বাংলা ইন্টারফেস'},
+  {id:'f11',heading:'Amiri',body:'Cairo',tags:['arabic'],note:'Traditional Serif Arabic pairing, elegant and readable',previewText:'اللغة العربية والجمال'},
+  {id:'f12',heading:'Tajawal',body:'Lateef',tags:['arabic'],note:'Modern Sans Arabic pairing, clean UI text',previewText:'الخط العربي الحديث'},
 ];
 
 // ===== CHECKLIST DATA =====
@@ -1250,6 +1525,15 @@ const defaultChecklist = {
     'Horizontal scroll eliminated',
     'Mobile menu tested',
   ],
+  'SEO & Handoff': [
+    'Unique H1 tag exists on the page',
+    'Page Title tag is set and under 60 characters',
+    'Meta Description is set and between 50-160 characters',
+    'All images have descriptive alt text tags',
+    'Internal and external links checked (no broken links)',
+    'Social sharing (Open Graph) image and tags set',
+    'Schema markup (Structured Data) verified if needed'
+  ],
   'Handover': [
     'All content finalized (no lorem ipsum)',
     'Forms tested (submission, validation)',
@@ -1263,7 +1547,16 @@ const defaultChecklist = {
 };
 
 function createDefaultProject(name = 'My Project') {
-  return { name, sections: [], checks: {}, colors: [], savedFontPairs: [], cssSnippets: [], notes: '' };
+  return {
+    name,
+    sections: [],
+    checks: {},
+    colors: [],
+    savedFontPairs: [],
+    cssSnippets: [],
+    notes: '',
+    designTokens: normalizeDesignTokens({})
+  };
 }
 
 function createDefaultState() {
@@ -1357,6 +1650,7 @@ function init() {
   renderColors();
   renderFontPairs();
   renderSnippets();
+  renderTokens();
   loadNotes();
   updateBadges();
   renderOnboarding();
@@ -1466,6 +1760,9 @@ function showPanel(id) {
   if (id === 'export') {
     buildExport();
     updateDataHealthStatus();
+  }
+  if (id === 'tokens') {
+    renderTokens();
   }
 }
 
@@ -1614,6 +1911,10 @@ function openSectionModal(id) {
   document.getElementById('edit-sec-note').value = sec.note || '';
   document.getElementById('edit-sec-css').value = sec.css || '';
   document.getElementById('edit-sec-dependency').innerHTML = dependencyOptions(sec.dependency || 'ready');
+  document.getElementById('edit-sec-qa-desktop').value = sec.qa_desktop || 'pending';
+  document.getElementById('edit-sec-qa-tablet').value = sec.qa_tablet || 'pending';
+  document.getElementById('edit-sec-qa-mobile').value = sec.qa_mobile || 'pending';
+  document.getElementById('edit-sec-qa-notes').value = sec.qa_notes || '';
   const linked = !!(sec.elementorCid || sec.elementorId);
   document.getElementById('edit-sec-sync-wrap').style.display = linked ? 'flex' : 'none';
   document.getElementById('edit-sec-sync').checked = linked;
@@ -1652,6 +1953,10 @@ function saveSectionModal() {
   sec.css = cleanCssClass(document.getElementById('edit-sec-css').value);
   const dep = cleanText(document.getElementById('edit-sec-dependency').value, 24);
   sec.dependency = SECTION_DEPENDENCIES.includes(dep) ? dep : 'ready';
+  sec.qa_desktop = document.getElementById('edit-sec-qa-desktop').value;
+  sec.qa_tablet = document.getElementById('edit-sec-qa-tablet').value;
+  sec.qa_mobile = document.getElementById('edit-sec-qa-mobile').value;
+  sec.qa_notes = cleanText(document.getElementById('edit-sec-qa-notes').value, 600);
   const shouldRenameElementor = document.getElementById('edit-sec-sync').checked && (sec.elementorCid || sec.elementorId);
   renderSections();
   saveState();
@@ -1752,9 +2057,16 @@ function renderSections() {
         </div>
         ${displaySettings.plannerShowNotes && s.note ? `<div class="section-note">${esc(s.note)}</div>` : ''}
         ${displaySettings.plannerShowCss && s.css ? `<div class="section-css">${esc(s.css)}</div>` : ''}
-        <div class="section-status-row">
-          <div class="section-meta-row"><select class="dependency-select" title="Dependency" onclick="event.stopPropagation()" onchange="setSectionDependency('${s.id}',this.value)">${dependencyOptions(s.dependency || 'ready')}</select></div>
-          ${healthHtml}
+        <div class="section-status-row" style="margin-top: 7px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <select class="dependency-select" title="Dependency" onclick="event.stopPropagation()" onchange="setSectionDependency('${s.id}',this.value)">${dependencyOptions(s.dependency || 'ready')}</select>
+            ${healthHtml}
+          </div>
+          <div class="qa-indicators" style="display: flex; gap: 6px; align-items: center;" onclick="event.stopPropagation()">
+            <i class="ti ti-device-desktop qa-badge" title="Desktop QA: ${(s.qa_desktop || 'pending').toUpperCase()}" style="cursor: pointer; font-size: 14px; color: ${getQAColor(s.qa_desktop)}; opacity: ${s.qa_desktop === 'pending' ? 0.4 : 1};" onclick="toggleSectionQA('${s.id}', 'desktop')"></i>
+            <i class="ti ti-device-tablet qa-badge" title="Tablet QA: ${(s.qa_tablet || 'pending').toUpperCase()}" style="cursor: pointer; font-size: 14px; color: ${getQAColor(s.qa_tablet)}; opacity: ${s.qa_tablet === 'pending' ? 0.4 : 1};" onclick="toggleSectionQA('${s.id}', 'tablet')"></i>
+            <i class="ti ti-device-mobile qa-badge" title="Mobile QA: ${(s.qa_mobile || 'pending').toUpperCase()}" style="cursor: pointer; font-size: 14px; color: ${getQAColor(s.qa_mobile)}; opacity: ${s.qa_mobile === 'pending' ? 0.4 : 1};" onclick="toggleSectionQA('${s.id}', 'mobile')"></i>
+          </div>
         </div>
       </div>
       <div class="section-actions">
@@ -1765,6 +2077,26 @@ function renderSections() {
       </div>
     </div>`;
   }).join('');
+}
+
+function getQAColor(status) {
+  if (status === 'pass') return 'var(--teal)';
+  if (status === 'fail') return 'var(--red)';
+  return 'var(--text3)';
+}
+
+function toggleSectionQA(id, device) {
+  const sec = proj().sections.find(s => s.id === id);
+  if (!sec) return;
+  const prop = 'qa_' + device;
+  const current = sec[prop] || 'pending';
+  let next = 'pending';
+  if (current === 'pending') next = 'pass';
+  else if (current === 'pass') next = 'fail';
+  sec[prop] = next;
+  renderSections();
+  saveState();
+  toast(`${device.charAt(0).toUpperCase() + device.slice(1)} QA set to ${next.toUpperCase()}`);
 }
 
 // Drag & Drop
@@ -1907,36 +2239,70 @@ function renderColors() {
   const colors = proj().colors || [];
   if (!colors.length) {
     container.innerHTML = '<div class="card"><div class="empty"><i class="ti ti-palette"></i><h3>Build your project palette</h3><p class="mini">Save brand colors with roles so handoff notes and CSS stay consistent.</p></div></div>'; 
-    return;
-  }
-  // Group colors
-  const groups = {};
-  colors.forEach(c => {
-    const g = c.group || 'Project Colors';
-    if (!groups[g]) groups[g] = [];
-    groups[g].push(c);
-  });
-  let html = '';
-  for (const [gname, gcolors] of Object.entries(groups)) {
-    html += `<div class="palette-group card">
-      <div class="palette-group-title">${esc(gname)}</div>
-      <div class="palette-grid">`;
-    gcolors.forEach(c => {
-      html += `<div class="color-swatch" onclick="copyText('${c.hex}')">
-        <div class="swatch-preview" style="background:${c.hex}">
-          <span class="swatch-copy"><i class="ti ti-copy"></i></span>
-          <button class="swatch-delete" onclick="event.stopPropagation();deleteColor('${c.id}')">&times;</button>
-        </div>
-        <div class="swatch-info">
-          <div class="swatch-name">${esc(c.name)}</div>
-          <div class="swatch-hex">${c.hex}</div>
-          <div class="swatch-role">${c.role}</div>
-        </div>
-      </div>`;
+  } else {
+    // Group colors
+    const groups = {};
+    colors.forEach(c => {
+      const g = c.group || 'Project Colors';
+      if (!groups[g]) groups[g] = [];
+      groups[g].push(c);
     });
-    html += '</div></div>';
+    let html = '';
+    for (const [gname, gcolors] of Object.entries(groups)) {
+      html += `<div class="palette-group card">
+        <div class="palette-group-title">${esc(gname)}</div>
+        <div class="palette-grid">`;
+      gcolors.forEach(c => {
+        html += `<div class="color-swatch" onclick="copyText('${c.hex}')">
+          <div class="swatch-preview" style="background:${c.hex}">
+            <span class="swatch-copy"><i class="ti ti-copy"></i></span>
+            <button class="swatch-delete" onclick="event.stopPropagation();deleteColor('${c.id}')">&times;</button>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-name">${esc(c.name)}</div>
+            <div class="swatch-hex">${c.hex}</div>
+            <div class="swatch-role">${c.role}</div>
+          </div>
+        </div>`;
+      });
+      html += '</div></div>';
+    }
+    container.innerHTML = html;
   }
-  container.innerHTML = html;
+
+  // Populate contrast checker select options
+  const fgSelect = document.getElementById('contrast-fg');
+  const bgSelect = document.getElementById('contrast-bg');
+  if (fgSelect && bgSelect) {
+    const prevFg = fgSelect.value;
+    const prevBg = bgSelect.value;
+    
+    let optionsHtml = '';
+    if (!colors.length) {
+      optionsHtml = '<option value="#000000">Black (#000000)</option><option value="#ffffff">White (#ffffff)</option>';
+    } else {
+      optionsHtml = colors.map(c => `<option value="${esc(c.hex)}">${esc(c.name || 'Swatch')} (${esc(c.hex)})</option>`).join('');
+    }
+    
+    fgSelect.innerHTML = optionsHtml;
+    bgSelect.innerHTML = optionsHtml;
+    
+    if (prevFg && Array.from(fgSelect.options).some(o => o.value === prevFg)) {
+      fgSelect.value = prevFg;
+    } else if (colors.length > 0) {
+      fgSelect.value = colors[0].hex;
+    }
+    
+    if (prevBg && Array.from(bgSelect.options).some(o => o.value === prevBg)) {
+      bgSelect.value = prevBg;
+    } else if (colors.length > 1) {
+      bgSelect.value = colors[1].hex;
+    } else {
+      bgSelect.value = '#ffffff';
+    }
+    
+    checkContrast();
+  }
 }
 
 function syncColorsToElementor() {
@@ -2006,6 +2372,8 @@ function renderFontPairCard(p, isSaved) {
   const googleUrl = `https://fonts.google.com/specimen/${encodeURIComponent(p.heading)}`;
   const cssCode = `/* Heading */\nfont-family: '${p.heading}', serif;\n\n/* Body */\nfont-family: '${p.body}', sans-serif;`;
   const linkCode = `<link href="https://fonts.googleapis.com/css2?family=${encodeURIComponent(p.heading)}:wght@400;700&family=${encodeURIComponent(p.body)}:wght@300;400;500&display=swap" rel="stylesheet">`;
+  const headingRec = p.headingRec || 'Wt 700, Lh 1.2';
+  const bodyRec = p.bodyRec || 'Wt 400, Lh 1.6';
 
   return `<div class="font-pair-card">
     <div class="font-pair-preview">
@@ -2025,10 +2393,14 @@ function renderFontPairCard(p, isSaved) {
         <div class="fp-font-name">${esc(p.body)}</div>
       </div>
     </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:10px;padding-top:6px;border-top:1px dashed var(--border);display:flex;gap:12px">
+      <span><strong>Heading:</strong> ${esc(headingRec)}</span>
+      <span><strong>Body:</strong> ${esc(bodyRec)}</span>
+    </div>
     <div class="fp-actions">
       <button class="btn btn-sm" onclick="copyText(\`${cssCode.replace(/`/g, '\\`').replace(/"/g, '&quot;')}\`)"><i class="ti ti-code"></i> Copy CSS</button>
       <button class="btn btn-sm" onclick="copyText(\`${linkCode.replace(/`/g, '\\`').replace(/"/g, '&quot;')}\`)"><i class="ti ti-link"></i> Google Link</button>
-      <button class="btn btn-sm ${isSaved ? 'btn-accent' : ''}" onclick="${isSaved ? `removeSavedPair('${esc(p.heading)}','${esc(p.body)}')` : `saveFontPair('${esc(p.heading)}','${esc(p.body)}','${esc(p.previewText||'')}','${esc((p.tags||[]).join(','))}')`}">
+      <button class="btn btn-sm ${isSaved ? 'btn-accent' : ''}" onclick="${isSaved ? `removeSavedPair('${esc(p.heading)}','${esc(p.body)}')` : `saveFontPair('${esc(p.heading)}','${esc(p.body)}','${esc(p.previewText||'')}','${esc((p.tags||[]).join(','))}','${esc(headingRec)}','${esc(bodyRec)}')`}">
         <i class="ti ti-${isSaved ? 'check' : 'bookmark'}"></i> ${isSaved ? 'Saved' : 'Save'}
       </button>
       <button class="btn btn-sm btn-accent" onclick="syncFontsToElementor('${esc(p.heading)}','${esc(p.body)}')"><i class="ti ti-bolt"></i> Push</button>
@@ -2036,10 +2408,17 @@ function renderFontPairCard(p, isSaved) {
   </div>`;
 }
 
-function saveFontPair(heading, body, preview, tags) {
+function saveFontPair(heading, body, preview, tags, headingRec, bodyRec) {
   const saved = proj().savedFontPairs || [];
   if (!saved.some(sp => sp.heading === heading && sp.body === body)) {
-    saved.push({ heading, body, previewText: preview, tags: tags.split(',').filter(Boolean) });
+    saved.push({ 
+      heading, 
+      body, 
+      previewText: preview, 
+      tags: tags.split(',').filter(Boolean),
+      headingRec: headingRec || 'Wt 700, Lh 1.2',
+      bodyRec: bodyRec || 'Wt 400, Lh 1.6'
+    });
     proj().savedFontPairs = saved;
     saveState();
     renderFontPairs();
@@ -2057,13 +2436,26 @@ function addCustomPair() {
   const heading = cleanFontName(document.getElementById('custom-heading-font').value);
   const body = cleanFontName(document.getElementById('custom-body-font').value);
   const note = document.getElementById('custom-pair-note').value.trim();
+  const headingRec = document.getElementById('custom-heading-rec').value.trim() || 'Wt 700, Lh 1.2';
+  const bodyRec = document.getElementById('custom-body-rec').value.trim() || 'Wt 400, Lh 1.6';
+
   if (!heading || !body) return;
   const saved = proj().savedFontPairs || [];
-  saved.push({ heading, body, previewText: heading + ' + ' + body, tags: ['custom'], note });
+  saved.push({ 
+    heading, 
+    body, 
+    previewText: heading + ' + ' + body, 
+    tags: ['custom'], 
+    note,
+    headingRec,
+    bodyRec
+  });
   proj().savedFontPairs = saved;
   document.getElementById('custom-heading-font').value = '';
   document.getElementById('custom-body-font').value = '';
   document.getElementById('custom-pair-note').value = '';
+  document.getElementById('custom-heading-rec').value = 'Wt 700, Lh 1.2';
+  document.getElementById('custom-body-rec').value = 'Wt 400, Lh 1.6';
   saveState();
   renderFontPairs();
   toast('Custom pair added!');
@@ -2154,8 +2546,20 @@ function saveCSSSnippet() {
   const code = document.getElementById('css-output').textContent;
   if (!code || code.includes('Click Generate')) return;
   const name = cleanText(document.getElementById('css-comment').value, 120) || 'Snippet ' + ((proj().cssSnippets || []).length + 1);
+  const selector = cleanCssClass(document.getElementById('css-sel').value);
+  const device = document.getElementById('css-device').value;
+  const risk = document.getElementById('css-risk').value;
+
   if (!proj().cssSnippets) proj().cssSnippets = [];
-  proj().cssSnippets.push(normalizeSnippet({ id: 'snip' + (nextId++), name, code, date: new Date().toISOString().split('T')[0] }));
+  proj().cssSnippets.push(normalizeSnippet({ 
+    id: 'snip' + (nextId++), 
+    name, 
+    code, 
+    date: new Date().toISOString().split('T')[0],
+    selector,
+    device,
+    risk
+  }));
   saveState();
   renderSnippets();
   toast('Snippet saved!');
@@ -2169,20 +2573,57 @@ function deleteSnippet(id) {
 
 function renderSnippets() {
   const list = document.getElementById('snippets-list');
-  const snippets = proj().cssSnippets || [];
+  let snippets = proj().cssSnippets || [];
+
+  // Apply Search Filter
+  const query = (document.getElementById('snippet-search') ? document.getElementById('snippet-search').value : '').toLowerCase().trim();
+  if (query) {
+    snippets = snippets.filter(s => 
+      (s.name || '').toLowerCase().includes(query) || 
+      (s.selector || '').toLowerCase().includes(query) ||
+      (s.code || '').toLowerCase().includes(query)
+    );
+  }
+
+  // Apply Device Filter
+  const filterDevice = document.getElementById('snippet-filter-device') ? document.getElementById('snippet-filter-device').value : 'all';
+  if (filterDevice !== 'all') {
+    snippets = snippets.filter(s => s.device === filterDevice);
+  }
+
+  // Apply Risk Filter
+  const filterRisk = document.getElementById('snippet-filter-risk') ? document.getElementById('snippet-filter-risk').value : 'all';
+  if (filterRisk !== 'all') {
+    snippets = snippets.filter(s => s.risk === filterRisk);
+  }
+
   if (!snippets.length) {
-    list.innerHTML = '<div class="empty" style="padding:18px 10px"><i class="ti ti-code"></i><h3>No saved snippets yet</h3><p class="mini">Generate CSS, then save useful snippets for reuse.</p><div class="empty-actions"><button class="btn btn-sm" onclick="generateCSS()"><i class="ti ti-refresh"></i> Generate CSS</button></div></div>'; 
+    list.innerHTML = '<div class="empty" style="padding:18px 10px"><i class="ti ti-code"></i><h3>No snippets found</h3><p class="mini">Generate CSS, then save useful snippets or adjust filters.</p></div>'; 
     return;
   }
-  list.innerHTML = snippets.map(s => `
-    <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg3);border-radius:var(--r-md);margin-bottom:6px;border:1px solid var(--border)">
-      <span style="font-size:12px;color:var(--text2);flex:1">${esc(s.name)}</span>
-      <span style="font-size:10px;color:var(--text3)">${esc(s.date)}</span>
-      <button class="btn btn-sm snippet-copy" data-id="${esc(s.id)}"><i class="ti ti-copy"></i></button>
-      <button class="btn btn-sm snippet-view" data-id="${esc(s.id)}"><i class="ti ti-eye"></i></button>
-      <button class="btn btn-sm snippet-delete" data-id="${esc(s.id)}"><i class="ti ti-trash"></i></button>
-    </div>
-  `).join('');
+
+  list.innerHTML = snippets.map(s => {
+    let riskColor = 'var(--text3)';
+    if (s.risk === 'low') riskColor = 'var(--teal)';
+    else if (s.risk === 'medium') riskColor = 'var(--amber)';
+    else if (s.risk === 'high') riskColor = 'var(--red)';
+
+    return `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg3);border-radius:var(--r-md);margin-bottom:6px;border:1px solid var(--border)">
+        <div style="flex:1;min-width:0">
+          <span style="font-size:12px;color:var(--text);font-weight:500;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.name)}</span>
+          <span style="font-size:10px;color:var(--text3)">
+            ${esc(s.device ? s.device.toUpperCase() : 'ALL')} | 
+            <span style="color:${riskColor};font-weight:600">${esc(s.risk ? s.risk.toUpperCase() : 'LOW')}</span>
+          </span>
+        </div>
+        <span style="font-size:10px;color:var(--text3);white-space:nowrap">${esc(s.date)}</span>
+        <button class="btn btn-sm snippet-copy" data-id="${esc(s.id)}" title="Copy CSS"><i class="ti ti-copy"></i></button>
+        <button class="btn btn-sm snippet-view" data-id="${esc(s.id)}" title="Load parameters"><i class="ti ti-eye"></i></button>
+        <button class="btn btn-sm snippet-delete" data-id="${esc(s.id)}" title="Delete"><i class="ti ti-trash"></i></button>
+      </div>
+    `;
+  }).join('');
 
   list.querySelectorAll('.snippet-copy').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -2193,7 +2634,13 @@ function renderSnippets() {
   list.querySelectorAll('.snippet-view').forEach(btn => {
     btn.addEventListener('click', () => {
       const snippet = snippets.find(s => s.id === btn.dataset.id);
-      if (snippet) document.getElementById('css-output').textContent = snippet.code;
+      if (snippet) {
+        document.getElementById('css-output').textContent = snippet.code;
+        document.getElementById('css-comment').value = snippet.name || '';
+        document.getElementById('css-sel').value = snippet.selector || '';
+        if (snippet.device) document.getElementById('css-device').value = snippet.device;
+        if (snippet.risk) document.getElementById('css-risk').value = snippet.risk;
+      }
     });
   });
   list.querySelectorAll('.snippet-delete').forEach(btn => {
@@ -2729,18 +3176,24 @@ window.addEventListener('message', function(event) {
     const errorCard = document.getElementById('audit-error-card');
     const resultsList = document.getElementById('audit-results-list');
     const badge = document.getElementById('audit-badge');
+    const exportBtn = document.getElementById('btn-export-audit-report');
     
     placeholder.style.display = 'none';
     
     if (event.data.error) {
       errorCard.style.display = 'block';
       document.getElementById('audit-error-msg').textContent = event.data.error;
+      if (exportBtn) exportBtn.style.display = 'none';
       return;
     }
     
     resultsList.innerHTML = '';
     
     const auditResults = Array.isArray(event.data.results) ? event.data.results.slice(0, 200) : [];
+    window.latestAuditResults = auditResults;
+    if (exportBtn) {
+      exportBtn.style.display = 'inline-flex';
+    }
 
     if (auditResults.length === 0) {
       badge.textContent = '0 Issues';
@@ -2751,7 +3204,7 @@ window.addEventListener('message', function(event) {
         <div style="text-align: center; padding: 32px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r-xl);">
           <i class="ti ti-circle-check" style="font-size: 40px; color: var(--teal); display: block; margin-bottom: 12px;"></i>
           <h4 style="font-size: 14px; font-family: var(--font-head); font-weight: 600; color: var(--text);">Canvas is Perfect!</h4>
-          <p style="font-size: 12px; color: var(--text3); margin-top: 4px;">No empty links, missing alt tags, placeholder text, or empty columns found.</p>
+          <p style="font-size: 12px; color: var(--text3); margin-top: 4px;">No empty links, missing alt tags, placeholder text, empty columns, oversized images, or accessibility/SEO gaps found.</p>
         </div>
       `;
       resultsCard.style.display = 'block';
@@ -2767,13 +3220,22 @@ window.addEventListener('message', function(event) {
       let colorClass = 'var(--amber)';
       let bgClass = 'rgba(255, 176, 32, 0.1)';
       
-      if (item.type === 'alt' || item.type === 'lorem') {
+      if (item.type === 'alt' || item.type === 'lorem' || item.type === 'oversized') {
         colorClass = 'var(--amber)';
         bgClass = 'rgba(255, 176, 32, 0.1)';
-      } else if (item.type === 'link') {
+        icon = item.type === 'oversized' ? 'ti-photo' : 'ti-alert-triangle';
+      } else if (item.type === 'link' || item.type === 'contrast') {
         colorClass = 'var(--red)';
         bgClass = 'rgba(255, 77, 77, 0.1)';
-        icon = 'ti-link';
+        icon = item.type === 'contrast' ? 'ti-contrast-2' : 'ti-link';
+      } else if (item.type === 'seo') {
+        colorClass = 'var(--teal)';
+        bgClass = 'rgba(0, 229, 204, 0.1)';
+        icon = 'ti-search';
+      } else if (item.type === 'accessibility') {
+        colorClass = 'var(--purple)';
+        bgClass = 'rgba(155, 111, 255, 0.1)';
+        icon = 'ti-accessible';
       } else if (item.type === 'empty') {
         colorClass = 'var(--text2)';
         bgClass = 'var(--bg4)';
@@ -2852,7 +3314,255 @@ window.addEventListener('message', function(event) {
     
     resultsCard.style.display = 'block';
   }
+
+  if (event.data.type === 'itspc_element_selected') {
+    state.lastSelectedElement = event.data;
+    updateSelectorHelperUI();
+  }
 });
+
+// ===== DESIGN TOKENS LOGIC =====
+function renderTokens() {
+  const dt = proj().designTokens || normalizeDesignTokens({});
+  document.getElementById('token-typo-base').value = dt.typography.base;
+  document.getElementById('token-typo-ratio').value = dt.typography.ratio;
+  document.getElementById('token-space-base').value = dt.spacing.base;
+  document.getElementById('token-radius-sm').value = dt.radius.sm;
+  document.getElementById('token-radius-md').value = dt.radius.md;
+  document.getElementById('token-radius-lg').value = dt.radius.lg;
+  document.getElementById('token-radius-xl').value = dt.radius.xl;
+  document.getElementById('token-shadow-soft').value = dt.shadows.soft;
+  document.getElementById('token-shadow-medium').value = dt.shadows.medium;
+  document.getElementById('token-shadow-hard').value = dt.shadows.hard;
+
+  updateTypoScale();
+  updateSpacingScale();
+}
+
+function updateTypoScale() {
+  const base = parseInt(document.getElementById('token-typo-base').value, 10) || 16;
+  const ratio = parseFloat(document.getElementById('token-typo-ratio').value) || 1.25;
+
+  const h6 = Math.round(base);
+  const h5 = Math.round(base * ratio);
+  const h4 = Math.round(h5 * ratio);
+  const h3 = Math.round(h4 * ratio);
+  const h2 = Math.round(h3 * ratio);
+  const h1 = Math.round(h2 * ratio);
+
+  let html = `/* Typography scale */\n`;
+  html += `--font-size-base: ${base}px;\n`;
+  html += `--font-size-h6: ${h6}px;\n`;
+  html += `--font-size-h5: ${h5}px;\n`;
+  html += `--font-size-h4: ${h4}px;\n`;
+  html += `--font-size-h3: ${h3}px;\n`;
+  html += `--font-size-h2: ${h2}px;\n`;
+  html += `--font-size-h1: ${h1}px;\n`;
+
+  document.getElementById('typo-scale-preview').innerText = html;
+  
+  if (!proj().designTokens) proj().designTokens = normalizeDesignTokens({});
+  proj().designTokens.typography.base = base;
+  proj().designTokens.typography.ratio = ratio;
+  saveState();
+}
+
+function updateSpacingScale() {
+  const base = parseInt(document.getElementById('token-space-base').value, 10) || 8;
+  const xs = Math.round(base * 0.5);
+  const sm = base;
+  const md = base * 2;
+  const lg = base * 3;
+  const xl = base * 4;
+  const xxl = base * 8;
+
+  let html = `/* Spacing scale */\n`;
+  html += `--space-xs:  ${xs}px;\n`;
+  html += `--space-sm:  ${sm}px;\n`;
+  html += `--space-md:  ${md}px;\n`;
+  html += `--space-lg:  ${lg}px;\n`;
+  html += `--space-xl:  ${xl}px;\n`;
+  html += `--space-xxl: ${xxl}px;\n`;
+
+  document.getElementById('space-scale-preview').innerText = html;
+
+  if (!proj().designTokens) proj().designTokens = normalizeDesignTokens({});
+  proj().designTokens.spacing.base = base;
+  saveState();
+}
+
+function updateRadiusShadows() {
+  const sm = parseInt(document.getElementById('token-radius-sm').value, 10) || 4;
+  const md = parseInt(document.getElementById('token-radius-md').value, 10) || 8;
+  const lg = parseInt(document.getElementById('token-radius-lg').value, 10) || 12;
+  const xl = parseInt(document.getElementById('token-radius-xl').value, 10) || 16;
+  const soft = document.getElementById('token-shadow-soft').value;
+  const medium = document.getElementById('token-shadow-medium').value;
+  const hard = document.getElementById('token-shadow-hard').value;
+
+  if (!proj().designTokens) proj().designTokens = normalizeDesignTokens({});
+  proj().designTokens.radius = { sm, md, lg, xl };
+  proj().designTokens.shadows = { soft, medium, hard };
+  saveState();
+}
+
+function copyCSSVariables() {
+  const dt = proj().designTokens || normalizeDesignTokens({});
+  const baseTypo = dt.typography.base;
+  const ratio = dt.typography.ratio;
+  const h6 = Math.round(baseTypo);
+  const h5 = Math.round(baseTypo * ratio);
+  const h4 = Math.round(h5 * ratio);
+  const h3 = Math.round(h4 * ratio);
+  const h2 = Math.round(h3 * ratio);
+  const h1 = Math.round(h2 * ratio);
+
+  const baseSpace = dt.spacing.base;
+  const xs = Math.round(baseSpace * 0.5);
+  const sm = baseSpace;
+  const md = baseSpace * 2;
+  const lg = baseSpace * 3;
+  const xl = baseSpace * 4;
+  const xxl = baseSpace * 8;
+
+  let css = `:root {\n`;
+  css += `  /* Typography scale */\n`;
+  css += `  --font-size-base: ${baseTypo}px;\n`;
+  css += `  --font-size-h6: ${h6}px;\n`;
+  css += `  --font-size-h5: ${h5}px;\n`;
+  css += `  --font-size-h4: ${h4}px;\n`;
+  css += `  --font-size-h3: ${h3}px;\n`;
+  css += `  --font-size-h2: ${h2}px;\n`;
+  css += `  --font-size-h1: ${h1}px;\n\n`;
+
+  css += `  /* Spacing */\n`;
+  css += `  --space-xs:  ${xs}px;\n`;
+  css += `  --space-sm:  ${sm}px;\n`;
+  css += `  --space-md:  ${md}px;\n`;
+  css += `  --space-lg:  ${lg}px;\n`;
+  css += `  --space-xl:  ${xl}px;\n`;
+  css += `  --space-xxl: ${xxl}px;\n\n`;
+
+  css += `  /* Border Radius */\n`;
+  css += `  --radius-sm: ${dt.radius.sm}px;\n`;
+  css += `  --radius-md: ${dt.radius.md}px;\n`;
+  css += `  --radius-lg: ${dt.radius.lg}px;\n`;
+  css += `  --radius-xl: ${dt.radius.xl}px;\n\n`;
+
+  css += `  /* Box Shadows */\n`;
+  css += `  --shadow-soft:   ${dt.shadows.soft};\n`;
+  css += `  --shadow-medium: ${dt.shadows.medium};\n`;
+  css += `  --shadow-hard:   ${dt.shadows.hard};\n`;
+  css += `}`;
+
+  navigator.clipboard.writeText(css).then(() => {
+    toast('CSS Variables copied to clipboard!');
+  });
+}
+
+// ===== CONTRAST CHECKER LOGIC =====
+function checkContrast() {
+  const fgSelect = document.getElementById('contrast-fg');
+  const bgSelect = document.getElementById('contrast-bg');
+  const preview = document.getElementById('contrast-preview-box');
+  const ratioEl = document.getElementById('contrast-ratio-val');
+  const normalAA = document.getElementById('contrast-normal-aa');
+  const normalAAA = document.getElementById('contrast-normal-aaa');
+  const largeAA = document.getElementById('contrast-large-aa');
+  const largeAAA = document.getElementById('contrast-large-aaa');
+
+  if (!fgSelect || !bgSelect || !preview) return;
+
+  const fgHex = fgSelect.value || '#000000';
+  const bgHex = bgSelect.value || '#ffffff';
+
+  preview.style.color = fgHex;
+  preview.style.backgroundColor = bgHex;
+
+  const ratio = getContrastRatio(fgHex, bgHex);
+  ratioEl.innerText = ratio.toFixed(2) + ':1';
+
+  setComplianceClass(normalAA, ratio >= 4.5);
+  setComplianceClass(normalAAA, ratio >= 7.0);
+  setComplianceClass(largeAA, ratio >= 3.0);
+  setComplianceClass(largeAAA, ratio >= 4.5);
+}
+
+function setComplianceClass(el, passes) {
+  if (!el) return;
+  if (passes) {
+    el.classList.add('ok');
+    el.classList.remove('risk');
+    el.innerText = el.innerText.replace(' (Fail)', '').replace(' (Pass)', '') + ' (Pass)';
+  } else {
+    el.classList.add('risk');
+    el.classList.remove('ok');
+    el.innerText = el.innerText.replace(' (Fail)', '').replace(' (Pass)', '') + ' (Fail)';
+  }
+}
+
+function getContrastRatio(hex1, hex2) {
+  const l1 = getLuminance(hex1);
+  const l2 = getLuminance(hex2);
+  const brightest = Math.max(l1, l2);
+  const darkest = Math.min(l1, l2);
+  return (brightest + 0.05) / (darkest + 0.05);
+}
+
+function getLuminance(hex) {
+  const rgb = parseHexToRgb(hex);
+  if (!rgb) return 0;
+  const a = [rgb.r, rgb.g, rgb.b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+
+function parseHexToRgb(hex) {
+  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  const fullHex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+// ===== SELECTOR HELPER LOGIC =====
+function updateSelectorHelperUI() {
+  const el = state.lastSelectedElement;
+  const wrap = document.getElementById('selector-helper-wrap');
+  const list = document.getElementById('selector-helper-options');
+  if (!el || !wrap || !list) return;
+
+  wrap.style.display = 'block';
+  let html = '';
+
+  if (el.elementId) {
+    html += `<button class="btn btn-sm" onclick="setCSSSelector('#${esc(el.elementId)}')" style="font-family:var(--font-mono);font-size:11px;padding:3px 6px;margin:2px">#${esc(el.elementId)}</button>`;
+  }
+
+  if (el.cssClasses) {
+    const classes = el.cssClasses.trim().split(/\s+/).filter(Boolean);
+    classes.forEach(cls => {
+      const cleanCls = cls.replace(/^\./, '');
+      html += `<button class="btn btn-sm" onclick="setCSSSelector('.${esc(cleanCls)}')" style="font-family:var(--font-mono);font-size:11px;padding:3px 6px;margin:2px">.${esc(cleanCls)}</button>`;
+    });
+  }
+
+  if (el.id) {
+    html += `<button class="btn btn-sm" onclick="setCSSSelector('.elementor-element-${esc(el.id)}')" style="font-family:var(--font-mono);font-size:11px;padding:3px 6px;margin:2px">.elementor-${esc(el.id)}</button>`;
+  }
+
+  list.innerHTML = html || '<span style="font-size:10px;color:var(--text3)">No custom class/ID set. Use default Elementor selector.</span>';
+}
+
+function setCSSSelector(sel) {
+  document.getElementById('css-sel').value = sel;
+  toast('Selector populated: ' + sel);
+}
 
 document.addEventListener('keydown', function(event) {
   if (event.key === 'Escape') {
@@ -2862,6 +3572,63 @@ document.addEventListener('keydown', function(event) {
     }
   }
 });
+
+function exportAuditReport() {
+  const results = window.latestAuditResults || [];
+  const p = proj();
+  const sections = p.sections || [];
+  
+  let out = `==================================================\n`;
+  out += `          SEKKEI PRE-PUBLISH AUDIT REPORT\n`;
+  out += `==================================================\n`;
+  out += `Project: ${p.name}\n`;
+  out += `Date: ${new Date().toLocaleString()}\n`;
+  out += `Page Title: ${document.title || 'Unknown'}\n`;
+  
+  const pageHealth = getPageHealth(sections);
+  const healthScore = Math.max(0, Math.round(100 - Math.min(pageHealth.totalIssues, 8) * 12.5));
+  out += `Planner Health Score: ${healthScore}%\n`;
+  out += `Total Audit Issues: ${results.length}\n`;
+  out += `==================================================\n\n`;
+  
+  if (results.length > 0) {
+    out += `[ AUDIT ISSUES ]\n\n`;
+    results.forEach((item, idx) => {
+      out += `${idx + 1}. [${item.type.toUpperCase()}] ${item.title}\n`;
+      out += `   Description: ${item.description}\n`;
+      if (item.elementId) out += `   Element ID: #${item.elementId}\n`;
+      if (item.previewText) out += `   Value/Context: ${item.previewText}\n`;
+      out += `\n`;
+    });
+  } else {
+    out += `[✔] PAGE AUDIT PASSED: No issues detected on the canvas.\n\n`;
+  }
+  
+  if (sections.length > 0) {
+    out += `==================================================\n`;
+    out += `[ RESPONSIVE QA & SECTIONS STATUS ]\n\n`;
+    sections.forEach((s, idx) => {
+      out += `${String(idx+1).padStart(2,'0')}. ${s.name} [${s.type.toUpperCase()}]\n`;
+      out += `   Desktop QA: ${(s.qa_desktop || 'pending').toUpperCase()}\n`;
+      out += `   Tablet QA:  ${(s.qa_tablet || 'pending').toUpperCase()}\n`;
+      out += `   Mobile QA:  ${(s.qa_mobile || 'pending').toUpperCase()}\n`;
+      if (s.qa_notes) out += `   QA Notes:   ${s.qa_notes}\n`;
+      if (s.note) out += `   Planner Note: ${s.note}\n`;
+      out += `\n`;
+    });
+  }
+  
+  out += `==================================================\n`;
+  out += `Generated by Sekkei - Elementor Workflow Toolkit\n`;
+  
+  const blob = new Blob([out], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sekkei-audit-report-${p.name.replace(/\s+/g, '-').toLowerCase()}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Audit report downloaded!');
+}
 
 // ===== START =====
 init();

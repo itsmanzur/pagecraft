@@ -10,7 +10,7 @@
  * Plugin Name:       Sekkei - Section Planner & Workflow Toolkit for Elementor
  * Plugin URI:        https://wordpress.org/plugins/sekkei/
  * Description:       A workflow tool for Elementor - section planner, design checklist, color palette, font pairing, CSS generator, and project notes.
- * Version:           1.2.0
+ * Version:           1.4.0
  * Author:            itsmanzur
  * Author URI:        https://profiles.wordpress.org/itsmanzur/
  * Text Domain:       sekkei
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Plugin constants
  */
 if ( ! defined( 'ITSPC_VERSION' ) ) {
-    define( 'ITSPC_VERSION', '1.2.0' );
+    define( 'ITSPC_VERSION', '1.4.0' );
 }
 if ( ! defined( 'ITSPC_PLUGIN_DIR' ) ) {
     define( 'ITSPC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

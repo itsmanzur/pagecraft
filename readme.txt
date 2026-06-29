@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,6 +113,19 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 7. Settings Page  Configure panel position, width, and behavior
 
 == Changelog ==
+ 
+= 1.4.0 =
+* Added deep page audit: heading sequence, oversized images, SEO title/meta length, accessibility checks
+* Added Responsive QA status tracking per section (desktop/tablet/mobile pass/fail)
+* Added SEO & Handoff checklist category
+* Added audit report export (.txt)
+ 
+= 1.3.0 =
+* Added Design Tokens panel for typography scale, spacing, radius, and shadow CSS variables
+* Added WCAG contrast checker for saved brand colors
+* Added Arabic font pairing presets with weight/line-height recommendations
+* Added CSS snippet library with device target and risk level filtering
+* Added Elementor selector helper for quick CSS targeting
 
 = 1.2.0 =
 * Added smarter Section Planner health warnings for titles, duplicate CSS classes, empty linked containers, dependencies, and CTA coverage
@@ -146,6 +159,12 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 * Settings page for panel configuration
 
 == Upgrade Notice ==
+ 
+= 1.4.0 =
+Adds deep page audit checks, responsive section QA status indicators, SEO/handoff checklists, and audit text report exports.
+ 
+= 1.3.0 =
+Adds Design Tokens panel, WCAG contrast checker, Arabic font pairs, CSS snippet library filtering, and Elementor selector helper.
 
 = 1.2.0 =
 Adds smarter Section Planner health, dependencies, reusable presets, page outline export, and safer Elementor sync.
