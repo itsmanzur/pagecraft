@@ -345,6 +345,57 @@
                     "Click 'Locate' on any issue to automatically scroll to and highlight the element in your canvas, or click 'Export Report' to download a text report for client handoff."
                 ],
                 tip: "Run a full scan right before scheduling client walkthroughs or launching live websites to verify all components are fully polished."
+            },
+            tokens: {
+                title: "Design Tokens",
+                what: "Generate CSS custom property tokens for typography scale, spacing, border radius, and box shadows — copy them as a :root {} block into your stylesheet.",
+                how: [
+                    "Open the Design Tokens panel from the sidebar.",
+                    "Choose a typography scale (e.g. Major Third) and spacing base.",
+                    "Click 'Copy CSS Variables' to get a ready-to-paste :root { } block."
+                ],
+                tip: "Paste the token block at the top of Elementor's Custom CSS or your child theme stylesheet to maintain a consistent design system."
+            },
+            cockpit: {
+                title: "Agency Cockpit",
+                what: "A Kanban-style project pipeline board to track all your client projects through stages: Draft → Design → Review → Revision → Approved → Published.",
+                how: [
+                    "Open the Agency Cockpit panel from the sidebar.",
+                    "Each project card shows its current stage, blockers, and last updated date.",
+                    "Click a project card to edit its stage, add blockers, or update metadata."
+                ],
+                tip: "Use the Blockers field to flag what's stopping a project from moving forward — great for async agency handoffs."
+            },
+            feedback: {
+                title: "Client Feedback",
+                what: "Collect and organize client review comments by page section. Export a shareable HTML feedback page or import feedback JSON from clients.",
+                how: [
+                    "Open the Client Feedback panel and click 'Add Comment'.",
+                    "Assign the comment to a specific section and mark its status (Open, In Progress, Resolved).",
+                    "Use 'Shareable Page' to export an HTML file you can email to clients for review.",
+                    "Import the client's feedback JSON back to sync their comments."
+                ],
+                tip: "The shareable page lets clients review without needing WordPress access — ideal for non-technical clients."
+            },
+            revisions: {
+                title: "Revision Log",
+                what: "Track every change and client request with a dated revision log. Keep a full audit trail of what was changed, why, and by whom.",
+                how: [
+                    "Open the Revision Log panel and click 'Add Revision'.",
+                    "Enter the change description, client request source, and date.",
+                    "Review the log table to trace the full history of project changes."
+                ],
+                tip: "Log revisions immediately after a client call — it prevents scope creep disputes and gives you a clean project history for billing."
+            },
+            sop: {
+                title: "SOP Templates",
+                what: "Reusable Standard Operating Procedure checklists for Landing Pages, WooCommerce pages, and Blog layouts. Save your own custom SOPs for repeat use.",
+                how: [
+                    "Go to the Checklist panel and find the SOP Templates section at the top.",
+                    "Select a template (Landing Page, WooCommerce, Blog) and click 'Load' or 'Append'.",
+                    "Customize the checklist, then click 'Save SOP' to store your own template for future projects."
+                ],
+                tip: "Build agency-specific SOPs for each client type — saves 20+ minutes per project setup."
             }
         };
 

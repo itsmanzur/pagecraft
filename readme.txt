@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -114,6 +114,13 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 
 == Changelog ==
  
+= 1.5.0 =
+* Added Agency Cockpit with Kanban project pipeline board
+* Added Client Feedback panel with shareable HTML export and JSON import
+* Added Revision Log for tracking changes and client requests
+* Added SOP templates for landing page, WooCommerce, and blog workflows
+* Added custom SOP save and append support
+ 
 = 1.4.0 =
 * Added deep page audit: heading sequence, oversized images, SEO title/meta length, accessibility checks
 * Added Responsive QA status tracking per section (desktop/tablet/mobile pass/fail)
@@ -159,6 +166,9 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 * Settings page for panel configuration
 
 == Upgrade Notice ==
+ 
+= 1.5.0 =
+Adds Agency Cockpit (Kanban board), Client Feedback panel (with shareable HTML and JSON sync), Revision Log tracker, and templateable/custom SOP checklists.
  
 = 1.4.0 =
 Adds deep page audit checks, responsive section QA status indicators, SEO/handoff checklists, and audit text report exports.

@@ -525,7 +525,7 @@ class ITSPC_Admin {
                     <div class="itspc-step-num">3</div>
                     <div class="itspc-step-content">
                       <div class="itspc-step-title"><?php esc_html_e( 'Plan, Design, Ship', 'sekkei' ); ?></div>
-                      <div class="itspc-step-desc"><?php esc_html_e( 'Use the 7 modules: Section Planner, Checklist, Color Palette, Font Pairs, CSS Generator, Notes, and Audit - all saved automatically.', 'sekkei' ); ?></div>
+                      <div class="itspc-step-desc"><?php esc_html_e( 'Use the 12 panels: Section Planner, Checklist, Color Palette, Font Pairs, CSS Generator, Design Tokens, Pre-Publish Audit, Project Notes, Agency Cockpit, Client Feedback, Revision Log, and SOP Templates — all saved automatically.', 'sekkei' ); ?></div>
                     </div>
                   </div>
  
@@ -578,6 +578,31 @@ class ITSPC_Admin {
                   <div class="itspc-feature-card" data-feature="audit">
                     <div class="itspc-feature-icon"></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Pre-Publish Audit', 'sekkei' ); ?></div>
+                  </div>
+
+                  <div class="itspc-feature-card" data-feature="tokens">
+                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Design Tokens', 'sekkei' ); ?></div>
+                  </div>
+
+                  <div class="itspc-feature-card" data-feature="cockpit">
+                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Agency Cockpit', 'sekkei' ); ?></div>
+                  </div>
+
+                  <div class="itspc-feature-card" data-feature="feedback">
+                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Client Feedback', 'sekkei' ); ?></div>
+                  </div>
+
+                  <div class="itspc-feature-card" data-feature="revisions">
+                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'Revision Log', 'sekkei' ); ?></div>
+                  </div>
+
+                  <div class="itspc-feature-card" data-feature="sop">
+                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-name"><?php esc_html_e( 'SOP Templates', 'sekkei' ); ?></div>
                   </div>
  
                 </div>
