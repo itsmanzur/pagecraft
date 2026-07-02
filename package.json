@@ -1,0 +1,12 @@
+{
+  "name": "sekkei",
+  "version": "1.6.0",
+  "description": "Sekkei - Section Planner & Workflow Toolkit for Elementor",
+  "private": true,
+  "scripts": {
+    "build:js": "npx -y terser assets/js/itspc-tool.js -o assets/js/itspc-tool.min.js --compress --mangle --source-map && npx -y terser assets/js/itspc-editor.js -o assets/js/itspc-editor.min.js --compress --mangle --source-map && npx -y terser assets/js/itspc-admin.js -o assets/js/itspc-admin.min.js --compress --mangle --source-map",
+    "build:css": "npx -y cssnano-cli assets/css/itspc-tool.css assets/css/itspc-tool.min.css && npx -y cssnano-cli assets/css/itspc-admin.css assets/css/itspc-admin.min.css && npx -y cssnano-cli assets/css/itspc-editor.css assets/css/itspc-editor.min.css && npx -y cssnano-cli assets/css/itspc-tool-page.css assets/css/itspc-tool-page.min.css",
+    "build": "npm run build:js && npm run build:css",
+    "prebuild": "echo Building Sekkei minified assets..."
+  }
+}

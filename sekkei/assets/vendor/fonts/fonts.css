@@ -1,0 +1,40 @@
+/* Sekkei - Self-hosted Fonts
+   Families : Syne, DM Sans, DM Mono
+   License  : SIL Open Font License 1.1
+   Source   : https://fonts.google.com
+   Generated: 2026-06-07
+ */
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style : normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./dm-mono-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style : normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./dm-sans-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style : normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./dm-sans-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Syne';
+  font-style : normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./syne-700.woff2') format('woff2');
+}
+
+

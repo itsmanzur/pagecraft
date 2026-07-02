@@ -1,0 +1,30 @@
+/**
+ * Sekkei Tool Page - Fullscreen Override
+ *
+ * Hides the WP admin chrome (admin bar, menu, footer) when the standalone
+ * tool page is open, giving the iframe a full-viewport experience.
+ *
+ * Loaded only on the sekkei-tool sub-page via wp_enqueue_style().
+ *
+ * @package Sekkei
+ */
+
+#wpbody-content {
+    padding: 0 !important;
+}
+
+#wpadminbar,
+#adminmenuwrap,
+#adminmenuback,
+#wpfooter {
+    display: none !important;
+}
+
+#wpcontent,
+#wpbody {
+    margin-left: 0 !important;
+}
+
+html.wp-toolbar {
+    padding-top: 0 !important;
+}

@@ -1,4 +1,4 @@
-﻿# Sekkei Market Leadership Roadmap 2026
+# Sekkei Market Leadership Roadmap 2026
 
 Updated: 15 June 2026  
 Status: Live on WordPress.org  
@@ -7,14 +7,16 @@ Version path: v1.1 stability -> v2.0 pro-ready ecosystem
 
 ## Overall Progress
 
-- [ ] Phase 1: Trust, polish, and retention (v1.1)
+- [x] Phase 1: Trust, polish, and retention (v1.1)
 - [x] Phase 2: Smarter section planner (v1.2)
-- [ ] Phase 3: Design system cockpit (v1.3)
-- [ ] Phase 4: Audit and pre-publish QA (v1.4)
-- [ ] Phase 5: Agency collaboration (v1.5)
+- [x] Phase 3: Design system cockpit (v1.3)
+- [x] Phase 4: Audit and pre-publish QA (v1.4)
+- [x] Phase 5: Agency collaboration (v1.5)
 - [ ] Phase 6: Ecosystem and monetization-ready (v2.0)
+- [ ] Phase 7: Performance, Security & Data Safety (v1.6)
+- [ ] Phase 8: Internationalization (v1.7)
 
-Progress: 0/6 phases complete.
+Progress: 5/8 phases complete.
 
 ## Core Thesis
 
