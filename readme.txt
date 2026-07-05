@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -114,6 +114,13 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 
 == Changelog ==
  
+= 1.6.1 =
+* Added draggable floating trigger button (FAB) with position memory and double-click reset
+* Added draggable floating panel window (Divi-style undocking) with position memory and double-click redock
+* Added Alt+1 to Alt+9 and Alt+0 keyboard shortcuts for instant panel navigation
+* Fixed iframe focus trap — Ctrl+Shift+P and Escape now bubble correctly from panel to editor
+* Added CSS Variables export button in Font Pairing panel
+ 
 = 1.6.0 =
 * Added Global Error Boundary for JS catch resilience and emergency auto-save
 * Added auto-retry save logic with exponential backoff on localStorage quota/issues
@@ -127,11 +134,6 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 * Fixed legacy Elementor version compatibility check (requires 3.0.0+)
 * Fixed a syntax error in client feedback interactive HTML sheet export
 * Generated WordPress POT translation templates inside the /languages directory
-* Added draggable floating trigger button (FAB) with position memory and double-click reset
-* Added draggable floating panel window (Divi-style undocking) with position memory and double-click redock
-* Added Alt+1 to Alt+9 and Alt+0 keyboard shortcuts for instant panel navigation
-* Fixed iframe focus trap — Ctrl+Shift+P and Escape now bubble correctly from panel to editor
-* Added CSS Variables export button in Font Pairing panel
  
 = 1.5.0 =
 * Added Agency Cockpit with Kanban project pipeline board
