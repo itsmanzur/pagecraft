@@ -254,12 +254,37 @@
         var structureSyncDebounce = null;
         var position   = (typeof itspcData !== 'undefined' && itspcData.panelPosition) ? itspcData.panelPosition : 'right';
 
+        var isPanelDragging = false;
+        var panelStartX, panelStartY;
+        var panelInitialLeft, panelInitialTop;
+        var isPanelFloating = localStorage.getItem('itspc_panel_floating') === '1';
+
+        // Restore saved panel position on load if floating
+        if (isPanelFloating && panel) {
+            panel.classList.add('itspc-panel-floating');
+            var savedPanelLeft = localStorage.getItem('itspc_panel_left');
+            var savedPanelTop = localStorage.getItem('itspc_panel_top');
+            var savedPanelHeight = localStorage.getItem('itspc_panel_height');
+            if (savedPanelLeft !== null) panel.style.left = savedPanelLeft;
+            if (savedPanelTop !== null) panel.style.top = savedPanelTop;
+            if (savedPanelHeight !== null) panel.style.height = savedPanelHeight;
+        }
+
         function updateToggleBtnPosition() {
+            if (localStorage.getItem('itspc_btn_top') !== null) {
+                return;
+            }
             if (isOpen && position === 'right') {
                 var panelWidth = panel.offsetWidth;
                 btn.style.right = (panelWidth + 16) + 'px';
+                btn.style.left = 'auto';
+                btn.style.top = 'auto';
+                btn.style.bottom = '24px';
             } else {
                 btn.style.right = '';
+                btn.style.left = '';
+                btn.style.top = '';
+                btn.style.bottom = '';
             }
         }
 
@@ -445,7 +470,143 @@
         }
 
         // --- Event Handlers ---
-        btn.addEventListener('click', togglePanel);
+        // Restore last saved button position if available
+        var savedTop = localStorage.getItem('itspc_btn_top');
+        var savedLeft = localStorage.getItem('itspc_btn_left');
+        var savedRight = localStorage.getItem('itspc_btn_right');
+        var savedBottom = localStorage.getItem('itspc_btn_bottom');
+
+        if (savedTop !== null && savedLeft !== null) {
+            btn.style.top = savedTop;
+            btn.style.left = savedLeft;
+            btn.style.bottom = 'auto';
+            btn.style.right = 'auto';
+        } else if (savedBottom !== null && savedRight !== null) {
+            btn.style.bottom = savedBottom;
+            btn.style.right = savedRight;
+            btn.style.top = 'auto';
+            btn.style.left = 'auto';
+        }
+
+        var isDragging = false;
+        var hasDragged = false;
+        var startX, startY;
+        var initialLeft, initialTop;
+
+        btn.addEventListener('mousedown', function(e) {
+            if (e.button !== 0) return;
+            isDragging = true;
+            hasDragged = false;
+            startX = e.clientX;
+            startY = e.clientY;
+            var rect = btn.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            btn.style.transition = 'none';
+            btn.style.cursor = 'grabbing';
+            btn.style.top = initialTop + 'px';
+            btn.style.left = initialLeft + 'px';
+            btn.style.bottom = 'auto';
+            btn.style.right = 'auto';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            var dx = e.clientX - startX;
+            var dy = e.clientY - startY;
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                hasDragged = true;
+            }
+            var newLeft = initialLeft + dx;
+            var newTop = initialTop + dy;
+            var maxLeft = window.innerWidth - btn.offsetWidth - 10;
+            var maxTop = window.innerHeight - btn.offsetHeight - 10;
+            newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+            newTop = Math.max(10, Math.min(newTop, maxTop));
+            btn.style.left = newLeft + 'px';
+            btn.style.top = newTop + 'px';
+        });
+
+        document.addEventListener('mouseup', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            btn.style.transition = '';
+            btn.style.cursor = '';
+            if (hasDragged) {
+                localStorage.setItem('itspc_btn_top', btn.style.top);
+                localStorage.setItem('itspc_btn_left', btn.style.left);
+                localStorage.removeItem('itspc_btn_right');
+                localStorage.removeItem('itspc_btn_bottom');
+            } else {
+                togglePanel();
+            }
+        });
+
+        // Touch support for tablets/mobile
+        btn.addEventListener('touchstart', function(e) {
+            var touch = e.touches[0];
+            isDragging = true;
+            hasDragged = false;
+            startX = touch.clientX;
+            startY = touch.clientY;
+            var rect = btn.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            btn.style.transition = 'none';
+            btn.style.cursor = 'grabbing';
+            btn.style.top = initialTop + 'px';
+            btn.style.left = initialLeft + 'px';
+            btn.style.bottom = 'auto';
+            btn.style.right = 'auto';
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (!isDragging) return;
+            var touch = e.touches[0];
+            var dx = touch.clientX - startX;
+            var dy = touch.clientY - startY;
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                hasDragged = true;
+            }
+            var newLeft = initialLeft + dx;
+            var newTop = initialTop + dy;
+            var maxLeft = window.innerWidth - btn.offsetWidth - 10;
+            var maxTop = window.innerHeight - btn.offsetHeight - 10;
+            newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+            newTop = Math.max(10, Math.min(newTop, maxTop));
+            btn.style.left = newLeft + 'px';
+            btn.style.top = newTop + 'px';
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            btn.style.transition = '';
+            btn.style.cursor = '';
+            if (hasDragged) {
+                localStorage.setItem('itspc_btn_top', btn.style.top);
+                localStorage.setItem('itspc_btn_left', btn.style.left);
+                localStorage.removeItem('itspc_btn_right');
+                localStorage.removeItem('itspc_btn_bottom');
+            } else {
+                togglePanel();
+            }
+        });
+
+        // Double-click to reset positioning
+        btn.addEventListener('dblclick', function() {
+            localStorage.removeItem('itspc_btn_top');
+            localStorage.removeItem('itspc_btn_left');
+            localStorage.removeItem('itspc_btn_right');
+            localStorage.removeItem('itspc_btn_bottom');
+            btn.style.top = '';
+            btn.style.left = '';
+            btn.style.bottom = '';
+            btn.style.right = '';
+            updateToggleBtnPosition();
+        });
+
         closeBtn.addEventListener('click', closePanel);
 
         popoutBtn.addEventListener('click', function() {
@@ -478,6 +639,64 @@
             }
             var data = e.data;
             if (!data || typeof data !== 'object') return;
+
+            if (data.type === 'itspc_close_panel') {
+                closePanel();
+                return;
+            }
+            if (data.type === 'itspc_toggle_panel') {
+                togglePanel();
+                return;
+            }
+
+            if (data.type === 'itspc_panel_iframe_drag_start') {
+                var rect = panel.getBoundingClientRect();
+                panelInitialLeft = rect.left;
+                panelInitialTop = rect.top;
+                panel.style.transition = 'none';
+                iframe.style.pointerEvents = 'none';
+                return;
+            }
+            if (data.type === 'itspc_panel_iframe_drag_move') {
+                if (!panel.classList.contains('itspc-panel-floating')) {
+                    panel.classList.add('itspc-panel-floating');
+                    localStorage.setItem('itspc_panel_floating', '1');
+                    panel.style.height = '80vh';
+                    var rect = panel.getBoundingClientRect();
+                    panelInitialLeft = rect.left - data.dx;
+                    panelInitialTop = rect.top - data.dy;
+                }
+                var newLeft = panelInitialLeft + data.dx;
+                var newTop = panelInitialTop + data.dy;
+                var maxLeft = window.innerWidth - panel.offsetWidth - 10;
+                var maxTop = window.innerHeight - panel.offsetHeight - 10;
+                newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+                newTop = Math.max(10, Math.min(newTop, maxTop));
+                panel.style.left = newLeft + 'px';
+                panel.style.top = newTop + 'px';
+                return;
+            }
+            if (data.type === 'itspc_panel_iframe_drag_end') {
+                panel.style.transition = '';
+                iframe.style.pointerEvents = 'auto';
+                if (panel.classList.contains('itspc-panel-floating')) {
+                    localStorage.setItem('itspc_panel_left', panel.style.left);
+                    localStorage.setItem('itspc_panel_top', panel.style.top);
+                    localStorage.setItem('itspc_panel_height', panel.style.height);
+                }
+                return;
+            }
+            if (data.type === 'itspc_panel_iframe_dblclick') {
+                panel.classList.remove('itspc-panel-floating');
+                panel.style.left = '';
+                panel.style.top = '';
+                panel.style.height = '';
+                localStorage.removeItem('itspc_panel_floating');
+                localStorage.removeItem('itspc_panel_left');
+                localStorage.removeItem('itspc_panel_top');
+                localStorage.removeItem('itspc_panel_height');
+                return;
+            }
 
             if (data.type === 'rename_elementor_element') {
                 var safeTitle = cleanText(data.title, 120);
@@ -1122,6 +1341,138 @@
                 btn.style.transition = ''; // Restore CSS transition
             }
         });
+
+        // --- Panel Dragging and Floating Mode (Divi/Navigator style) ---
+        var panelHeader = document.querySelector('.itspc-panel-header');
+        if (panelHeader) {
+            panelHeader.addEventListener('mousedown', function(e) {
+                if (e.target.closest('#itspc-panel-close') || e.target.closest('#itspc-panel-popout') || e.target.closest('#itspc-page-name')) {
+                    return;
+                }
+                if (e.button !== 0) return;
+                isPanelDragging = true;
+                panelStartX = e.clientX;
+                panelStartY = e.clientY;
+                var rect = panel.getBoundingClientRect();
+                panelInitialLeft = rect.left;
+                panelInitialTop = rect.top;
+                panel.style.transition = 'none';
+                panelHeader.style.cursor = 'grabbing';
+                iframe.style.pointerEvents = 'none'; // Avoid mouse trap inside iframe during drag
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!isPanelDragging) return;
+                var dx = e.clientX - panelStartX;
+                var dy = e.clientY - panelStartY;
+
+                if (!panel.classList.contains('itspc-panel-floating')) {
+                    panel.classList.add('itspc-panel-floating');
+                    localStorage.setItem('itspc_panel_floating', '1');
+                    panel.style.height = '80vh';
+                    var rect = panel.getBoundingClientRect();
+                    panelInitialLeft = rect.left;
+                    panelInitialTop = rect.top;
+                }
+
+                var newLeft = panelInitialLeft + dx;
+                var newTop = panelInitialTop + dy;
+
+                var maxLeft = window.innerWidth - panel.offsetWidth - 10;
+                var maxTop = window.innerHeight - panel.offsetHeight - 10;
+
+                newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+                newTop = Math.max(10, Math.min(newTop, maxTop));
+
+                panel.style.left = newLeft + 'px';
+                panel.style.top = newTop + 'px';
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (!isPanelDragging) return;
+                isPanelDragging = false;
+                panel.style.transition = '';
+                panelHeader.style.cursor = '';
+                iframe.style.pointerEvents = 'auto';
+                if (panel.classList.contains('itspc-panel-floating')) {
+                    localStorage.setItem('itspc_panel_left', panel.style.left);
+                    localStorage.setItem('itspc_panel_top', panel.style.top);
+                    localStorage.setItem('itspc_panel_height', panel.style.height);
+                }
+            });
+
+            // Touch support for dragging panel
+            panelHeader.addEventListener('touchstart', function(e) {
+                if (e.target.closest('#itspc-panel-close') || e.target.closest('#itspc-panel-popout') || e.target.closest('#itspc-page-name')) {
+                    return;
+                }
+                var touch = e.touches[0];
+                isPanelDragging = true;
+                panelStartX = touch.clientX;
+                panelStartY = touch.clientY;
+                var rect = panel.getBoundingClientRect();
+                panelInitialLeft = rect.left;
+                panelInitialTop = rect.top;
+                panel.style.transition = 'none';
+                iframe.style.pointerEvents = 'none';
+            });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!isPanelDragging) return;
+                var touch = e.touches[0];
+                var dx = touch.clientX - panelStartX;
+                var dy = touch.clientY - panelStartY;
+
+                if (!panel.classList.contains('itspc-panel-floating')) {
+                    panel.classList.add('itspc-panel-floating');
+                    localStorage.setItem('itspc_panel_floating', '1');
+                    panel.style.height = '80vh';
+                    var rect = panel.getBoundingClientRect();
+                    panelInitialLeft = rect.left;
+                    panelInitialTop = rect.top;
+                }
+
+                var newLeft = panelInitialLeft + dx;
+                var newTop = panelInitialTop + dy;
+
+                var maxLeft = window.innerWidth - panel.offsetWidth - 10;
+                var maxTop = window.innerHeight - panel.offsetHeight - 10;
+
+                newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+                newTop = Math.max(10, Math.min(newTop, maxTop));
+
+                panel.style.left = newLeft + 'px';
+                panel.style.top = newTop + 'px';
+            });
+
+            document.addEventListener('touchend', function() {
+                if (!isPanelDragging) return;
+                isPanelDragging = false;
+                panel.style.transition = '';
+                iframe.style.pointerEvents = 'auto';
+                if (panel.classList.contains('itspc-panel-floating')) {
+                    localStorage.setItem('itspc_panel_left', panel.style.left);
+                    localStorage.setItem('itspc_panel_top', panel.style.top);
+                    localStorage.setItem('itspc_panel_height', panel.style.height);
+                }
+            });
+
+            // Double-click to redock panel
+            panelHeader.addEventListener('dblclick', function(e) {
+                if (e.target.closest('#itspc-panel-close') || e.target.closest('#itspc-panel-popout') || e.target.closest('#itspc-page-name')) {
+                    return;
+                }
+                panel.classList.remove('itspc-panel-floating');
+                panel.style.left = '';
+                panel.style.top = '';
+                panel.style.height = '';
+                localStorage.removeItem('itspc_panel_floating');
+                localStorage.removeItem('itspc_panel_left');
+                localStorage.removeItem('itspc_panel_top');
+                localStorage.removeItem('itspc_panel_height');
+            });
+        }
     }
 
     // --- Wait for Elementor to be ready ---

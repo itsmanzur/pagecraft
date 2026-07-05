@@ -249,3 +249,25 @@
     border: none;
     background: #0D0D0F;
 }
+
+/* ===== FLOATING PANEL STYLES ===== */
+#itspc-panel.itspc-panel-floating {
+    height: 80vh;
+    max-height: 850px;
+    min-height: 400px;
+    top: 10vh;
+    border: 1px solid #2A2A30;
+    border-radius: 12px;
+    overflow: hidden;
+    transform: none !important;
+}
+#itspc-panel.itspc-panel-floating #itspc-panel-iframe {
+    border-radius: 0 0 11px 11px;
+}
+.itspc-panel-header {
+    cursor: grab;
+    user-select: none;
+}
+.itspc-panel-header:active {
+    cursor: grabbing;
+}

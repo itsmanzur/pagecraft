@@ -127,6 +127,11 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 * Fixed legacy Elementor version compatibility check (requires 3.0.0+)
 * Fixed a syntax error in client feedback interactive HTML sheet export
 * Generated WordPress POT translation templates inside the /languages directory
+* Added draggable floating trigger button (FAB) with position memory and double-click reset
+* Added draggable floating panel window (Divi-style undocking) with position memory and double-click redock
+* Added Alt+1 to Alt+9 and Alt+0 keyboard shortcuts for instant panel navigation
+* Fixed iframe focus trap — Ctrl+Shift+P and Escape now bubble correctly from panel to editor
+* Added CSS Variables export button in Font Pairing panel
  
 = 1.5.0 =
 * Added Agency Cockpit with Kanban project pipeline board

@@ -1689,6 +1689,7 @@ function renderFontPairCard(p, isSaved) {
     </div>
     <div class="fp-actions">
       <button class="btn btn-sm" onclick="copyText(\`${cssCode.replace(/`/g, '\\`').replace(/"/g, '&quot;')}\`)"><i class="ti ti-code"></i> Copy CSS</button>
+      <button class="btn btn-sm" onclick="copyFontAsCSSVars('${esc(p.heading)}','${esc(p.body)}')"><i class="ti ti-code"></i> CSS Vars</button>
       <button class="btn btn-sm" onclick="copyText(\`${linkCode.replace(/`/g, '\\`').replace(/"/g, '&quot;')}\`)"><i class="ti ti-link"></i> Google Link</button>
       <button class="btn btn-sm ${isSaved ? 'btn-accent' : ''}" onclick="${isSaved ? `removeSavedPair('${esc(p.heading)}','${esc(p.body)}')` : `saveFontPair('${esc(p.heading)}','${esc(p.body)}','${esc(p.previewText||'')}','${esc((p.tags||[]).join(','))}','${esc(headingRec)}','${esc(bodyRec)}')`}">
         <i class="ti ti-${isSaved ? 'check' : 'bookmark'}"></i> ${isSaved ? 'Saved' : 'Save'}
@@ -3280,9 +3281,59 @@ document.addEventListener('keydown', function(event) {
     const sectionModal = document.getElementById('section-modal');
     if (sectionModal && sectionModal.classList.contains('open')) {
       closeSectionModal();
+    } else {
+      // Send close command to parent window
+      window.parent.postMessage({ type: 'itspc_close_panel' }, window.location.origin);
+    }
+  }
+
+  // Ctrl+Shift+P to toggle panel
+  if ((event.ctrlKey || event.metaKey) && event.shiftKey && (event.key === 'P' || event.key === 'p')) {
+    event.preventDefault();
+    event.stopPropagation();
+    window.parent.postMessage({ type: 'itspc_toggle_panel' }, window.location.origin);
+  }
+
+  // Alt+1 to Alt+9, Alt+0 Navigation
+  if (event.altKey && !event.ctrlKey && !event.metaKey) {
+    const panels = [
+      'dashboard', // 1
+      'feedback',  // 2
+      'revisions', // 3
+      'checklist', // 4
+      'colors',    // 5
+      'fonts',     // 6
+      'tokens',    // 7
+      'css',       // 8
+      'audit',     // 9
+      'notes'      // 0
+    ];
+    let index = -1;
+    if (event.key >= '1' && event.key <= '9') {
+      index = parseInt(event.key, 10) - 1;
+    } else if (event.key === '0') {
+      index = 9;
+    }
+
+    if (index !== -1 && index < panels.length) {
+      event.preventDefault();
+      showPanel(panels[index]);
     }
   }
 });
+
+/**
+ * Format project fonts as CSS custom properties and copy to clipboard.
+ *
+ * @param {string} heading Heading font family name
+ * @param {string} body Body font family name
+ */
+function copyFontAsCSSVars(heading, body) {
+  if (!heading || !body) return;
+  const css = `:root {\n  --font-heading: '${heading}', sans-serif;\n  --font-body: '${body}', sans-serif;\n}`;
+  copyText(css);
+  toast('Font variables copied!');
+}
 
 function exportAuditReport() {
   const results = window.latestAuditResults || [];
@@ -3847,3 +3898,85 @@ function exportFeedbackShareablePage() {
 
 // ===== START =====
 init();
+
+// ===== Drag-and-Drop Forwarding to Parent (Elementor Editor Dock/Undock) =====
+(function() {
+  const topbar = document.querySelector('.topbar');
+  if (!topbar) return;
+
+  // Add visual cursor cue
+  topbar.style.cursor = 'grab';
+
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+
+  topbar.addEventListener('mousedown', function(e) {
+    if (e.button !== 0) return;
+    if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select') || e.target.closest('.project-pill') || e.target.closest('a')) {
+      return;
+    }
+    isDragging = true;
+    startX = e.screenX;
+    startY = e.screenY;
+    topbar.style.cursor = 'grabbing';
+    window.parent.postMessage({ type: 'itspc_panel_iframe_drag_start' }, window.location.origin);
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    const dx = e.screenX - startX;
+    const dy = e.screenY - startY;
+    window.parent.postMessage({
+      type: 'itspc_panel_iframe_drag_move',
+      dx: dx,
+      dy: dy
+    }, window.location.origin);
+  });
+
+  window.addEventListener('mouseup', function() {
+    if (!isDragging) return;
+    isDragging = false;
+    topbar.style.cursor = 'grab';
+    window.parent.postMessage({ type: 'itspc_panel_iframe_drag_end' }, window.location.origin);
+  });
+
+  // Touch Support
+  topbar.addEventListener('touchstart', function(e) {
+    if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select') || e.target.closest('.project-pill') || e.target.closest('a')) {
+      return;
+    }
+    const touch = e.touches[0];
+    isDragging = true;
+    startX = touch.screenX;
+    startY = touch.screenY;
+    window.parent.postMessage({ type: 'itspc_panel_iframe_drag_start' }, window.location.origin);
+  });
+
+  window.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    const dx = touch.screenX - startX;
+    const dy = touch.screenY - startY;
+    window.parent.postMessage({
+      type: 'itspc_panel_iframe_drag_move',
+      dx: dx,
+      dy: dy
+    }, window.location.origin);
+  });
+
+  window.addEventListener('touchend', function() {
+    if (!isDragging) return;
+    isDragging = false;
+    window.parent.postMessage({ type: 'itspc_panel_iframe_drag_end' }, window.location.origin);
+  });
+
+  // Double click to redock
+  topbar.addEventListener('dblclick', function(e) {
+    if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select') || e.target.closest('.project-pill') || e.target.closest('a')) {
+      return;
+    }
+    window.parent.postMessage({ type: 'itspc_panel_iframe_dblclick' }, window.location.origin);
+  });
+})();
