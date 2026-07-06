@@ -948,7 +948,7 @@
                     }
                 });
 
-                // 2. Scan for Missing Image Alt Text
+                // 2. Scan for Missing/Generic Image Alt Text
                 var images = previewDoc.querySelectorAll('img');
                 images.forEach(function(img) {
                     var alt = img.getAttribute('alt');
@@ -956,10 +956,10 @@
                     if (src.indexOf('data:image') === 0) return;
                     if (img.closest('.elementor-editor-element-setting')) return;
 
+                    var fileName = src.substring(src.lastIndexOf('/') + 1) || 'image';
+                    var info = getElementInfo(img);
+
                     if (alt === null || alt.trim() === '') {
-                        var info = getElementInfo(img);
-                        var fileName = src.substring(src.lastIndexOf('/') + 1) || 'image';
-                        
                         results.push({
                             type: 'alt',
                             title: 'Missing Alt Text',
@@ -967,6 +967,21 @@
                             elementId: info.id,
                             previewText: fileName.substring(0, 30)
                         });
+                    } else {
+                        var altTrim = alt.trim().toLowerCase();
+                        var genericKeywords = ['image', 'img', 'logo', 'placeholder', 'banner', 'graphic', 'pic', 'picture', 'photo', 'sekkei'];
+                        var isFilenamePattern = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(altTrim) || altTrim === fileName.toLowerCase();
+                        var isGeneric = genericKeywords.indexOf(altTrim) !== -1 || altTrim.length < 3;
+
+                        if (isFilenamePattern || isGeneric) {
+                            results.push({
+                                type: 'alt',
+                                title: 'Weak/Generic Alt Text',
+                                description: 'Image alt text "' + alt.substring(0, 24) + '" in "' + info.title + '" is generic or matches a filename. Use descriptive text for screen readers.',
+                                elementId: info.id,
+                                previewText: alt.substring(0, 30)
+                            });
+                        }
                     }
                 });
 

@@ -729,6 +729,29 @@
         </div>
         <div style="font-size:11px;color:var(--text3)">Primary storage is local to this browser, but you can secure your projects by backing them up to your WordPress database.</div>
       </div>
+      <div class="card" style="margin-top:12px">
+        <div class="card-title">White-Label Client Handoff Report</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px">Generate a beautiful, customized client report containing the project outline, checklists, and scan history. Ready to print or save as PDF.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <label style="display:block;font-size:11px;color:var(--text3);margin-bottom:4px">Agency Name</label>
+            <input type="text" id="report-agency-name" placeholder="e.g. Acme Web Agency" style="width:100%">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;color:var(--text3);margin-bottom:4px">Agency Logo URL</label>
+            <input type="text" id="report-agency-logo" placeholder="e.g. https://domain.com/logo.png" style="width:100%">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;color:var(--text3);margin-bottom:4px">Report Theme Color</label>
+            <input type="color" id="report-theme-color" value="#C8FF00" style="width:100%;height:38px;border:1px solid var(--border);border-radius:8px;background:none;padding:3px;cursor:pointer">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;color:var(--text3);margin-bottom:4px">Report Custom Title</label>
+            <input type="text" id="report-custom-title" placeholder="e.g. Page Outline & Design Handover" style="width:100%">
+          </div>
+        </div>
+        <button class="btn btn-accent" onclick="generateClientReport()"><i class="ti ti-file-text"></i> Generate Printable Report</button>
+      </div>
     </div>
 
     <!-- ===== PRE-PUBLISH AUDIT ===== -->
@@ -857,6 +880,23 @@
         <div style="display:flex; gap:6px;">
           <button class="btn btn-accent btn-sm" onclick="saveProjectMeta()"><i class="ti ti-device-floppy"></i> Save</button>
           <button class="btn btn-sm" onclick="cancelProjectMeta()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Sekkei Cloud Sync Integration Card -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Sekkei Cloud Workspace (v2.0 Beta)</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px">Auto-synchronize your design checklists, planners, and tokens to your central Sekkei Cloud workspace.</div>
+        <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:8px 12px;font-size:12px;margin-bottom:10px;color:#856404;">
+          ⚡ <strong>Coming Soon</strong> — Cloud Workspace is currently in development. API keys are not yet active.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 140px;gap:8px;margin-bottom:8px">
+          <input type="text" id="cloud-api-key" placeholder="Enter Sekkei Cloud API Key (sk_live_...)" style="width:100%" />
+          <button class="btn btn-accent" id="btn-cloud-sync" onclick="syncToSekkeiCloud()" style="height:38px"><i class="ti ti-cloud-upload"></i> Sync Now</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text3)">
+          <span id="cloud-sync-status"><i class="ti ti-circle" style="color:#e53e3e"></i> Cloud Workspace Disconnected</span>
+          <a href="https://sekkei.market/cloud" target="_blank" style="color:var(--accent);text-decoration:none">Get API Key &rarr;</a>
         </div>
       </div>
     </div>

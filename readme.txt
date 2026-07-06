@@ -4,64 +4,66 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Elementor workflow toolkit - plan sections, run a design checklist, save color palettes & font pairs, and generate CSS, right beside your canvas.
+Elementor workflow toolkit - plan sections, run audits, manage client feedback, sync design tokens, and hand off projects — right beside your canvas.
 
 == Description ==
 
-**Sekkei** is the all-in-one workflow tool designed specifically for Elementor page builders. It integrates directly into the Elementor editor as a sliding side panel, or works as a standalone tool from your WordPress dashboard.
+**Sekkei** (設計, Japanese for "design/planning") is the all-in-one workflow companion built specifically for Elementor developers and agencies. It integrates directly into the Elementor editor as a draggable floating panel, or works as a standalone tool from your WordPress dashboard.
 
-Stop switching between apps and browser tabs - plan, design, and organize everything in one place, right next to your Elementor canvas.
+Stop switching between apps and browser tabs — plan, audit, collaborate, and hand off everything in one place, right next to your Elementor canvas.
 
-=  Key Features =
+= Key Features =
 
-**Section Planner** - Plan your page structure before building. Add sections with names, types, CSS classes, notes, dependencies, and health warnings. Sync Elementor containers into the planner, rename linked sections safely, and export a clean page outline for client approval.
+**Section Planner** — Plan your page structure before building. Add sections with names, types, CSS classes, notes, dependencies, and health warnings. Sync Elementor containers, export a clean page outline for client approval, and track responsive QA status (desktop/tablet/mobile) per section.
 
-**Design Checklist** - Never miss a step. 30+ checklist items across 5 categories: Before Design, Structure, Design, Mobile, and Handover. Add custom items and groups. Track progress with a live progress bar.
+**Design Checklist** — Never miss a step. 30+ checklist items across 5 categories with accordion collapse. Load SOP templates for Landing Pages, WooCommerce, or Blog layouts. Add custom items and groups. Track progress with a live progress bar.
 
-**Color Palette** - Save and organize your brand colors. Group colors by palette (Brand, Dark Mode, etc.). Click any swatch to copy the hex code. Assign roles like Primary, Accent, Background.
+**Color Palette** — Save and organize brand colors. Group colors by palette (Brand, Dark Mode, etc.). Assign roles like Primary, Accent, Background. Copy hex codes, CSS variables, or push colors directly to Elementor Global Colors.
 
-**Font Pairing** - 10 curated font pairings (including Bengali fonts). Filter by style: editorial, modern, minimal, bold. Copy CSS and Google Fonts links. Save custom pairings.
+**Font Pairing** — Curated font pairings including Bengali and Arabic presets. Filter by style: editorial, modern, minimal, bold. Copy CSS, Google Fonts links, or CSS Custom Properties. Save custom pairings with weight/line-height recommendations.
 
-**CSS Generator** - Generate Elementor-ready custom CSS snippets. 6 presets (Section, Container, Typography, Button, Card, Responsive). Auto-fill from your Section Planner. Save and reuse snippets.
+**Design Tokens** — Generate CSS custom property tokens for typography scale, spacing, border radius, and box shadows. Copy as a `:root {}` block into your stylesheet. Sync tokens directly to Elementor Global Styles (writes to Elementor Kit).
 
-**Project Notes** - Client feedback, revision history, TODOs  all in one place. Quick insert tags for common patterns. Date stamps and structured formatting.
+**CSS Generator** — Generate Elementor-ready CSS snippets from 6 presets. Categorize by device target and risk level. Auto-fill from your Section Planner. Save and reuse snippets. Elementor selector helper for quick CSS targeting.
 
-**Pre-Publish Audit** - Scan your Elementor page for common issues before publishing. Detect placeholder text, broken links, missing image alt tags, and layout hierarchy issues. Locate elements with a single click.
+**Pre-Publish Audit** — Scan your Elementor page before publishing. Detect placeholder text, broken links, missing or weak image alt tags, heading sequence issues, oversized images, SEO title/meta length, and accessibility gaps. View audit history (last 5 scans). Export a full audit report as .txt.
 
-**Export** - Export your entire project as formatted text or JSON. Download .txt for client handover. JSON backup/import for portability.
+**Agency Cockpit** — Kanban-style project pipeline board (Draft → Design → Review → Revision → Approved → Published). Track blockers, project metadata, and last updated dates.
 
-**Multiple Projects** - Manage separate projects with independent data. Switch between projects instantly.
+**Client Feedback** — Collect section-level client comments. Export a shareable HTML feedback page for clients (no WordPress access needed). Import feedback JSON back to sync client comments.
 
-=  How It Works =
+**Revision Log** — Track every change and client request with a dated revision log. Full audit trail for billing and scope management.
 
-1. **In Elementor Editor**: A floating "Sekkei" button appears. Click it to open the tool as a sliding side panel. Use keyboard shortcut `Ctrl+Shift+P` for quick access.
+**White-Label Handoff Reports** — Generate a branded, printable HTML client handoff report with your agency logo, custom title, accent color, project details, planner structure, checklists, and audit summary.
 
-2. **In WordPress Admin**: Navigate to Sekkei  Open Tool for a full-screen experience.
+**Project Notes** — Client feedback, revision history, TODOs — all in one place. Quick insert tags and date stamps.
 
-3. **Data Storage**: All data is saved in your browser's localStorage  no server requests, no database load, instant performance.
+**Export & Backup** — Export your project as formatted text or JSON. Sync to WordPress database (stored in user metadata, max 3MB). Restore from database backup. Auto-backup reminder every 15 saves or 7 days.
 
-=  100% Free & Unlocked =
+= How It Works =
 
-Sekkei is 100% free and open-source. Every feature is included with no paywalls, subscriptions, or license keys:
+1. **In Elementor Editor**: A floating "Sekkei" button appears. Click or drag it anywhere on screen. Use `Ctrl+Shift+P` to toggle. Drag the panel header to undock it as a floating window — just like Divi or Elementor Navigator. Double-click the header to redock.
 
-* **Section Planner**: Add unlimited sections and use all pre-made workflow templates.
-* **Design Checklist**: Add unlimited custom checklist items and custom item groups.
-* **Color Palette**: Build and save multiple custom color palettes with roles.
-* **Font Pairing**: Access all 10 curated pairs (including Bengali fonts) and customize pairings.
-* **CSS Generator**: Generate, edit, and save Elementor-ready custom CSS snippets from all 6 presets.
-* **Multiple Projects**: Create, name, and switch between separate design projects.
-* **JSON Export**: Export and import your full workflow data in JSON format for backup or migration.
+2. **In WordPress Admin**: Navigate to Sekkei → Open Tool for a full-screen experience.
+
+3. **Keyboard Shortcuts**: `Ctrl+Shift+P` to toggle panel. `Escape` to close. `Alt+1` to `Alt+9` and `Alt+0` for instant tab switching.
+
+4. **Data Storage**: All data is saved in your browser's localStorage — no server requests, no database load, instant performance. Optional database sync available in Export panel.
+
+= 100% Free & Unlocked =
+
+Sekkei is 100% free and open-source under GPL-2.0+. Every feature is included with no paywalls, subscriptions, or license keys.
 
 == Installation ==
 
 1. Upload the `sekkei` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Open any page with Elementor editor - look for the "Sekkei" button
-4. Or navigate to Sekkei  Open Tool in the WordPress admin menu
+3. Open any page with Elementor editor — look for the floating "Sekkei" button
+4. Or navigate to Sekkei → Open Tool in the WordPress admin menu
 
 == Frequently Asked Questions ==
 
@@ -71,16 +73,15 @@ No! Sekkei works with the free version of Elementor. No Pro API is used.
 
 = Where is my data saved? =
 
-All data is saved in your browser's localStorage. This means it persists across sessions but is specific to the browser you're using.
+All data is saved in your browser's localStorage by default — no server requests, instant performance. You can optionally sync to the WordPress database from the Export panel (stored securely in user metadata).
 
 = Can I export my data? =
 
-Yes! Use the Export tab to download your project as a .txt file for client handover or as JSON for backup/import.
+Yes! Use the Export panel to download your project as a .txt file for client handover, as JSON for backup/import, or generate a white-label HTML handoff report for clients.
 
 = Will this slow down my site? =
 
-No. Sekkei only loads in the Elementor editor and WordPress admin - never on the frontend. Zero impact on site performance.
-
+No. Sekkei only loads in the Elementor editor and WordPress admin — never on the frontend. Zero impact on site performance or page speed.
 
 = Does Sekkei load anything on my live frontend? =
 
@@ -88,39 +89,54 @@ No. Sekkei is designed for the WordPress admin and Elementor editor only. It doe
 
 = What happens if my browser storage gets corrupted? =
 
-Sekkei keeps a local recovery backup before saves. If the main local data cannot be loaded, Sekkei attempts to recover from the backup. You can also use Export -> Restore Backup inside the tool.
+Sekkei keeps a local recovery backup before every save. If the main data cannot be loaded, Sekkei attempts to recover from the backup. You can also restore from a database backup or imported JSON via the Export panel.
 
 = Is JSON import safe? =
 
-Sekkei validates imported JSON, normalizes project data, limits large imports, and shows an import summary before adding the project.
+Sekkei validates imported JSON, normalizes project data, limits large imports, and shows an import summary before adding the project. Prototype pollution is guarded against during parsing.
 
 = What should I do before publishing an Elementor page? =
 
-Open Sekkei, review the Section Planner, complete the Design Checklist, run the Pre-Publish Audit, then export your notes or JSON backup for handoff.
+Open Sekkei, review the Section Planner, complete the Design Checklist, run the Pre-Publish Audit, then export your notes or generate a white-label handoff report for your client.
 
 = Does it work with other page builders? =
 
-Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Open Tool) can be used for planning any website project.
+Sekkei is designed for Elementor workflows, but the standalone tool (Admin → Open Tool) can be used for planning any website project.
+
+= Can I drag the floating button and panel? =
+
+Yes! Both the floating trigger button and the panel itself are draggable. Drag the panel header to undock it as a floating window anywhere on screen. Double-click to reset to default position. Positions are saved in localStorage.
+
+= What is the Elementor Global Styles sync? =
+
+From the Design Tokens panel, you can sync your design tokens and color palette directly to Elementor's active Kit — writing CSS custom properties to Elementor's global settings and flushing the CSS cache automatically.
 
 == Screenshots ==
 
-1. Section Planner  Plan and organize your page sections with drag-and-drop
-2. Design Checklist  Track your progress with categorized checkpoints
-3. Color Palette  Save and organize brand colors with groups and roles
-4. Font Pairing  Curated font combinations with live preview
-5. CSS Generator  Generate Elementor-ready CSS snippets with presets
-6. Elementor Integration  Floating button and sliding panel in the editor
-7. Settings Page  Configure panel position, width, and behavior
+1. Section Planner — Plan and organize your page sections with drag-and-drop, health warnings, and responsive QA status
+2. Design Checklist — Track your progress with categorized checkpoints and SOP templates
+3. Color Palette — Save and organize brand colors with groups, roles, and CSS variable export
+4. Font Pairing — Curated font combinations including Bengali and Arabic with live preview
+5. CSS Generator — Generate Elementor-ready CSS snippets with device and risk categorization
+6. Pre-Publish Audit — Scan for accessibility, SEO, and layout issues before going live
+7. Agency Cockpit — Kanban pipeline board for project management and client collaboration
+8. Export & Handoff — White-label client reports, database backup, and JSON export
 
 == Changelog ==
- 
+
+= 1.7.0 =
+* Added Elementor Global Styles database sync (writes design tokens directly to Elementor Kit via AJAX)
+* Added White-label Client Handoff HTML report with agency logo, custom title, and accent color
+* Enhanced pre-publish audit with generic/weak alt text detection
+* Added Cloud Workspace panel (coming soon — API keys not yet active)
+
 = 1.6.1 =
 * Added draggable floating trigger button (FAB) with position memory and double-click reset
 * Added draggable floating panel window (Divi-style undocking) with position memory and double-click redock
 * Added Alt+1 to Alt+9 and Alt+0 keyboard shortcuts for instant panel navigation
 * Fixed iframe focus trap — Ctrl+Shift+P and Escape now bubble correctly from panel to editor
 * Added CSS Variables export button in Font Pairing panel
- 
+
 = 1.6.0 =
 * Added Global Error Boundary for JS catch resilience and emergency auto-save
 * Added auto-retry save logic with exponential backoff on localStorage quota/issues
@@ -134,20 +150,20 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 * Fixed legacy Elementor version compatibility check (requires 3.0.0+)
 * Fixed a syntax error in client feedback interactive HTML sheet export
 * Generated WordPress POT translation templates inside the /languages directory
- 
+
 = 1.5.0 =
 * Added Agency Cockpit with Kanban project pipeline board
 * Added Client Feedback panel with shareable HTML export and JSON import
 * Added Revision Log for tracking changes and client requests
 * Added SOP templates for landing page, WooCommerce, and blog workflows
 * Added custom SOP save and append support
- 
+
 = 1.4.0 =
 * Added deep page audit: heading sequence, oversized images, SEO title/meta length, accessibility checks
 * Added Responsive QA status tracking per section (desktop/tablet/mobile pass/fail)
 * Added SEO & Handoff checklist category
 * Added audit report export (.txt)
- 
+
 = 1.3.0 =
 * Added Design Tokens panel for typography scale, spacing, radius, and shadow CSS variables
 * Added WCAG contrast checker for saved brand colors
@@ -187,13 +203,22 @@ Sekkei is designed for Elementor workflows, but the standalone tool (Admin - Ope
 * Settings page for panel configuration
 
 == Upgrade Notice ==
- 
+
+= 1.7.0 =
+Adds Elementor Global Styles sync, white-label client handoff reports, enhanced alt text audit, and Cloud Workspace panel.
+
+= 1.6.1 =
+Adds draggable FAB and panel (Divi-style), Alt+1–9 keyboard shortcuts, iframe focus fix, and font CSS variable export.
+
+= 1.6.0 =
+Adds error boundary, cross-tab sync, database backup, minification pipeline, checklist accordion, audit history, and i18n support.
+
 = 1.5.0 =
 Adds Agency Cockpit (Kanban board), Client Feedback panel (with shareable HTML and JSON sync), Revision Log tracker, and templateable/custom SOP checklists.
- 
+
 = 1.4.0 =
 Adds deep page audit checks, responsive section QA status indicators, SEO/handoff checklists, and audit text report exports.
- 
+
 = 1.3.0 =
 Adds Design Tokens panel, WCAG contrast checker, Arabic font pairs, CSS snippet library filtering, and Elementor selector helper.
 
@@ -241,5 +266,3 @@ Sekkei uses the following third-party libraries, included in the plugin package:
 * Source: https://fonts.google.com/specimen/DM+Mono
 * Location: assets/vendor/fonts/dm-mono-400.woff2
 * Purpose: Monospace font for CSS code output in the standalone tool interface
-
-

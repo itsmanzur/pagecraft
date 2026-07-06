@@ -25,6 +25,7 @@ class ITSPC_Admin {
         add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widget' ) );
         add_action( 'wp_ajax_itspc_save_backup', array( $this, 'ajax_save_backup' ) );
         add_action( 'wp_ajax_itspc_load_backup', array( $this, 'ajax_load_backup' ) );
+        add_action( 'wp_ajax_itspc_sync_elementor_globals', array( $this, 'ajax_sync_elementor_globals' ) );
     }
 
     /**
@@ -1002,6 +1003,151 @@ class ITSPC_Admin {
         wp_send_json_success( array(
             'data' => json_decode( $data, true )
         ) );
+    }
+
+    /**
+     * Sync Sekkei Colors and Fonts directly to Elementor Kit database options.
+     */
+    public function ajax_sync_elementor_globals() {
+        check_ajax_referer( 'itspc-ajax-nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( 'Unauthorized' );
+        }
+
+        $colors_data = isset( $_POST['colors'] ) ? wp_unslash( $_POST['colors'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $fonts_data  = isset( $_POST['fonts'] ) ? wp_unslash( $_POST['fonts'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+        $kit_id = get_option( 'elementor_active_kit' );
+        if ( ! $kit_id ) {
+            wp_send_json_error( array( 'message' => __( 'Active Elementor Kit not found. Make sure Elementor is installed and configured.', 'sekkei' ) ) );
+        }
+
+        $page_settings = get_post_meta( $kit_id, '_elementor_page_settings', true );
+        if ( ! is_array( $page_settings ) ) {
+            $page_settings = array();
+        }
+
+        $updated = false;
+
+        // Process Colors
+        if ( ! empty( $colors_data ) ) {
+            $colors = json_decode( $colors_data, true );
+            if ( is_array( $colors ) ) {
+                $system_colors = array();
+                $custom_colors = array();
+                $system_roles  = array( 'primary', 'secondary', 'text', 'accent' );
+                $role_map      = array();
+
+                foreach ( $colors as $c ) {
+                    if ( isset( $c['role'] ) && in_array( $c['role'], $system_roles, true ) ) {
+                        $role_map[ $c['role'] ] = $c['hex'];
+                    }
+                }
+
+                $system_index = 0;
+                foreach ( $colors as $c ) {
+                    if ( ! isset( $c['role'] ) || ! in_array( $c['role'], $system_roles, true ) ) {
+                        while ( $system_index < count( $system_roles ) ) {
+                            $r = $system_roles[ $system_index ];
+                            if ( ! isset( $role_map[ $r ] ) ) {
+                                $role_map[ $r ] = $c['hex'];
+                                $system_index++;
+                                break;
+                            }
+                            $system_index++;
+                        }
+                    }
+                }
+
+                $defaults = array(
+                    'primary'   => '#6EC1E4',
+                    'secondary' => '#54595F',
+                    'text'      => '#7A7A7A',
+                    'accent'    => '#61CE70',
+                );
+
+                foreach ( $system_roles as $r ) {
+                    $system_colors[] = array(
+                        '_id'   => $r,
+                        'title' => ucfirst( $r ),
+                        'color' => isset( $role_map[ $r ] ) ? $role_map[ $r ] : $defaults[ $r ],
+                    );
+                }
+
+                foreach ( $colors as $c ) {
+                    $is_mapped_system = false;
+                    foreach ( $role_map as $r => $hex ) {
+                        if ( $hex === $c['hex'] ) {
+                            $is_mapped_system = true;
+                            break;
+                        }
+                    }
+                    if ( ! $is_mapped_system || ( isset( $c['role'] ) && ! in_array( $c['role'], $system_roles, true ) ) ) {
+                        $custom_colors[] = array(
+                            '_id'   => isset( $c['id'] ) ? $c['id'] : 'color_' . substr( md5( uniqid( rand(), true ) ), 0, 9 ),
+                            'title' => isset( $c['name'] ) ? $c['name'] : 'Custom Color',
+                            'color' => $c['hex'],
+                        );
+                    }
+                }
+
+                $page_settings['system_colors'] = $system_colors;
+                $page_settings['custom_colors'] = $custom_colors;
+                $updated = true;
+            }
+        }
+
+        // Process Fonts
+        if ( ! empty( $fonts_data ) ) {
+            $fonts = json_decode( $fonts_data, true );
+            if ( is_array( $fonts ) && isset( $fonts['heading'] ) && isset( $fonts['body'] ) ) {
+                $heading = sanitize_text_field( $fonts['heading'] );
+                $body    = sanitize_text_field( $fonts['body'] );
+
+                $system_typography = array(
+                    array(
+                        '_id'                    => 'primary',
+                        'title'                  => 'Primary',
+                        'typography_font_family' => $heading,
+                        'typography_font_weight' => '700',
+                    ),
+                    array(
+                        '_id'                    => 'secondary',
+                        'title'                  => 'Secondary',
+                        'typography_font_family' => $heading,
+                        'typography_font_weight' => '600',
+                    ),
+                    array(
+                        '_id'                    => 'text',
+                        'title'                  => 'Text',
+                        'typography_font_family' => $body,
+                        'typography_font_weight' => '400',
+                    ),
+                    array(
+                        '_id'                    => 'accent',
+                        'title'                  => 'Accent',
+                        'typography_font_family' => $heading,
+                        'typography_font_weight' => '500',
+                    ),
+                );
+
+                $page_settings['system_typography'] = $system_typography;
+                $updated = true;
+            }
+        }
+
+        if ( $updated ) {
+            update_post_meta( $kit_id, '_elementor_page_settings', $page_settings );
+
+            // Clear Elementor CSS Cache
+            if ( class_exists( '\Elementor\Plugin' ) ) {
+                \Elementor\Plugin::$instance->files_manager->clear_cache();
+            }
+
+            wp_send_json_success( array( 'message' => __( 'Elementor global styles successfully synced to database.', 'sekkei' ) ) );
+        }
+
+        wp_send_json_error( array( 'message' => __( 'No valid styling data updated.', 'sekkei' ) ) );
     }
 }
 
