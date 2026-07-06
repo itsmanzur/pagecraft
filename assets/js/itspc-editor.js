@@ -928,16 +928,17 @@
                     return { id: id, title: title };
                 };
 
-                // 1. Scan for Empty / Unlinked Links
+                // 1. Scan for Empty, Unlinked, Placeholder or Unsafe Links
                 var links = previewDoc.querySelectorAll('a');
                 links.forEach(function(link) {
+                    if (link.closest('.elementor-editor-element-setting')) return;
+                    
                     var href = link.getAttribute('href');
-                    if (typeof href === 'undefined' || href === null || href === '' || href === '#' || (href && href.toLowerCase() === 'http://#') || (href && href.toLowerCase() === 'https://#')) {
-                        if (link.closest('.elementor-editor-element-setting')) return;
-                        
-                        var info = getElementInfo(link);
-                        var linkText = (link.textContent || '').trim() || link.getAttribute('title') || 'Button/Link';
+                    var info = getElementInfo(link);
+                    var linkText = (link.textContent || '').trim() || link.getAttribute('title') || 'Button/Link';
 
+                    // Check A: Empty / Unlinked link
+                    if (typeof href === 'undefined' || href === null || href === '' || href === '#' || (href && href.toLowerCase() === 'http://#') || (href && href.toLowerCase() === 'https://#')) {
                         results.push({
                             type: 'link',
                             title: 'Empty Link',
@@ -945,6 +946,39 @@
                             elementId: info.id,
                             previewText: linkText.substring(0, 30)
                         });
+                        return;
+                    }
+
+                    var hrefLower = href.toLowerCase().trim();
+
+                    // Check B: Template Social Links Left Unchanged
+                    var templateSocialRegex = /facebook\.com\/(yourpage|pages\/|$)|twitter\.com\/(yourpage|$)|instagram\.com\/(yourpage|$)|linkedin\.com\/(yourpage|company\/yourpage|$)|youtube\.com\/(yourpage|channel\/yourpage|$)/i;
+                    if (templateSocialRegex.test(hrefLower)) {
+                        results.push({
+                            type: 'seo',
+                            title: 'Placeholder Social Link',
+                            description: 'Social link "' + href.substring(0, 35) + '" in "' + info.title + '" contains a placeholder template URL. Replace with your actual page link.',
+                            elementId: info.id,
+                            previewText: href.substring(0, 30)
+                        });
+                        return;
+                    }
+
+                    // Check C: Unsafe target="_blank" without rel="noopener"
+                    if (link.getAttribute('target') === '_blank') {
+                        var isExternal = hrefLower.indexOf('http') === 0 && hrefLower.indexOf(window.location.hostname) === -1;
+                        if (isExternal) {
+                            var rel = link.getAttribute('rel') || '';
+                            if (rel.indexOf('noopener') === -1) {
+                                results.push({
+                                    type: 'accessibility',
+                                    title: 'Unsafe Tab Target',
+                                    description: 'External link opens in a new tab but is missing rel="noopener" in "' + info.title + '". This poses performance and security risks (tabnabbing).',
+                                    elementId: info.id,
+                                    previewText: 'No noopener'
+                                });
+                            }
+                        }
                     }
                 });
 
@@ -1183,17 +1217,40 @@
                     return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
                 };
 
+                // Helper to find inherited background color up the tree
+                var getInheritedBgColor = function(element) {
+                    var current = element;
+                    while (current) {
+                        var style = window.getComputedStyle(current);
+                        var bg = style.backgroundColor;
+                        if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+                            return bg;
+                        }
+                        if (current.tagName.toLowerCase() === 'body' || current.tagName.toLowerCase() === 'html') {
+                            break;
+                        }
+                        current = current.parentElement;
+                    }
+                    // Fallback default: if inside elementor editor preview, it is typically white
+                    return 'rgb(255, 255, 255)';
+                };
+
                 var textElements = previewDoc.querySelectorAll('p, span, a, h1, h2, h3, h4, h5, h6, button');
                 textElements.forEach(function(el) {
                     if (el.closest('.elementor-editor-element-setting')) return;
+                    
+                    // Don't scan empty text containers
+                    var textContent = (el.textContent || '').trim();
+                    if (!textContent) return;
+
                     var style = window.getComputedStyle(el);
                     var color = style.color;
-                    var bgColor = style.backgroundColor;
+                    var bgColor = getInheritedBgColor(el);
 
                     var rgbColor = parseColor(color);
                     var rgbBg = parseColor(bgColor);
 
-                    if (rgbColor && rgbBg && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
+                    if (rgbColor && rgbBg) {
                         var l1 = getLuminanceVal(rgbColor.r, rgbColor.g, rgbColor.b);
                         var l2 = getLuminanceVal(rgbBg.r, rgbBg.g, rgbBg.b);
                         var brightest = Math.max(l1, l2);
@@ -1214,7 +1271,7 @@
                                     results.push({
                                         type: 'contrast',
                                         title: 'Low Color Contrast',
-                                        description: 'Text element has low contrast ratio (' + ratio.toFixed(2) + ':1) against its background. Recommended ratio is at least 4.5:1 (3.0:1 for large text).',
+                                        description: 'Text element ("' + textContent.substring(0, 15) + '...") has low contrast ratio (' + ratio.toFixed(2) + ':1) against its inherited background (' + bgColor + '). Minimum recommended is 4.5:1.',
                                         elementId: info.id,
                                         previewText: ratio.toFixed(2) + ':1 ratio'
                                     });

@@ -708,9 +708,10 @@ function trackSaveForBackupReminder() {
     const lastBackupStr = localStorage.getItem(LAST_BACKUP_KEY);
     const daysSinceBackup = lastBackupStr
       ? Math.floor((Date.now() - new Date(lastBackupStr).getTime()) / (1000 * 60 * 60 * 24))
-      : 999;
+      : null;
 
-    const needsReminder = count >= BACKUP_REMIND_SAVES || daysSinceBackup >= BACKUP_REMIND_DAYS;
+    // Remind if saves exceeded OR days since backup exceeded OR if they have never backed up yet after many saves
+    const needsReminder = count >= BACKUP_REMIND_SAVES || (daysSinceBackup !== null && daysSinceBackup >= BACKUP_REMIND_DAYS) || (daysSinceBackup === null && count >= BACKUP_REMIND_SAVES);
 
     if (needsReminder && count > 1) {
       // Reset counter
@@ -727,9 +728,12 @@ function trackSaveForBackupReminder() {
  * Show a non-intrusive backup reminder with one-click download.
  */
 function showBackupReminder(daysSinceBackup) {
-  const msg = daysSinceBackup >= BACKUP_REMIND_DAYS
-    ? 'It\'s been ' + daysSinceBackup + ' days since your last backup.'
-    : 'You\'ve made many changes since your last backup.';
+  let msg = 'You\'ve made many changes since your last backup.';
+  if (daysSinceBackup === null) {
+    msg = 'You haven\'t backed up your projects yet.';
+  } else if (daysSinceBackup >= BACKUP_REMIND_DAYS) {
+    msg = 'It\'s been ' + daysSinceBackup + ' days since your last backup.';
+  }
 
   // Use a persistent toast-like notification
   const existing = document.getElementById('itspc-backup-reminder');
@@ -2351,9 +2355,9 @@ function renderDashboard() {
               </div>
               
               <div style="display:flex; justify-content:flex-end; gap:4px; margin-top:6px;" onclick="event.stopPropagation()">
-                <button class="btn btn-icon btn-sm" style="width:24px; height:24px; font-size:11px;" onclick="moveProjectStatus('${p.id}', -1)" title="Move left"><i class="ti ti-arrow-left"></i></button>
-                <button class="btn btn-icon btn-sm" style="width:24px; height:24px; font-size:11px;" onclick="moveProjectStatus('${p.id}', 1)" title="Move right"><i class="ti ti-arrow-right"></i></button>
-                <button class="btn btn-icon btn-sm" style="width:24px; height:24px; font-size:11px;" onclick="openEditProjectMeta('${p.id}')" title="Edit details"><i class="ti ti-edit"></i></button>
+                <button class="btn btn-icon btn-sm" style="width:28px; height:28px; font-size:15px;" onclick="moveProjectStatus('${p.id}', -1)" title="Move left"><i class="ti ti-arrow-left"></i></button>
+                <button class="btn btn-icon btn-sm" style="width:28px; height:28px; font-size:15px;" onclick="moveProjectStatus('${p.id}', 1)" title="Move right"><i class="ti ti-arrow-right"></i></button>
+                <button class="btn btn-icon btn-sm" style="width:28px; height:28px; font-size:15px;" onclick="openEditProjectMeta('${p.id}')" title="Edit details"><i class="ti ti-edit"></i></button>
               </div>
             </div>
           `;
