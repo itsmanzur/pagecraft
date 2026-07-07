@@ -125,6 +125,11 @@ From the Design Tokens panel, you can sync your design tokens and color palette 
 == Changelog ==
 
 = 1.7.0 =
+* UI polish: color-coded section type borders, Kanban status color accents, SaaS card elevation and hover effects
+* Fixed WCAG contrast checker badges unreadable in light mode
+* Fixed 999-day backup reminder showing for new users with no prior backup
+* Enhanced audit engine: inherited background contrast scanner, noopener security check, social media placeholder link detection
+* Reduced Tabler Icons font from 832KB to 10KB with expanded 55-icon subset
 * Added Elementor Global Styles database sync (writes design tokens directly to Elementor Kit via AJAX)
 * Added White-label Client Handoff HTML report with agency logo, custom title, and accent color
 * Enhanced pre-publish audit with generic/weak alt text detection
@@ -205,6 +210,11 @@ From the Design Tokens panel, you can sync your design tokens and color palette 
 == Upgrade Notice ==
 
 = 1.7.0 =
+* UI polish: color-coded section type borders, Kanban status color accents, SaaS card elevation and hover effects
+* Fixed WCAG contrast checker badges unreadable in light mode
+* Fixed 999-day backup reminder showing for new users with no prior backup
+* Enhanced audit engine: inherited background contrast scanner, noopener security check, social media placeholder link detection
+* Reduced Tabler Icons font from 832KB to 10KB with expanded 55-icon subset
 Adds Elementor Global Styles sync, white-label client handoff reports, enhanced alt text audit, and Cloud Workspace panel.
 
 = 1.6.1 =
