@@ -2884,6 +2884,7 @@ window.addEventListener('message', function(event) {
         </div>
       `;
       resultsCard.style.display = 'block';
+      renderWidgetBloatSummary(event.data.widgetCounts);
       return;
     }
     
@@ -2989,13 +2990,87 @@ window.addEventListener('message', function(event) {
     });
     
     resultsCard.style.display = 'block';
+    renderWidgetBloatSummary(event.data.widgetCounts);
   }
 
   if (event.data.type === 'itspc_element_selected') {
     state.lastSelectedElement = event.data;
     updateSelectorHelperUI();
   }
+
+  if (event.data.type === 'itspc_scattered_css_results') {
+    renderScatteredCSS(event.data.results || []);
+  }
+
+  if (event.data.type === 'itspc_update_element_css_success') {
+    toast('Custom CSS successfully updated in Elementor!');
+    // Re-scan to update list and ensure values are synced
+    setTimeout(() => {
+      window.parent.postMessage({ type: 'itspc_scan_scattered_css' }, window.location.origin);
+    }, 500);
+  }
 });
+
+/**
+ * Scattered Custom CSS Hub Functions
+ */
+function scanScatteredCSS() {
+  const list = document.getElementById('scattered-css-list');
+  if (!list) return;
+  list.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center;padding:16px 0;"><i class="ti ti-loader-quarter rotate" style="animation: spin 1s linear infinite; font-size: 18px; display: block; margin: 0 auto 8px;"></i>Scanning editor widgets...</div>';
+  window.parent.postMessage({
+    type: 'itspc_scan_scattered_css'
+  }, window.location.origin);
+}
+
+function renderScatteredCSS(results) {
+  const list = document.getElementById('scattered-css-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (results.length === 0) {
+    list.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center;padding:16px 0;">No Custom CSS found in any elements on this page.</div>';
+    return;
+  }
+
+  results.forEach((item, index) => {
+    const itemEl = document.createElement('div');
+    itemEl.className = 'scattered-css-item';
+    itemEl.style.cssText = 'background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:10px;display:flex;flex-direction:column;gap:6px;margin-bottom:8px;';
+    
+    let badgeColor = '#9B6FFF';
+    if (item.elType === 'column') badgeColor = '#FFB020';
+    if (item.elType === 'section' || item.elType === 'container') badgeColor = '#00E5CC';
+
+    itemEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:12px;font-weight:600;color:var(--text);">${esc(item.title)}</span>
+          <span style="font-size:9px;background:${badgeColor}15;color:${badgeColor};border:1px solid ${badgeColor}33;padding:1px 5px;border-radius:99px;text-transform:uppercase;font-weight:700;">${esc(item.elType)}</span>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--text3);">#${esc(item.id)}</span>
+      </div>
+      <textarea id="scattered-css-text-${index}" style="min-height:70px;font-family:var(--font-mono);font-size:12px;padding:6px;background:var(--bg);line-height:1.4;" placeholder="/* Custom CSS */">${esc(item.css)}</textarea>
+      <div style="display:flex;justify-content:flex-end;gap:6px;">
+        <button class="btn btn-sm" onclick="window.parent.postMessage({type:'itspc_highlight_element',elementId:'${esc(item.id)}'}, window.location.origin)"><i class="ti ti-eye"></i> Locate</button>
+        <button class="btn btn-sm btn-accent" onclick="updateElementCSS('${esc(item.id)}', ${index})"><i class="ti ti-device-floppy"></i> Update CSS</button>
+      </div>
+    `;
+    list.appendChild(itemEl);
+  });
+}
+
+function updateElementCSS(elementId, index) {
+  const textarea = document.getElementById('scattered-css-text-' + index);
+  if (!textarea) return;
+  const css = textarea.value;
+  window.parent.postMessage({
+    type: 'itspc_update_element_css',
+    elementId: elementId,
+    css: css
+  }, window.location.origin);
+}
+
 
 /**
  * Render past audits list in UI.
@@ -4232,6 +4307,11 @@ function generateClientReport() {
 </style>
 </head>
 <body>
+<div class="no-print" style="position:fixed;top:16px;right:16px;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border:1px solid #CBD5E1;border-radius:10px;padding:8px 12px;box-shadow:0 10px 25px rgba(0,0,0,0.08);display:flex;gap:8px;z-index:100000;">
+  <button onclick="window.print()" style="font-family:inherit;font-size:12px;font-weight:600;background:var(--primary);color:#0d0d0f;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:flex;align-items:center;gap:4px;">
+    Save/Print PDF
+  </button>
+</div>
 <div class="container">
   
   <!-- Header -->
@@ -4342,4 +4422,324 @@ function restoreCloudConfig() {
       statusEl.innerHTML = '<i class="ti ti-circle-check" style="color:#C8FF00"></i> Cloud Workspace Connected (Standby)';
     }
   }
+}
+
+/**
+ * Render Widget & Asset Bloat Summary details
+ */
+function renderWidgetBloatSummary(widgetCounts) {
+  const card = document.getElementById('audit-bloat-card');
+  const list = document.getElementById('audit-bloat-list');
+  if (!card || !list) return;
+
+  list.innerHTML = '';
+  
+  if (!widgetCounts || Object.keys(widgetCounts).length === 0) {
+    card.style.display = 'none';
+    return;
+  }
+
+  // Sort widgets by usage count descending
+  const sorted = Object.entries(widgetCounts).sort((a, b) => b[1] - a[1]);
+
+  sorted.forEach(([type, count]) => {
+    const pill = document.createElement('div');
+    pill.style.cssText = 'font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 8px;display:flex;align-items:center;gap:6px;color:var(--text);font-weight:500;';
+    
+    // Highlight widgets with high count (> 10 is typical high limit per element type)
+    let countStyle = 'font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--accent);';
+    if (count > 10) {
+      countStyle = 'font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--red);background:rgba(255,77,77,0.1);padding:1px 4px;border-radius:4px;';
+    }
+
+    pill.innerHTML = `<span>${esc(type)}</span> <span style="${countStyle}">${count}</span>`;
+    list.appendChild(pill);
+  });
+
+  card.style.display = 'block';
+}
+
+/**
+ * Generate and open a standalone, highly-professional Brand Style Guide page.
+ */
+function generateStyleGuide() {
+  const p = proj();
+  const tokens = p.designTokens || {
+    typography: { base: 16, ratio: 1.250 },
+    spacing: { base: 8 },
+    radius: { sm: 4, md: 8, lg: 12, xl: 16 }
+  };
+  const colors = p.colors || [];
+
+  // Generate color swatches html
+  let colorsHtml = '';
+  if (colors.length > 0) {
+    colorsHtml = colors.map(c => {
+      let roleBadge = c.role ? `<span class="role-badge role-${c.role.toLowerCase()}">${esc(c.role)}</span>` : '';
+      return `
+        <div class="swatch-card">
+          <div class="swatch-preview" style="background:${c.hex}"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">${esc(c.name || 'Custom Color')}</div>
+            <div class="swatch-hex">${esc(c.hex)}</div>
+            ${roleBadge}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    colorsHtml = '<p style="color:var(--text-muted);font-size:13px">No brand colors configured in your palette yet.</p>';
+  }
+
+  // Calculate typography scales
+  const baseSize = parseFloat(tokens.typography ? tokens.typography.base : 16) || 16;
+  const ratio = parseFloat(tokens.typography ? tokens.typography.ratio : 1.250) || 1.250;
+  
+  const getScale = (pow) => Math.round(baseSize * Math.pow(ratio, pow));
+  const tScale = {
+    h1: getScale(5),
+    h2: getScale(4),
+    h3: getScale(3),
+    h4: getScale(2),
+    h5: getScale(1),
+    h6: getScale(0),
+    body: baseSize
+  };
+
+  // Border radius scale html
+  const radius = tokens.radius || { sm: 4, md: 8, lg: 12, xl: 16 };
+  const radiusHtml = Object.entries(radius).map(([key, val]) => {
+    return `
+      <div class="token-row">
+        <span class="token-name">Border Radius (${esc(key)})</span>
+        <span class="token-value"><code>${val}px</code></span>
+        <div class="token-preview" style="width:40px;height:40px;background:#E2E8F0;border:1px solid #CBD5E1;border-radius:${val}px"></div>
+      </div>
+    `;
+  }).join('');
+
+  // Spacing scale html
+  const baseSpacing = parseFloat(tokens.spacing ? tokens.spacing.base : 8) || 8;
+  const spacingScale = [1, 2, 3, 4, 6, 8, 12];
+  const spacingHtml = spacingScale.map(multiplier => {
+    const val = baseSpacing * multiplier;
+    return `
+      <div class="token-row">
+        <span class="token-name">Spacing x${multiplier}</span>
+        <span class="token-value"><code>${val}px</code></span>
+        <div class="token-preview" style="height:12px;background:var(--primary);width:${val * 2}px;min-width:4px;border-radius:2px"></div>
+      </div>
+    `;
+  }).join('');
+
+  // Find dynamic colors to style buttons inside style guide
+  const primaryColor = colors.find(c => c.role === 'primary') || colors[0] || { hex: '#3B82F6' };
+  const secondaryColor = colors.find(c => c.role === 'secondary') || colors[1] || { hex: '#4B5563' };
+  const accentColor = colors.find(c => c.role === 'accent') || colors[2] || { hex: '#10B981' };
+  const bgColor = colors.find(c => c.role === 'background') || { hex: '#ffffff' };
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Brand Style Guide - ${esc(p.name)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: ${primaryColor.hex};
+    --secondary: ${secondaryColor.hex};
+    --accent: ${accentColor.hex};
+    --brand-bg: ${bgColor.hex};
+    --text: #1E293B;
+    --text-muted: #64748B;
+    --border: #E2E8F0;
+    --bg-light: #F8FAFC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    color: var(--text);
+    background: #F1F5F9;
+    line-height: 1.6;
+    padding: 50px 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(15,23,42,0.06); padding: 40px; }
+  
+  /* Header */
+  .header {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .title-area h1 { font-size: 28px; font-weight: 700; color: #0F172A; }
+  .title-area p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+  
+  h2 { font-size: 20px; font-weight: 600; color: #0F172A; margin-top: 45px; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--bg-light); display: flex; align-items: center; gap: 8px; }
+  
+  /* Color Swatches */
+  .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+  .swatch-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #ffffff; transition: transform 0.2s ease; }
+  .swatch-card:hover { transform: translateY(-2px); }
+  .swatch-preview { height: 100px; border-bottom: 1px solid var(--border); }
+  .swatch-info { padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+  .swatch-name { font-size: 13px; font-weight: 600; color: #0F172A; }
+  .swatch-hex { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); }
+  
+  .role-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; align-self: flex-start; margin-top: 4px; }
+  .role-primary { background: rgba(59,130,246,0.1); color: #2563EB; }
+  .role-secondary { background: rgba(75,85,99,0.1); color: #4B5563; }
+  .role-accent { background: rgba(16,185,129,0.1); color: #059669; }
+  .role-background { background: rgba(0,0,0,0.05); color: #1E293B; }
+  .role-text { background: rgba(0,0,0,0.08); color: #000000; }
+  .role-border { background: rgba(226,232,240,1); color: #475569; }
+  .role-custom { background: #F1F5F9; color: #475569; }
+
+  /* Typography Preview */
+  .typo-preview-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; background: var(--bg-light); display: flex; flex-direction: column; gap: 16px; }
+  .typo-row { display: flex; align-items: baseline; gap: 24px; border-bottom: 1px dashed var(--border); padding-bottom: 12px; }
+  .typo-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .typo-label { width: 90px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+  .typo-sample { flex: 1; color: var(--text); }
+  .typo-size { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); }
+
+  /* Spacing Grid */
+  .token-row { display: flex; align-items: center; gap: 20px; border-bottom: 1px solid var(--bg-light); padding: 10px 0; }
+  .token-row:last-child { border-bottom: none; }
+  .token-name { flex: 1; font-size: 14px; font-weight: 500; }
+  .token-value { width: 100px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-muted); }
+  .token-preview { flex-shrink: 0; }
+
+  /* Elements Card */
+  .elements-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; }
+  .btn-sample { display: inline-flex; align-items: center; justify-content: center; font-family: inherit; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: all 0.2s ease; text-decoration: none; }
+  .btn-primary { background: var(--primary); color: #ffffff; }
+  .btn-secondary { background: var(--secondary); color: #ffffff; }
+  .btn-accent { background: var(--accent); color: #ffffff; }
+  
+  .ui-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--brand-bg); }
+  .ui-card-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  
+  /* Print Settings */
+  @media print {
+    body { padding: 0; background: #ffffff; }
+    .container { box-shadow: none; border-radius: 0; padding: 0; }
+    .no-print { display: none !important; }
+    .swatch-card { page-break-inside: avoid; }
+    .typo-row { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="no-print" style="position:fixed;top:16px;right:16px;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border:1px solid #CBD5E1;border-radius:10px;padding:8px 12px;box-shadow:0 10px 25px rgba(0,0,0,0.08);display:flex;gap:8px;z-index:100000;">
+  <button onclick="window.print()" style="font-family:inherit;font-size:12px;font-weight:600;background:var(--primary);color:#ffffff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:flex;align-items:center;gap:4px;">
+    Print Style Guide
+  </button>
+</div>
+<div class="container">
+  
+  <!-- Header -->
+  <div class="header">
+    <div class="title-area">
+      <h1>Brand Style Guide</h1>
+      <p>Project Name: <strong>${esc(p.name)}</strong> &bull; Generated: ${new Date().toLocaleDateString()}</p>
+    </div>
+  </div>
+
+  <!-- Color Palette -->
+  <h2>Color Palette</h2>
+  <div class="swatch-grid">
+    ${colorsHtml}
+  </div>
+
+  <!-- Typography Scale -->
+  <h2>Typography Scale (Ratio: ${ratio})</h2>
+  <div class="typo-preview-card">
+    <div class="typo-row">
+      <div class="typo-label">Heading 1</div>
+      <div class="typo-sample" style="font-size:${tScale.h1}px;font-weight:700">The quick brown fox</div>
+      <div class="typo-size">${tScale.h1}px</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Heading 2</div>
+      <div class="typo-sample" style="font-size:${tScale.h2}px;font-weight:700">The quick brown fox</div>
+      <div class="typo-size">${tScale.h2}px</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Heading 3</div>
+      <div class="typo-sample" style="font-size:${tScale.h3}px;font-weight:600">The quick brown fox</div>
+      <div class="typo-size">${tScale.h3}px</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Heading 4</div>
+      <div class="typo-sample" style="font-size:${tScale.h4}px;font-weight:600">The quick brown fox</div>
+      <div class="typo-size">${tScale.h4}px</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Heading 5</div>
+      <div class="typo-sample" style="font-size:${tScale.h5}px;font-weight:600">The quick brown fox</div>
+      <div class="typo-size">${tScale.h5}px</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Heading 6</div>
+      <div class="typo-sample" style="font-size:${tScale.h6}px;font-weight:600">The quick brown fox</div>
+      <div class="typo-size">${tScale.h6}px</div>
+    </div>
+    <div class="typo-row">
+      <div class="typo-label">Body Text</div>
+      <div class="typo-sample" style="font-size:${tScale.body}px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+      <div class="typo-size">${tScale.body}px</div>
+    </div>
+  </div>
+
+  <div class="elements-grid" style="margin-top:40px">
+    <!-- Spacing & Layout Tokens -->
+    <div>
+      <h2>Spacing &amp; Layout</h2>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:16px">
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Spacing Scale (Base: ${baseSpacing}px)</div>
+        ${spacingHtml}
+        
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-top:20px;margin-bottom:8px">Border Radius Tokens</div>
+        ${radiusHtml}
+      </div>
+    </div>
+
+    <!-- UI Component Previews -->
+    <div>
+      <h2>Component Previews</h2>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:20px">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">Button Variants</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn-sample btn-primary">Primary Button</button>
+            <button class="btn-sample btn-secondary">Secondary Button</button>
+            <button class="btn-sample btn-accent">Accent Button</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">UI Container Card</div>
+          <div class="ui-card">
+            <div style="height:100px;background:#CBD5E1;display:flex;align-items:center;justify-content:center;color:#475569;font-weight:500;font-size:13px">Cover Placeholder</div>
+            <div class="ui-card-body">
+              <h4 style="font-size:16px;font-weight:600">Sample Card Title</h4>
+              <p style="font-size:12px;color:var(--text-muted)">This is a preview container utilizing the brand styling colors and base typography spacing values.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>`;
+
+  const win = window.open();
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
 }

@@ -318,13 +318,15 @@
                 tip: "Maintain a proper font size and line-height hierarchy between headings and body text to maximize readability."
             },
             css: {
-                title: "CSS Generator ",
-                what: "Generate clean, customizable CSS snippets for buttons, sections, typography, containers, cards, and responsive layouts.",
+                title: "CSS Generator & Scattered CSS Hub",
+                what: "Generate clean, customizable CSS snippets and locate/edit all custom CSS written inside individual widgets and containers on your page from one central cockpit.",
                 how: [
                     "Select a layout preset in the CSS Generator tab (e.g. Button hover style).",
-                    "Adjust parameters to customize the output and copy the generated CSS rules."
+                    "Adjust parameters to customize the output and copy the generated CSS rules.",
+                    "Scroll down to 'Scattered Custom CSS' and click 'Scan Page' to gather all Custom CSS written inside any widget, column, or container on the page.",
+                    "Edit the CSS directly inside the Sekkei sidebar and click 'Update CSS' to sync it back to the Elementor element in real-time."
                 ],
-                tip: "Paste the copied CSS directly inside Elementor's Custom CSS field or your child theme's `style.css` file."
+                tip: "Use the 'Locate' button next to any scattered CSS snippet to immediately scroll to and highlight the element on the layout preview canvas."
             },
             notes: {
                 title: "Project Notes ",
@@ -337,14 +339,15 @@
             },
             audit: {
                 title: "Pre-Publish Audit ",
-                what: "Automatically scans the Elementor builder preview canvas for content and structural layout issues, accessibility warnings, and SEO metadata gaps.",
+                what: "Automatically scans the Elementor builder preview canvas for structural layout issues, accessibility warnings (including inherited contrast), link security gaps, SEO metadata issues, and widget usage or DOM asset bloat statistics.",
                 how: [
                     "Open the Pre-Publish Audit tab inside the Sekkei tool panel.",
                     "Click 'Run Scan' to scan the active Elementor document canvas.",
-                    "Review issues classified by severity (Critical link failures, color contrast accessibility warnings, heading level skips, oversized image alerts, or missing meta titles/descriptions).",
+                    "Review issues classified by severity (including inherited text-contrast issues, missing alt attributes, target='_blank' links missing rel='noopener' security tags, or placeholder social media templates).",
+                    "Scroll down to 'Widget & Asset Bloat Analyzer' to view a frequency breakdown of exactly which widgets are used on this page and receive performance warnings if the total widget count exceeds 50.",
                     "Click 'Locate' on any issue to automatically scroll to and highlight the element in your canvas, or click 'Export Report' to download a text report for client handoff."
                 ],
-                tip: "Run a full scan right before scheduling client walkthroughs or launching live websites to verify all components are fully polished."
+                tip: "The contrast checker automatically traverses up the DOM tree to locate the closest inherited background color. Use the widget summary map to identify and remove unused or duplicate widgets to minimize page bloat."
             },
             tokens: {
                 title: "Design Tokens",

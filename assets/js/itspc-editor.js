@@ -1281,12 +1281,77 @@
                     }
                 });
 
+                // 9. Widget & Asset Bloat Audit (Total widgets count, empty text/heading, widget usage map)
+                var widgetList = previewDoc.querySelectorAll('.elementor-widget');
+                var totalWidgets = widgetList.length;
+                var widgetCounts = {};
+
+                // Audit empty core widgets
+                widgetList.forEach(function(widget) {
+                    var elType = widget.getAttribute('data-widget_type') || 'unknown';
+                    // clean widget type (e.g. "heading.default" -> "heading")
+                    var cleanType = elType.split('.')[0].replace('widget', '').replace('column', '').replace('section', '').trim();
+                    cleanType = cleanType.charAt(0).toUpperCase() + cleanType.slice(1);
+                    
+                    // Count frequency
+                    widgetCounts[cleanType] = (widgetCounts[cleanType] || 0) + 1;
+
+                    // Skip checks on editor UI items
+                    if (widget.closest('.elementor-editor-element-setting')) return;
+
+                    var info = getElementInfo(widget);
+                    var container = widget.querySelector('.elementor-widget-container');
+                    var textContent = container ? (container.textContent || '').trim() : '';
+
+                    if (cleanType === 'Heading' && !textContent) {
+                        results.push({
+                            type: 'empty',
+                            title: 'Empty Heading Widget',
+                            description: 'A Heading widget is empty. Delete it or enter heading text.',
+                            elementId: info.id,
+                            previewText: 'Empty Heading'
+                        });
+                    } else if (cleanType === 'Text-editor' && !textContent) {
+                        results.push({
+                            type: 'empty',
+                            title: 'Empty Text Editor',
+                            description: 'A Text Editor widget contains no text content. Delete it or add content.',
+                            elementId: info.id,
+                            previewText: 'Empty Text Editor'
+                        });
+                    } else if (cleanType === 'Button') {
+                        var btnAnchor = widget.querySelector('a');
+                        var btnText = btnAnchor ? (btnAnchor.textContent || '').trim() : '';
+                        if (!btnText && !widget.querySelector('i, svg')) {
+                            results.push({
+                                type: 'empty',
+                                title: 'Empty Button Widget',
+                                description: 'Button widget in "' + info.title + '" has no text or icon.',
+                                elementId: info.id,
+                                previewText: 'Empty Button'
+                            });
+                        }
+                    }
+                });
+
+                // Add warning for high widget count (bloat risk)
+                if (totalWidgets > 50) {
+                    results.push({
+                        type: 'seo', // display as warning style
+                        title: 'High Widget Count Warning',
+                        description: 'This page loads ' + totalWidgets + ' widgets. A high widget count (over 50) increases DOM size and slows page speeds. Consider consolidating layouts.',
+                        elementId: '',
+                        previewText: totalWidgets + ' widgets'
+                    });
+                }
+
                 // Send results back to Sekkei tool iframe
                 var iframeEl = document.getElementById('itspc-panel-iframe');
                 if (iframeEl && iframeEl.contentWindow) {
                     iframeEl.contentWindow.postMessage({
                         type: 'itspc_audit_results',
-                        results: results
+                        results: results,
+                        widgetCounts: widgetCounts
                     }, window.location.origin);
                 }
             }
@@ -1311,6 +1376,84 @@
                         setTimeout(function() {
                             targetEl.style.outline = 'none';
                         }, 2200);
+                    }
+                }
+            }
+
+            // Scan for Scattered Custom CSS
+            if (data.type === 'itspc_scan_scattered_css') {
+                var doc = (typeof elementor !== 'undefined' && elementor.documents) ? elementor.documents.getCurrent() : null;
+                var found = [];
+                if (doc && doc.container) {
+                    var walkContainersForCSS = function(container) {
+                        if (!container) return;
+                        var model = container.model;
+                        if (model) {
+                            var customCss = getModelSetting(container, 'custom_css');
+                            if (customCss && customCss.trim()) {
+                                var id = cleanId(getModelValue(container, 'id'));
+                                var elType = getModelValue(container, 'elType');
+                                var title = getModelSetting(container, '_title') || (elType ? (elType.charAt(0).toUpperCase() + elType.slice(1)) : 'Element');
+                                found.push({
+                                    id: id,
+                                    title: cleanText(title, 120),
+                                    elType: cleanText(elType, 80),
+                                    css: customCss
+                                });
+                            }
+                        }
+                        var children = getContainerChildren(container);
+                        children.forEach(function(child) {
+                            walkContainersForCSS(child);
+                        });
+                    };
+                    walkContainersForCSS(doc.container);
+                }
+
+                var iframeEl = document.getElementById('itspc-panel-iframe');
+                if (iframeEl && iframeEl.contentWindow) {
+                    iframeEl.contentWindow.postMessage({
+                        type: 'itspc_scattered_css_results',
+                        results: found
+                    }, window.location.origin);
+                }
+            }
+
+            // Update Custom CSS back inside Elementor
+            if (data.type === 'itspc_update_element_css' && data.elementId) {
+                var doc = (typeof elementor !== 'undefined' && elementor.documents) ? elementor.documents.getCurrent() : null;
+                if (doc && doc.container) {
+                    var container = findElementorContainer(doc.container, cleanId(data.elementId), '');
+                    if (container && container.model) {
+                        if (typeof container.model.setSetting === 'function') {
+                            container.model.setSetting('custom_css', data.css);
+                        } else {
+                            var settings = typeof container.model.get === 'function' ? container.model.get('settings') : container.model.settings;
+                            if (settings && typeof settings.set === 'function') {
+                                settings.set('custom_css', data.css);
+                            } else if (settings) {
+                                settings['custom_css'] = data.css;
+                            }
+                        }
+                        
+                        // Re-render
+                        if (typeof container.render === 'function') {
+                            container.render();
+                        }
+                        
+                        // Trigger setting panel sync in editor sidebar if active
+                        if (container.model.trigger) {
+                            container.model.trigger('change');
+                        }
+
+                        // Send success notification back to iframe
+                        var iframeEl = document.getElementById('itspc-panel-iframe');
+                        if (iframeEl && iframeEl.contentWindow) {
+                            iframeEl.contentWindow.postMessage({
+                                type: 'itspc_update_element_css_success',
+                                elementId: data.elementId
+                            }, window.location.origin);
+                        }
                     }
                 }
             }
