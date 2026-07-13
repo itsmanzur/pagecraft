@@ -157,9 +157,15 @@ class ITSPC_Admin {
 
           <!-- Tabs Navigation -->
           <div class="itspc-tabs-nav">
-              <button class="itspc-tab-btn active" data-tab="settings"> Settings</button>
-              <button class="itspc-tab-btn" data-tab="docs"> Docs & Help</button>
-              <button class="itspc-tab-btn" data-tab="about"> About Us</button>
+              <button class="itspc-tab-btn active" data-tab="settings">
+                  <span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'Settings', 'sekkei' ); ?>
+              </button>
+              <button class="itspc-tab-btn" data-tab="docs">
+                  <span class="dashicons dashicons-editor-help"></span> <?php esc_html_e( 'Docs & Help', 'sekkei' ); ?>
+              </button>
+              <button class="itspc-tab-btn" data-tab="about">
+                  <span class="dashicons dashicons-businessman"></span> <?php esc_html_e( 'About Us', 'sekkei' ); ?>
+              </button>
           </div>
 
           <!-- Tab Pane 1: Settings -->
@@ -169,7 +175,7 @@ class ITSPC_Admin {
              
                 <div class="itspc-card">
                   <div class="itspc-card-header">
-                    <div class="itspc-card-icon"></div>
+                    <div class="itspc-card-icon"><span class="dashicons dashicons-admin-generic"></span></div>
                     <div class="itspc-card-title"><?php esc_html_e( 'General Settings', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
@@ -233,7 +239,7 @@ class ITSPC_Admin {
                 <!-- Planner Display Settings Card -->
                 <div class="itspc-card">
                   <div class="itspc-card-header">
-                    <div class="itspc-card-icon"></div>
+                    <div class="itspc-card-icon"><span class="dashicons dashicons-visibility"></span></div>
                     <div class="itspc-card-title"><?php esc_html_e( 'Planner Display', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
@@ -308,7 +314,7 @@ class ITSPC_Admin {
                 <!-- Client Handover & White-Label Widget Card -->
                 <div class="itspc-card">
                   <div class="itspc-card-header">
-                    <div class="itspc-card-icon"></div>
+                    <div class="itspc-card-icon"><span class="dashicons dashicons-welcome-widgets-menus"></span></div>
                     <div class="itspc-card-title"><?php esc_html_e( 'Client Handover & White-Label Widget', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">
@@ -449,7 +455,7 @@ class ITSPC_Admin {
                   <!-- Card: System Status -->
                   <div class="itspc-card" style="margin-bottom: 0;">
                       <div class="itspc-card-header">
-                          <div class="itspc-card-icon"></div>
+                          <div class="itspc-card-icon"><span class="dashicons dashicons-dashboard"></span></div>
                           <div class="itspc-card-title"><?php esc_html_e( 'System Status', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-card-body" style="padding: 16px 20px;">
@@ -476,7 +482,7 @@ class ITSPC_Admin {
                   <!-- Card: Data Maintenance -->
                   <div class="itspc-card" style="margin-bottom: 0;">
                       <div class="itspc-card-header">
-                          <div class="itspc-card-icon"></div>
+                          <div class="itspc-card-icon"><span class="dashicons dashicons-database"></span></div>
                           <div class="itspc-card-title"><?php esc_html_e( 'Data Maintenance', 'sekkei' ); ?></div>
                       </div>
                       <div class="itspc-card-body" style="padding: 16px 20px;">
@@ -497,7 +503,7 @@ class ITSPC_Admin {
             <!-- Quick Start Timeline -->
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
-                <div class="itspc-card-icon"></div>
+                <div class="itspc-card-icon"><span class="dashicons dashicons-controls-play"></span></div>
                 <div class="itspc-card-title"><?php esc_html_e( 'Quick Start - 3 Steps', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
@@ -539,7 +545,7 @@ class ITSPC_Admin {
             <!-- Feature Cards -->
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
-                <div class="itspc-card-icon"></div>
+                <div class="itspc-card-icon"><span class="dashicons dashicons-index-card"></span></div>
                 <div class="itspc-card-title"><?php esc_html_e( 'Interactive Feature Guide', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body">
@@ -549,62 +555,62 @@ class ITSPC_Admin {
                 <div class="itspc-feature-grid">
  
                   <div class="itspc-feature-card active" data-feature="planner">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-layout"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Section Planner', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="checklist">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-editor-ul"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Design Checklist', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="palette">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-art"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Color Palette', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="fonts">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-editor-bold"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Font Pairing', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="css">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-editor-code"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'CSS Generator', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="notes">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-welcome-write-blog"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Project Notes', 'sekkei' ); ?></div>
                   </div>
  
                   <div class="itspc-feature-card" data-feature="audit">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-shield-search"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Pre-Publish Audit', 'sekkei' ); ?></div>
                   </div>
 
                   <div class="itspc-feature-card" data-feature="tokens">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-admin-settings"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Design Tokens', 'sekkei' ); ?></div>
                   </div>
 
                   <div class="itspc-feature-card" data-feature="cockpit">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-groups"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Agency Cockpit', 'sekkei' ); ?></div>
                   </div>
 
                   <div class="itspc-feature-card" data-feature="feedback">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-testimonial"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Client Feedback', 'sekkei' ); ?></div>
                   </div>
 
                   <div class="itspc-feature-card" data-feature="revisions">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-backup"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'Revision Log', 'sekkei' ); ?></div>
                   </div>
 
                   <div class="itspc-feature-card" data-feature="sop">
-                    <div class="itspc-feature-icon"></div>
+                    <div class="itspc-feature-icon"><span class="dashicons dashicons-clipboard"></span></div>
                     <div class="itspc-feature-name"><?php esc_html_e( 'SOP Templates', 'sekkei' ); ?></div>
                   </div>
  
@@ -616,11 +622,10 @@ class ITSPC_Admin {
                 </div>
               </div>
             </div>
- 
-            <!-- FAQ Accordion -->
+             <!-- FAQ Accordion -->
             <div class="itspc-card" style="margin-bottom:16px">
               <div class="itspc-card-header">
-                <div class="itspc-card-icon"></div>
+                <div class="itspc-card-icon"><span class="dashicons dashicons-testimonial"></span></div>
                 <div class="itspc-card-title"><?php esc_html_e( 'Frequently Asked Questions', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
@@ -683,7 +688,7 @@ class ITSPC_Admin {
             <!-- Keyboard Shortcuts -->
             <div class="itspc-card">
               <div class="itspc-card-header">
-                <div class="itspc-card-icon"></div>
+                <div class="itspc-card-icon"><span class="dashicons dashicons-editor-keyboard"></span></div>
                 <div class="itspc-card-title"><?php esc_html_e( 'Keyboard Shortcuts', 'sekkei' ); ?></div>
               </div>
               <div class="itspc-card-body" style="padding:0">
@@ -706,12 +711,12 @@ class ITSPC_Admin {
  
           </div>
           <!-- End Tab Pane 2 -->
-
+ 
           <!-- Tab Pane 3: About Us -->
           <div class="itspc-tab-content" id="itspc-tab-about">
               <div class="itspc-card">
                   <div class="itspc-card-header">
-                      <div class="itspc-card-icon"></div>
+                      <div class="itspc-card-icon"><span class="dashicons dashicons-businessman"></span></div>
                       <div class="itspc-card-title"><?php esc_html_e( 'About the Developer', 'sekkei' ); ?></div>
                   </div>
                   <div class="itspc-card-body">

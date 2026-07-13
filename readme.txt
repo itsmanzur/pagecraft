@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,9 +28,9 @@ Stop switching between apps and browser tabs — plan, audit, collaborate, and h
 
 **Design Tokens** — Generate CSS custom property tokens for typography scale, spacing, border radius, and box shadows. Copy as a `:root {}` block into your stylesheet. Sync tokens directly to Elementor Global Styles (writes to Elementor Kit).
 
-**CSS Generator** — Generate Elementor-ready CSS snippets from 6 presets. Categorize by device target and risk level. Auto-fill from your Section Planner. Save and reuse snippets. Elementor selector helper for quick CSS targeting.
+**CSS Generator** — Generate Elementor-ready CSS snippets from 6 presets, and manage all your styles in one place with the Scattered Custom CSS Hub. Scan the page to edit and update Elementor custom CSS on any widget or container from a single panel.
 
-**Pre-Publish Audit** — Scan your Elementor page before publishing. Detect placeholder text, broken links, missing or weak image alt tags, heading sequence issues, oversized images, SEO title/meta length, and accessibility gaps. View audit history (last 5 scans). Export a full audit report as .txt.
+**Pre-Publish Audit** — Scan your Elementor page before publishing. Detect placeholder text, broken links, missing or weak image alt tags, heading sequence issues, oversized images, SEO title/meta length, accessibility gaps, and widget usage or DOM asset bloat statistics. View audit history (last 5 scans). Export a full audit report as .txt.
 
 **Agency Cockpit** — Kanban-style project pipeline board (Draft → Design → Review → Revision → Approved → Published). Track blockers, project metadata, and last updated dates.
 
@@ -124,6 +124,15 @@ From the Design Tokens panel, you can sync your design tokens and color palette 
 
 == Changelog ==
 
+= 1.8.0 =
+* Added Scattered Custom CSS Hub for centralized scanning and two-way inline CSS updates in Elementor
+* Added Widget & Asset Bloat Audit scanner for high widget counts and active element frequency map
+* Added One-Click PDF Sign-off Handoff Report with print-ready CSS and a floating print button
+* Added Auto-Generated Brand Style Guide Page displaying brand colors, typography scales, spacing, border radius, and UI preview elements
+* Updated full Tabler Icons Webfont support to resolve missing dashboard and navigation icons
+* Fixed WCAG contrast checker badges readability in Light Mode
+* Fixed 999-day backup reminder showing for new users with no prior backup
+
 = 1.7.0 =
 * UI polish: color-coded section type borders, Kanban status color accents, SaaS card elevation and hover effects
 * Fixed WCAG contrast checker badges unreadable in light mode
@@ -208,6 +217,9 @@ From the Design Tokens panel, you can sync your design tokens and color palette 
 * Settings page for panel configuration
 
 == Upgrade Notice ==
+
+= 1.8.0 =
+Adds Scattered Custom CSS Hub, Widget & Asset Bloat Audit, PDF Sign-off Handoff Report, Auto-Generated Brand Style Guide, full Tabler Icons font, and fixes WCAG checker readability in Light Mode.
 
 = 1.7.0 =
 * UI polish: color-coded section type borders, Kanban status color accents, SaaS card elevation and hover effects
