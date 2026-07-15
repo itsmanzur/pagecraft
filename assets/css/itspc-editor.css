@@ -260,6 +260,15 @@
     border-radius: 12px;
     overflow: hidden;
     transform: none !important;
+    opacity: 1;
+    visibility: visible;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, visibility 0.2s ease;
+}
+#itspc-panel.itspc-panel-floating.itspc-panel-closed {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: scale(0.9) !important;
 }
 #itspc-panel.itspc-panel-floating #itspc-panel-iframe {
     border-radius: 0 0 11px 11px;

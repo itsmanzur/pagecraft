@@ -129,7 +129,7 @@ From the Design Tokens panel, you can sync your design tokens and color palette 
 * Added Widget & Asset Bloat Audit scanner for high widget counts and active element frequency map
 * Added One-Click PDF Sign-off Handoff Report with print-ready CSS and a floating print button
 * Added Auto-Generated Brand Style Guide Page displaying brand colors, typography scales, spacing, border radius, and UI preview elements
-* Updated full Tabler Icons Webfont support to resolve missing dashboard and navigation icons
+* Expanded Tabler Icons subset to include dashboard and navigation icons (font remains optimized at 10KB)
 * Fixed WCAG contrast checker badges readability in Light Mode
 * Fixed 999-day backup reminder showing for new users with no prior backup
 

@@ -865,6 +865,28 @@ function closeAddSection() {
   document.getElementById('add-section-card').style.display = 'none';
 }
 
+function autoSuggestWordCta(selectId, wordsId, ctaId) {
+  const type = document.getElementById(selectId).value;
+  const wordsInput = document.getElementById(wordsId);
+  const ctaInput = document.getElementById(ctaId);
+  if (!wordsInput || !ctaInput) return;
+  
+  if (wordsInput.value === '') {
+    if (type === 'hero') wordsInput.value = '50-80';
+    else if (type === 'nav') wordsInput.value = '10-20';
+    else if (type === 'cta') wordsInput.value = '30-60';
+    else if (type === 'features') wordsInput.value = '100-200';
+    else if (type === 'footer') wordsInput.value = '20-40';
+    else if (type === 'content') wordsInput.value = '150-250';
+    else wordsInput.value = '50-100';
+  }
+  if (ctaInput.value === '') {
+    if (type === 'footer' || type === 'custom') ctaInput.value = 0;
+    else if (type === 'hero') ctaInput.value = 2;
+    else ctaInput.value = 1;
+  }
+}
+
 function addSection() {
   const name = cleanText(document.getElementById('new-sec-name').value, 120);
   if (!name) return;
@@ -872,11 +894,31 @@ function addSection() {
   const note = cleanText(document.getElementById('new-sec-note').value, 600);
   const css = cleanCssClass(document.getElementById('new-sec-css').value);
   const dependency = SECTION_DEPENDENCIES.includes(document.getElementById('new-sec-dependency').value) ? document.getElementById('new-sec-dependency').value : 'ready';
-  proj().sections.push({ id: 's' + (nextId++), name, type, note, css, dependency });
+  const word_count = cleanText(document.getElementById('new-sec-words').value, 30) || '50-100';
+  const ctaVal = parseInt(document.getElementById('new-sec-cta-count').value, 10);
+  const cta_count = isNaN(ctaVal) ? 0 : ctaVal;
+  
+  proj().sections.push({ 
+    id: 's' + (nextId++), 
+    name, 
+    type, 
+    note, 
+    css, 
+    dependency,
+    word_count,
+    cta_count,
+    done_design: false,
+    done_copy: false,
+    done_responsive: false
+  });
+  
   document.getElementById('new-sec-name').value = '';
   document.getElementById('new-sec-note').value = '';
   document.getElementById('new-sec-css').value = '';
   document.getElementById('new-sec-dependency').value = 'ready';
+  document.getElementById('new-sec-words').value = '';
+  document.getElementById('new-sec-cta-count').value = '';
+  
   renderSections();
   saveState();
   updateBadges();
@@ -972,6 +1014,10 @@ function openSectionModal(id) {
   document.getElementById('edit-sec-note').value = sec.note || '';
   document.getElementById('edit-sec-css').value = sec.css || '';
   document.getElementById('edit-sec-dependency').innerHTML = dependencyOptions(sec.dependency || 'ready');
+  document.getElementById('edit-sec-words').value = sec.word_count || '';
+  const ctaVal = parseInt(sec.cta_count, 10);
+  document.getElementById('edit-sec-cta-count').value = isNaN(ctaVal) ? '' : ctaVal;
+  
   document.getElementById('edit-sec-qa-desktop').value = sec.qa_desktop || 'pending';
   document.getElementById('edit-sec-qa-tablet').value = sec.qa_tablet || 'pending';
   document.getElementById('edit-sec-qa-mobile').value = sec.qa_mobile || 'pending';
@@ -1014,6 +1060,10 @@ function saveSectionModal() {
   sec.css = cleanCssClass(document.getElementById('edit-sec-css').value);
   const dep = cleanText(document.getElementById('edit-sec-dependency').value, 24);
   sec.dependency = SECTION_DEPENDENCIES.includes(dep) ? dep : 'ready';
+  sec.word_count = cleanText(document.getElementById('edit-sec-words').value, 30) || '50-100';
+  const ctaVal = parseInt(document.getElementById('edit-sec-cta-count').value, 10);
+  sec.cta_count = isNaN(ctaVal) ? 0 : ctaVal;
+  
   sec.qa_desktop = document.getElementById('edit-sec-qa-desktop').value;
   sec.qa_tablet = document.getElementById('edit-sec-qa-tablet').value;
   sec.qa_mobile = document.getElementById('edit-sec-qa-mobile').value;
@@ -1185,11 +1235,65 @@ function onDrop(e, targetId) {
 }
 
 // ===== CHECKLIST =====
+function getCheckItemPriority(text) {
+  const t = String(text || '').toLowerCase();
+  if (
+    t.includes('lorem ipsum') ||
+    t.includes('h1') ||
+    t.includes('title tag') ||
+    t.includes('meta description') ||
+    t.includes('mobile layout') ||
+    t.includes('horizontal scroll') ||
+    t.includes('form') ||
+    t.includes('content (text') ||
+    t.includes('page sections planned') ||
+    t.includes('nap info') ||
+    t.includes('opening hours') ||
+    t.includes('add to cart') ||
+    t.includes('checkout') ||
+    t.includes('payment') ||
+    t.includes('not medical advice') ||
+    t.includes('ssl certificate') ||
+    t.includes('secure for patient') ||
+    t.includes('menu (avoid pure') ||
+    t.includes('compress portfolio') ||
+    t.includes('hero headline') ||
+    t.includes('primary cta') ||
+    t.includes('contact details')
+  ) {
+    return 'critical';
+  }
+  if (
+    t.includes('logo') ||
+    t.includes('favicon') ||
+    t.includes('reference site') ||
+    t.includes('time estimate') ||
+    t.includes('nice-to-have') ||
+    t.includes('social sharing') ||
+    t.includes('analytics/tracking') ||
+    t.includes('walkthrough') ||
+    t.includes('trust badges') ||
+    t.includes('accreditation') ||
+    t.includes('industry association') ||
+    t.includes('author box') ||
+    t.includes('newsletter') ||
+    t.includes('faq section')
+  ) {
+    return 'nice';
+  }
+  return 'important';
+}
+
 function getChecks() {
   if (!proj().checks || Object.keys(proj().checks).length === 0) {
     proj().checks = {};
     for (const [group, items] of Object.entries(defaultChecklist)) {
-      proj().checks[group] = items.map(text => ({ text, done: false, custom: false }));
+      proj().checks[group] = items.map(text => ({
+        text,
+        done: false,
+        custom: false,
+        priority: getCheckItemPriority(text)
+      }));
     }
     saveState();
   }
@@ -1206,6 +1310,8 @@ function toggleGroupCollapse(group) {
 function renderChecklist() {
   const checks = getChecks();
   const container = document.getElementById('checklist-container');
+  const filterVal = document.getElementById('checklist-filter') ? document.getElementById('checklist-filter').value : 'all';
+  
   let html = '';
   for (const [group, items] of Object.entries(checks)) {
     const totalCount = items.length;
@@ -1219,17 +1325,39 @@ function renderChecklist() {
     
     const isCollapsed = collapsedGroups[group];
     
+    // Filter items and keep original index
+    const filteredItems = items.map((item, index) => ({ ...item, _index: index })).filter(item => {
+      const prio = item.priority || getCheckItemPriority(item.text);
+      if (filterVal === 'critical') return prio === 'critical';
+      if (filterVal === 'important') return prio === 'critical' || prio === 'important';
+      if (filterVal === 'incomplete') return !item.done;
+      return true;
+    });
+    
+    if (filteredItems.length === 0) continue;
+    
     html += `<div class="check-group ${isCollapsed ? 'collapsed' : ''}">
       <div class="check-group-title" onclick="toggleGroupCollapse('${esc(group)}')">
-        <span>${esc(group)} <span style="font-size:10px;font-weight:normal;opacity:0.6;margin-left:4px">(${doneCount}/${totalCount})</span></span>
+        <span>${esc(group)} <span style="font-size:10px;font-weight:normal;opacity:0.6;margin-left:4px">(${filteredItems.filter(item => item.done).length}/${filteredItems.length})</span></span>
         <i class="ti ti-chevron-${isCollapsed ? 'right' : 'down'}" style="font-size:12px;opacity:0.8"></i>
       </div>`;
+      
     if (!isCollapsed) {
-      items.forEach((item, i) => {
-        html += `<div class="check-row ${item.done ? 'done' : ''}" onclick="toggleCheck('${esc(group)}',${i})">
-          <input type="checkbox" ${item.done ? 'checked' : ''} onclick="event.stopPropagation();toggleCheck('${esc(group)}',${i})" />
-          <span class="check-label">${esc(item.text)}</span>
-          ${item.custom ? `<button class="btn btn-icon btn-sm" onclick="event.stopPropagation();deleteCheckItem('${esc(group)}',${i})" title="Remove"><i class="ti ti-x"></i></button>` : ''}
+      filteredItems.forEach((item) => {
+        const priority = item.priority || getCheckItemPriority(item.text);
+        let tagHtml = '';
+        if (priority === 'critical') {
+          tagHtml = `<span class="check-priority critical" style="font-size:9px; font-weight:700; background:rgba(255, 77, 77, 0.1); color:var(--red); padding:1px 4px; border-radius:3px; text-transform:uppercase; margin-left:6px; flex-shrink:0;">Critical</span>`;
+        } else if (priority === 'nice') {
+          tagHtml = `<span class="check-priority nice" style="font-size:9px; font-weight:700; background:rgba(77, 158, 255, 0.1); color:var(--blue); padding:1px 4px; border-radius:3px; text-transform:uppercase; margin-left:6px; flex-shrink:0;">Nice</span>`;
+        } else {
+          tagHtml = `<span class="check-priority important" style="font-size:9px; font-weight:700; background:rgba(255, 176, 32, 0.1); color:var(--amber); padding:1px 4px; border-radius:3px; text-transform:uppercase; margin-left:6px; flex-shrink:0;">Important</span>`;
+        }
+
+        html += `<div class="check-row ${item.done ? 'done' : ''}" onclick="toggleCheck('${esc(group)}',${item._index})">
+          <input type="checkbox" ${item.done ? 'checked' : ''} onclick="event.stopPropagation();toggleCheck('${esc(group)}',${item._index})" />
+          <span class="check-label" style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">${esc(item.text)} ${tagHtml}</span>
+          ${item.custom ? `<button class="btn btn-icon btn-sm" onclick="event.stopPropagation();deleteCheckItem('${esc(group)}',${item._index})" title="Remove"><i class="ti ti-x"></i></button>` : ''}
         </div>`;
       });
     }
@@ -1243,9 +1371,6 @@ function toggleCheck(group, idx) {
   const checks = getChecks();
   if (checks[group] && checks[group][idx]) {
     checks[group][idx].done = !checks[group][idx].done;
-    
-    // If completed and setting to true, we don't auto-collapse immediately while they look at it,
-    // but the next render will handle it or they can collapse it.
     renderChecklist();
     saveState();
     updateBadges();
@@ -1279,7 +1404,7 @@ function addCheckItem() {
   }
   const checks = getChecks();
   if (!checks[group]) checks[group] = [];
-  checks[group].push({ text, done: false, custom: true });
+  checks[group].push({ text, done: false, custom: true, priority: getCheckItemPriority(text) });
   document.getElementById('new-check-text').value = '';
   renderChecklist();
   saveState();
@@ -1376,6 +1501,90 @@ const SOP_TEMPLATES = {
       { text: 'Featured images are compressed and have ALT tags', done: false, custom: false },
       { text: 'Setup schema markup for Article content type', done: false, custom: false }
     ]
+  },
+  local_business: {
+    'Planning & Layout': [
+      { text: 'Design Hero banner with local business value proposition', done: false, custom: false },
+      { text: 'Plan a distinct services section with custom grid', done: false, custom: false },
+      { text: 'Add interactive Google Map or local address card', done: false, custom: false }
+    ],
+    'Content & Trust': [
+      { text: 'Contact details (Phone, Email, Hours) clearly visible', done: false, custom: false },
+      { text: 'Add local client testimonials or reviews widget', done: false, custom: false },
+      { text: 'Include industry accreditation badges or licenses', done: false, custom: false }
+    ],
+    'SEO & Accessibility': [
+      { text: 'Add LocalBusiness schema markup containing NAP info', done: false, custom: false },
+      { text: 'Optimized page title includes city or service area keyword', done: false, custom: false },
+      { text: 'Ensure phone number link uses "tel:" protocol', done: false, custom: false }
+    ]
+  },
+  portfolio: {
+    'Planning & Gallery': [
+      { text: 'Organize work items into filterable categories', done: false, custom: false },
+      { text: 'Plan a clean layout grid for portfolio items', done: false, custom: false },
+      { text: 'Choose optimal image aspect ratios for work displays', done: false, custom: false }
+    ],
+    'UX & Case Studies': [
+      { text: 'Create clear hover states showcasing project details', done: false, custom: false },
+      { text: 'Add CTA pointing to case study page details', done: false, custom: false },
+      { text: 'Ensure client testimonial exists on work pages', done: false, custom: false }
+    ],
+    'Performance & SEO': [
+      { text: 'Compress portfolio showcase images heavily', done: false, custom: false },
+      { text: 'Verify image title and description tags are populated', done: false, custom: false },
+      { text: 'Verify custom domain profile page loads fast', done: false, custom: false }
+    ]
+  },
+  saas: {
+    'Hero & Value Prop': [
+      { text: 'Hero headline explicitly details software benefit', done: false, custom: false },
+      { text: 'Add primary CTA button alongside sub-CTA (e.g. Free Trial vs Demo)', done: false, custom: false },
+      { text: 'Include mockups or screenshots showcasing app UI', done: false, custom: false }
+    ],
+    'Features & Pricing': [
+      { text: 'List main features with clean vector icon descriptors', done: false, custom: false },
+      { text: 'Design clean pricing matrix with toggle (Monthly vs Annual)', done: false, custom: false },
+      { text: 'Add FAQ section addressing pricing and cancellation details', done: false, custom: false }
+    ],
+    'Security & Trust': [
+      { text: 'Verify customer logo slider is functional', done: false, custom: false },
+      { text: 'Display SSL badge, trust symbols, or SOC2 icons', done: false, custom: false },
+      { text: 'Add privacy policy link near newsletter signups', done: false, custom: false }
+    ]
+  },
+  restaurant: {
+    'Planning & Menu': [
+      { text: 'Create clean, readable text-based menu (avoid pure image PDFs)', done: false, custom: false },
+      { text: 'Include high-quality images of signature dishes', done: false, custom: false },
+      { text: 'Plan a dedicated reservation section with clear form', done: false, custom: false }
+    ],
+    'Info & Contact': [
+      { text: 'Store opening hours and location prominently in footer', done: false, custom: false },
+      { text: 'Provide clear instructions for reservations and walk-ins', done: false, custom: false },
+      { text: 'Ensure phone number is clickable with tel protocol', done: false, custom: false }
+    ],
+    'SEO & Social': [
+      { text: 'Add Restaurant schema markup (including price range)', done: false, custom: false },
+      { text: 'Verify links to social channels (Instagram, TripAdvisor)', done: false, custom: false }
+    ]
+  },
+  clinic: {
+    'Planning & Services': [
+      { text: 'List healthcare services clearly with descriptive pages', done: false, custom: false },
+      { text: 'Add clinic location, phone number, and opening hours', done: false, custom: false },
+      { text: 'Plan a clean Doctor/Staff profile section showing credentials', done: false, custom: false }
+    ],
+    'Trust & Medical UX': [
+      { text: 'Add disclaimer stating information is not medical advice', done: false, custom: false },
+      { text: 'Display patient testimonials and positive feedback', done: false, custom: false },
+      { text: 'Ensure patient booking or appointment scheduler is functional', done: false, custom: false }
+    ],
+    'Security & Compliance': [
+      { text: 'Verify SSL certificate is active (HTTPS required)', done: false, custom: false },
+      { text: 'Ensure web forms are secure for patient submissions', done: false, custom: false },
+      { text: 'Verify HIPAA or local privacy policy link exists in footer', done: false, custom: false }
+    ]
   }
 };
 
@@ -1388,7 +1597,12 @@ function loadSelectedSOP(appendMode) {
   if (val === 'default') {
     targetSOP = {};
     for (const [group, items] of Object.entries(defaultChecklist)) {
-      targetSOP[group] = items.map(text => ({ text, done: false, custom: false }));
+      targetSOP[group] = items.map(text => ({
+        text,
+        done: false,
+        custom: false,
+        priority: getCheckItemPriority(text)
+      }));
     }
   } else if (SOP_TEMPLATES[val]) {
     targetSOP = JSON.parse(JSON.stringify(SOP_TEMPLATES[val]));
@@ -1401,6 +1615,13 @@ function loadSelectedSOP(appendMode) {
     return;
   }
 
+  // Ensure priority tags exist
+  for (const [group, items] of Object.entries(targetSOP)) {
+    items.forEach(item => {
+      if (!item.priority) item.priority = getCheckItemPriority(item.text);
+    });
+  }
+
   if (appendMode) {
     const current = getChecks();
     for (const [group, items] of Object.entries(targetSOP)) {
@@ -1409,7 +1630,12 @@ function loadSelectedSOP(appendMode) {
       }
       items.forEach(item => {
         if (!current[group].some(ci => ci.text === item.text)) {
-          current[group].push({ text: item.text, done: false, custom: true });
+          current[group].push({
+            text: item.text,
+            done: false,
+            custom: true,
+            priority: item.priority || getCheckItemPriority(item.text)
+          });
         }
       });
     }
@@ -1828,6 +2054,50 @@ function loadPreset(type) {
   } else {
     generateCSS();
   }
+}
+
+function loadCommonCSSFix(key) {
+  if (!key) return;
+  const fixes = {
+    'sticky-zindex': { sel: '.sticky-header', comment: 'Sticky Header Z-Index Fix', code: `selector {\n  position: sticky !important;\n  top: 0 !important;\n  z-index: 9999 !important;\n}` },
+    'popup-overlay': { sel: '.dialog-lightbox-widget', comment: 'Popup Overlay Scroll Lock Fix', code: `.dialog-lightbox-widget {\n  overflow-y: auto !important;\n}` },
+    'container-maxwidth': { sel: '.custom-container', comment: 'Container Max-Width Override', code: `selector {\n  max-width: 1400px !important;\n  margin-left: auto !important;\n  margin-right: auto !important;\n}` },
+    'section-padding-mobile': { sel: '.section-pad', comment: 'Mobile Section Padding Reset', code: `@media (max-width: 767px) {\n  selector {\n    padding-top: 40px !important;\n    padding-bottom: 40px !important;\n    padding-left: 15px !important;\n    padding-right: 15px !important;\n  }\n}` },
+    'flex-gap-fallback': { sel: '.flex-fallback', comment: 'Flex Gap Legacy Browser Fallback', code: `selector > * {\n  margin-right: 15px;\n  margin-bottom: 15px;\n}\nselector > *:last-child {\n  margin-right: 0;\n}` },
+    'hide-scrollbar': { sel: '.no-scrollbar', comment: 'Hide Webkit Scrollbars', code: `selector::-webkit-scrollbar {\n  display: none !important;\n}\nselector {\n  -ms-overflow-style: none !important;\n  scrollbar-width: none !important;\n}` },
+    'smooth-scroll': { sel: 'html', comment: 'Smooth Scroll Behavior', code: `html {\n  scroll-behavior: smooth !important;\n}` },
+    'text-ellipsis': { sel: '.text-ellipsis', comment: 'Text Truncation (Ellipsis)', code: `selector {\n  white-space: nowrap !important;\n  overflow: hidden !important;\n  text-overflow: ellipsis !important;\n}` },
+    'reset-button': { sel: '.reset-btn', comment: 'Reset Default Button Styles', code: `selector {\n  background: none !important;\n  border: none !important;\n  padding: 0 !important;\n  margin: 0 !important;\n  box-shadow: none !important;\n  text-shadow: none !important;\n}` },
+    'aspect-ratio': { sel: '.aspect-16-9', comment: 'Aspect Ratio Helper (16:9)', code: `selector {\n  aspect-ratio: 16 / 9 !important;\n  width: 100% !important;\n  height: auto !important;\n}` },
+    'disable-select': { sel: '.no-select', comment: 'Disable Text Selection', code: `selector {\n  -webkit-user-select: none !important;\n  -moz-user-select: none !important;\n  -ms-user-select: none !important;\n  user-select: none !important;\n}` },
+    'custom-bullets': { sel: '.custom-list', comment: 'Custom Bullet List Spacing', code: `selector li {\n  margin-bottom: 8px !important;\n  padding-left: 4px !important;\n}` },
+    'overlay-gradient': { sel: '.gradient-overlay', comment: 'Overlay Linear Gradient Mask', code: `selector {\n  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%) !important;\n}` },
+    'blur-glassmorphism': { sel: '.glass-box', comment: 'Glassmorphism Overlay effect', code: `selector {\n  background: rgba(255, 255, 255, 0.15) !important;\n  backdrop-filter: blur(12px);\n  -webkit-backdrop-filter: blur(12px) !important;\n  border: 1px solid rgba(255, 255, 255, 0.2) !important;\n}` },
+    'center-absolute': { sel: '.absolute-center', comment: 'Center Element Absolutely', code: `selector {\n  position: absolute !important;\n  top: 50% !important;\n  left: 50% !important;\n  transform: translate(-50%, -50%) !important;\n}` },
+    'prevent-horizontal-scroll': { sel: 'html, body', comment: 'Prevent Body Horizontal Overflow', code: `html, body {\n  overflow-x: hidden !important;\n}` },
+    'grayscale-hover': { sel: '.gray-hover', comment: 'Grayscale Image to Color Hover', code: `selector img {\n  filter: grayscale(100%) !important;\n  transition: filter 0.3s ease !important;\n}\nselector img:hover {\n  filter: grayscale(0%) !important;\n}` },
+    'elementor-form-input': { sel: '.custom-form', comment: 'Elementor Form Input Styling', code: `selector input[type="text"], selector textarea {\n  border: 1px solid #ddd !important;\n  border-radius: 6px !important;\n  padding: 10px 14px !important;\n  transition: border-color 0.2s ease !important;\n}\nselector input[type="text"]:focus, selector textarea:focus {\n  border-color: var(--accent) !important;\n  outline: none !important;\n}` },
+    'custom-scrollbar': { sel: '.custom-scroll', comment: 'Custom Scrollbar Theme', code: `selector::-webkit-scrollbar {\n  width: 8px !important;\n}\nselector::-webkit-scrollbar-track {\n  background: var(--bg2) !important;\n}\nselector::-webkit-scrollbar-thumb {\n  background: var(--border) !important;\n  border-radius: 4px !important;\n}` },
+    'object-fit': { sel: '.img-fit', comment: 'Object Fit Cover Image Fix', code: `selector img {\n  width: 100% !important;\n  height: 100% !important;\n  object-fit: cover !important;\n}` }
+  };
+
+  const f = fixes[key];
+  if (!f) return;
+  document.getElementById('css-sel').value = f.sel;
+  document.getElementById('css-pt').value = 0;
+  document.getElementById('css-pb').value = 0;
+  document.getElementById('css-pl').value = 0;
+  document.getElementById('css-pr').value = 0;
+  document.getElementById('css-bg').value = '#ffffff';
+  document.getElementById('css-bg-text').value = '#ffffff';
+  document.getElementById('css-maxw').value = 0;
+  document.getElementById('css-radius').value = 0;
+  document.getElementById('css-comment').value = f.comment;
+  document.getElementById('css-extra').value = '';
+  
+  // Set output
+  document.getElementById('css-output').textContent = `/* ${f.comment} */\n${f.code}`;
+  toast('CSS fix snippet loaded!');
 }
 
 function generateFromSection() {

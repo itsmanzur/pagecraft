@@ -162,7 +162,7 @@
       <div class="panel-header">
         <div>
           <div class="panel-title"><i class="ti ti-layout-rows"></i>Section <span>Planner</span></div>
-          <div class="panel-sub">Drag to reorder - Click edit to rename - Label every section</div>
+          <div class="panel-sub" id="planner-sub-status">Drag to reorder - Click edit to rename - Label every section</div>
         </div>
         <div class="planner-actions" style="display:flex;gap:6px">
           <select id="planner-preset" class="dependency-select" title="Section preset">
@@ -172,6 +172,7 @@
             <option value="blog">Blog</option>
           </select>
           <button class="btn btn-sm" onclick="addQuickSections()"><i class="ti ti-template"></i> Add Preset</button>
+          <button class="btn btn-sm" onclick="exportPageBrief()"><i class="ti ti-file-export"></i> Brief</button>
           <button class="btn btn-accent btn-sm" onclick="openAddSection()"><i class="ti ti-plus"></i> Add Section</button>
         </div>
       </div>
@@ -218,7 +219,7 @@
         <div class="card-title">New Section</div>
         <div class="form-grid-row" style="display:grid;grid-template-columns:1fr 140px;gap:8px;margin-bottom:8px">
           <input type="text" id="new-sec-name" placeholder="Section name (e.g. Hero, Features, FAQ...)" onkeydown="if(event.key==='Enter')addSection()" />
-          <select id="new-sec-type">
+          <select id="new-sec-type" onchange="autoSuggestWordCta('new-sec-type', 'new-sec-words', 'new-sec-cta-count')">
             <option value="hero">Hero</option>
             <option value="nav">Navigation</option>
             <option value="content" selected>Content</option>
@@ -230,6 +231,10 @@
         <div class="form-grid-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
           <input type="text" id="new-sec-note" placeholder="Note (e.g. 2-column layout, video bg...)" />
           <input type="text" id="new-sec-css" placeholder="CSS class or ID (e.g. .hero-section)" />
+        </div>
+        <div class="form-grid-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <input type="text" id="new-sec-words" placeholder="Est. Word Count (e.g. 50-80)" />
+          <input type="number" id="new-sec-cta-count" min="0" placeholder="CTA Count Target (e.g. 1)" />
         </div>
         <div class="form-grid-row" style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px">
           <select id="new-sec-dependency" title="Section dependency">
@@ -275,6 +280,11 @@
               <option value="landing">Landing Page SOP</option>
               <option value="woo">WooCommerce Page SOP</option>
               <option value="blog">Blog Template SOP</option>
+              <option value="local_business">Local Business SOP</option>
+              <option value="portfolio">Portfolio SOP</option>
+              <option value="saas">SaaS Landing SOP</option>
+              <option value="restaurant">Restaurant SOP</option>
+              <option value="clinic">Doctor/Clinic SOP</option>
               <!-- Custom SOP templates will be dynamically inserted here -->
             </select>
             <button class="btn btn-sm btn-accent" onclick="loadSelectedSOP(false)" title="Load SOP template (overwrites current)"><i class="ti ti-rotate"></i> Load</button>
@@ -284,6 +294,16 @@
             <button class="btn btn-sm" onclick="openSaveSOPModal()" title="Save current checklist as a custom SOP"><i class="ti ti-device-floppy"></i> Save SOP</button>
           </div>
         </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:8px;">
+        <span style="font-size:11px; color:var(--text3); font-weight:600; text-transform:uppercase;">Checklist Items:</span>
+        <select id="checklist-filter" onchange="renderChecklist()" style="font-size:11px; padding:4px 8px; height:auto; width:auto; background:var(--bg3);">
+          <option value="all">All Items</option>
+          <option value="critical">Critical Only</option>
+          <option value="important">Important &amp; Above</option>
+          <option value="incomplete">Incomplete Only</option>
+        </select>
       </div>
 
       <div id="checklist-container"></div>
@@ -450,6 +470,38 @@
         <button class="btn btn-sm" onclick="loadPreset('button')">Button Style</button>
         <button class="btn btn-sm" onclick="loadPreset('card')">Card Style</button>
         <button class="btn btn-sm" onclick="loadPreset('responsive')">Responsive Hide</button>
+      </div>
+
+      <div class="card" style="margin-bottom:12px; padding:12px">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="ti ti-tool" style="color:var(--accent); font-size:16px;"></i>
+            <span style="font-size:12px; font-weight:600; color:var(--text)">Common Elementor CSS Fixes:</span>
+          </div>
+          <select id="common-css-fixes" onchange="loadCommonCSSFix(this.value)" style="flex:1; max-width:300px; font-size:12px; padding:5px 8px; height:auto; background:var(--bg3);">
+            <option value="">-- Choose a quick CSS fix --</option>
+            <option value="sticky-zindex">Sticky Header Z-Index Fix</option>
+            <option value="popup-overlay">Popup Overlay Scroll Lock Fix</option>
+            <option value="container-maxwidth">Container Max-Width Override</option>
+            <option value="section-padding-mobile">Mobile Section Padding Reset</option>
+            <option value="flex-gap-fallback">Flex Gap Legacy Browser Fallback</option>
+            <option value="hide-scrollbar">Hide Webkit Scrollbars</option>
+            <option value="smooth-scroll">Smooth Scroll Behavior</option>
+            <option value="text-ellipsis">Text Truncation (Ellipsis)</option>
+            <option value="reset-button">Reset Default Button Styles</option>
+            <option value="aspect-ratio">Aspect Ratio Helper (16:9)</option>
+            <option value="disable-select">Disable Text Selection</option>
+            <option value="custom-bullets">Custom Bullet List Spacing</option>
+            <option value="overlay-gradient">Overlay Linear Gradient Mask</option>
+            <option value="blur-glassmorphism">Glassmorphism Overlay effect</option>
+            <option value="center-absolute">Center Element Absolutely</option>
+            <option value="prevent-horizontal-scroll">Prevent Body Horizontal Overflow</option>
+            <option value="grayscale-hover">Grayscale Image to Color Hover</option>
+            <option value="elementor-form-input">Elementor Form Input Styling</option>
+            <option value="custom-scrollbar">Custom Scrollbar Theme</option>
+            <option value="object-fit">Object Fit Cover Image Fix</option>
+          </select>
+        </div>
       </div>
 
       <div class="css-generator-grid">
@@ -796,6 +848,14 @@
             <span id="audit-badge" style="font-family: var(--font-mono); font-size: 11px; padding: 2px 8px; border-radius: 99px; background: var(--bg4); color: var(--accent);">0 Issues</span>
         </div>
         
+        <div id="audit-scorecard" style="margin-bottom:14px; background:linear-gradient(135deg, var(--bg3), var(--bg2)); border:1px solid var(--border); border-radius:var(--r-md); padding:16px; display:flex; align-items:center; justify-content:space-between; gap:16px;">
+          <div>
+            <div style="font-size:12px; color:var(--text2); text-transform:uppercase; font-weight:600; letter-spacing:0.05em;">Page Audit Score</div>
+            <div id="audit-score-summary-text" style="font-size:13px; color:var(--text3); margin-top:4px;">No scan run yet.</div>
+          </div>
+          <div id="audit-score-circle" style="width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; font-family:var(--font-head); color:var(--accent); border:4px solid var(--accent); background:rgba(200,255,0,0.05); flex-shrink:0;">100</div>
+        </div>
+
         <div id="audit-results-list">
             <!-- Dynamic results go here -->
         </div>
@@ -1076,7 +1136,7 @@
         </label>
         <label>
           <span class="field-label">Type</span>
-          <select id="edit-sec-type"></select>
+          <select id="edit-sec-type" onchange="autoSuggestWordCta('edit-sec-type', 'edit-sec-words', 'edit-sec-cta-count')"></select>
         </label>
       </div>
       <label>
@@ -1091,6 +1151,16 @@
         <label>
           <span class="field-label">Dependency</span>
           <select id="edit-sec-dependency"></select>
+        </label>
+      </div>
+      <div class="modal-grid two">
+        <label>
+          <span class="field-label">Est. Word Count (e.g. 50-80)</span>
+          <input type="text" id="edit-sec-words" placeholder="e.g. 50-80" />
+        </label>
+        <label>
+          <span class="field-label">CTA Count Target</span>
+          <input type="number" id="edit-sec-cta-count" min="0" placeholder="e.g. 1" />
         </label>
       </div>
       <label class="check-option" id="edit-sec-sync-wrap">
@@ -1147,6 +1217,21 @@
     <div class="modal-actions">
       <button class="btn" onclick="closeSOPModal()">Cancel</button>
       <button class="btn btn-accent" onclick="saveCustomSOP()"><i class="ti ti-device-floppy"></i> Save Template</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE BRIEF MODAL -->
+<div class="modal-overlay" id="brief-modal" onclick="if(event.target===this)closeBriefModal()">
+  <div class="modal modal-large">
+    <div class="modal-title">Client-Ready Page Plan Brief</div>
+    <div style="margin-bottom:12px">
+      <p style="font-size:12px;color:var(--text3);margin-bottom:8px">This generates a structured outline of your page sections, including types, word count suggestions, CTA targets, and development status. Copy it to send to copywriters or clients.</p>
+      <textarea id="brief-text-output" readonly style="width:100%; min-height:280px; font-family:var(--font-mono); font-size:12px; padding:10px; background:var(--bg3); border:1px solid var(--border); border-radius:var(--r-md); color:var(--text2); resize:vertical; line-height:1.5;"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeBriefModal()">Close</button>
+      <button class="btn btn-accent" onclick="copyBriefText()"><i class="ti ti-copy"></i> Copy Brief</button>
     </div>
   </div>
 </div>

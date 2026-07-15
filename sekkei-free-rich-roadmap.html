@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sekkei — Free Plugin Rich করার Deep Plan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+:root {
+  --lime:#C8FF00;--lime-dk:#6b8a00;--lime-mid:#8fb300;
+  --dark:#0E0D13;--ink:#111827;--surface:#F4F4EF;
+  --card:#ffffff;--card2:#f9f9f6;--line:#e5e5e0;
+  --muted:#6b7280;--dim:#374151;
+  --green:#15803d;--green-bg:#f0fdf4;--green-bd:#86efac;
+  --orange:#c2410c;--orange-bg:#fff7ed;--orange-bd:#fed7aa;
+  --blue:#1d4ed8;--blue-bg:#eff6ff;--blue-bd:#93c5fd;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-bd:#c4b5fd;
+  --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fca5a5;
+  --r:12px;--shadow:0 2px 16px rgba(0,0,0,.07);
+  --font:'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--surface);color:var(--ink);font:15px/1.65 var(--font)}
+
+header{background:var(--dark);padding:52px 24px 44px;position:relative;overflow:hidden}
+header::after{content:'';position:absolute;top:-120px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(200,255,0,.1),transparent 65%);pointer-events:none}
+.wrap{max-width:1120px;margin:auto}
+.wordmark{font-size:24px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:24px}
+.wordmark em{color:var(--lime);font-style:normal}
+h1{font-size:40px;font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.5px;margin-bottom:12px}
+h1 span{color:var(--lime)}
+.sub{color:#9ca3af;max-width:700px;font-size:15px;line-height:1.7}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.pill{border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:5px 12px;font-size:12px;color:#9ca3af;background:rgba(255,255,255,.05)}
+.pill.lime{border-color:rgba(200,255,0,.3);color:var(--lime);background:rgba(200,255,0,.07)}
+
+main{padding:44px 24px 88px}
+h2{font-size:21px;font-weight:800;color:var(--ink);margin:56px 0 20px;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+h2::before{content:'';display:block;width:4px;height:22px;background:var(--lime-mid);border-radius:2px;flex-shrink:0}
+h3{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px}
+h4{font-size:13px;font-weight:700;color:var(--dim);margin:14px 0 4px;text-transform:uppercase;letter-spacing:.5px}
+p{color:var(--dim);font-size:14px;line-height:1.75;margin-bottom:6px}
+small{font-size:12px;color:var(--muted)}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.card.accent{border-left:4px solid var(--lime-mid);background:#fafff0}
+.card.blue-accent{border-left:4px solid var(--blue)}
+.card.purple-accent{border-left:4px solid var(--purple)}
+.card.orange-accent{border-left:4px solid var(--orange)}
+
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;border-radius:999px;padding:3px 10px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.badge.green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.badge.blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
+.badge.orange{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-bd)}
+.badge.purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd)}
+.badge.lime{background:#f5ffe0;color:var(--lime-dk);border:1px solid #b8d940}
+.badge.red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+
+.note{border-left:3px solid var(--lime-mid);background:#f5ffe0;padding:16px 18px;border-radius:0 var(--r) var(--r) 0;margin:16px 0}
+.note strong{color:var(--lime-dk);font-size:14px;display:block;margin-bottom:4px}
+.alert{border:1px solid var(--orange-bd);background:var(--orange-bg);border-radius:var(--r);padding:14px 16px;font-size:13px;color:#7c2d12;margin:14px 0}
+
+/* Feature item */
+.feature-item{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.feature-item:first-of-type{border-top:0;padding-top:0}
+.fi-icon{width:32px;height:32px;border-radius:8px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
+.fi-body h4{margin:0 0 3px;font-size:14px;font-weight:700;color:var(--ink);text-transform:none;letter-spacing:0}
+.fi-body p{margin:0;font-size:13px}
+.fi-body .tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.fi-body .tag{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+.tag.easy{background:#f0fdf4;color:#15803d;border:1px solid #86efac}
+.tag.medium{background:#eff6ff;color:#1d4ed8;border:1px solid #93c5fd}
+.tag.hard{background:#f5f3ff;color:#7c3aed;border:1px solid #c4b5fd}
+.tag.high-impact{background:#fef9c3;color:#854d0e;border:1px solid #fde047}
+
+/* Module header */
+.module-header{background:var(--dark);color:#fff;padding:16px 20px;border-radius:var(--r) var(--r) 0 0;margin-bottom:0}
+.module-header h3{color:#fff;margin:0;font-size:16px}
+.module-header .mh-meta{font-size:12px;color:#9ca3af;margin-top:3px}
+.module-body{background:var(--card);border:1px solid var(--line);border-top:0;border-radius:0 0 var(--r) var(--r);padding:20px}
+
+/* Impact row */
+.impact-row{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.impact-row:first-of-type{border-top:0;padding-top:0}
+.ir-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ir-dot.high{background:#15803d}
+.ir-dot.med{background:#2563eb}
+.ir-dot.low{background:#9ca3af}
+.ir-text{font-size:13px;color:var(--dim);flex:1}
+.ir-effort{font-size:11px;color:var(--muted);white-space:nowrap}
+
+/* Table */
+.table-wrap{overflow-x:auto;border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:13px}
+th,td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f8f8f5;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
+tr:last-child td{border-bottom:0}
+td{color:var(--dim)}
+td:first-child{color:var(--ink);font-weight:600}
+
+/* Timeline */
+.tl{position:relative;padding-left:28px}
+.tl::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:0 0 28px 20px}
+.tl-item::before{content:'';position:absolute;left:-13px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--line);border:2px solid var(--surface)}
+.tl-item.now::before{background:var(--lime-mid);box-shadow:0 0 0 4px rgba(143,179,0,.15)}
+.tl-phase{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--lime-dk);margin-bottom:3px}
+.tl-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:5px}
+.tl-desc{font-size:13px;color:var(--muted);line-height:1.7}
+
+.kpi-num{font-size:36px;font-weight:800;color:var(--lime-dk);line-height:1;letter-spacing:-1px;margin-bottom:4px}
+.kpi-label{font-size:13px;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);padding:28px 24px;text-align:center;font-size:13px;color:var(--muted);background:var(--card)}
+footer span{color:var(--lime-dk);font-weight:700}
+
+@media(max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="wordmark">Sek<em>kei</em> 設計</div>
+  <h1>Free Plugin <span>Rich করার</span><br>Deep Plan</h1>
+  <p class="sub">প্রতিটি module কীভাবে আরও powerful করবে, কোন feature কোন order-এ করবে, আর কীভাবে user-দের daily habit-এ পরিণত হবে — সব বিস্তারিত।</p>
+  <div class="pills">
+    <span class="pill lime">Target: v1.9 → v2.0</span>
+    <span class="pill">12 Modules</span>
+    <span class="pill">User First</span>
+    <span class="pill">No Widget, Pure Workflow</span>
+  </div>
+</div>
+</header>
+
+<main>
+<div class="wrap">
+
+<!-- PRINCIPLE -->
+<div class="note" style="margin-top:8px">
+  <strong>মূল নীতি — Free কেন Rich রাখতে হবে</strong>
+  User যদি Free-তে daily value না পায়, সে Pro কিনবে না। Free = "useful every project". Pro = "essential for agency scale". এই line কখনো blur করা যাবে না।
+</div>
+
+<!-- MODULE 1: SECTION PLANNER -->
+<h2>১. Section Planner</h2>
+<p style="color:var(--muted);margin-bottom:16px">Sekkei-এর flagship feature — এখানে সবচেয়ে বেশি invest করো।</p>
+
+<div class="module-header"><h3>🏗️ Section Planner</h3><div class="mh-meta">Current: drag-drop, health badges, presets, Elementor sync, QA status</div></div>
+<div class="module-body">
+  <div class="feature-item">
+    <div class="fi-icon">📊</div>
+    <div class="fi-body">
+      <h4>Section Completion Tracker</h4>
+      <p>প্রতিটি section-এ ৩টি mini-toggle: <strong>Design ✓</strong> / <strong>Copy ✓</strong> / <strong>Responsive ✓</strong>। Header-এ overall page completion % দেখাবে (যেমন "7/9 sections ready")। Client-কে "আমার page 78% ready" বলা যাবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📝</div>
+    <div class="fi-body">
+      <h4>Word Count & CTA Estimator</h4>
+      <p>প্রতিটি section-এ estimated word count range (যেমন Hero: 50-80 words) আর CTA count দেখাবে। Copywriter-দের brief দেওয়ার সময় কাজে আসবে। Content planning complete হবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📋</div>
+    <div class="fi-body">
+      <h4>Section Type Library (Expanded)</h4>
+      <p>Hero, Feature Grid, Testimonial Carousel, Pricing Table, FAQ Accordion, Team Grid, Blog Feed, Portfolio, Contact Form, Footer — প্রতিটি type-এ recommended elements আর best practices auto-suggest করবে। "Add a pricing section" করলে সাথে checklist hint দেবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🔗</div>
+    <div class="fi-body">
+      <h4>Section Dependencies v2</h4>
+      <p>এখন শুধু status আছে। এতে যোগ করো: <strong>blocking indicator</strong> — "এই section টা যতক্ষণ না ready, পরের ৩টা শুরু হবে না।" আর <strong>waiting-for</strong> tag: copy / image / client approval / development। Kanban-এর মতো flow দেখাবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📤</div>
+    <div class="fi-body">
+      <h4>Client-Ready Page Brief Export</h4>
+      <p>Section list থেকে একটি formatted page brief generate করবে — section name, type, word count, CTA, notes, completion status সহ। Copy করে client-কে paste করা যাবে। "এটাই আমাদের page plan" বলে পাঠানো যাবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🎯</div>
+    <div class="fi-body">
+      <h4>Quick Focus Mode</h4>
+      <p>"শুধু incomplete sections দেখাও" filter। বড় page-এ ৩০+ section-এর মধ্যে কোনগুলো বাকি সেটা instantly দেখা যাবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 2: DESIGN CHECKLIST -->
+<h2>২. Design Checklist</h2>
+<div class="module-header"><h3>✅ Design Checklist</h3><div class="mh-meta">Current: 30+ items, 5 categories, accordion, SOP templates</div></div>
+<div class="module-body">
+  <div class="feature-item">
+    <div class="fi-icon">🏷️</div>
+    <div class="fi-body">
+      <h4>Checklist Item Priority Tags</h4>
+      <p>প্রতিটি item-এ <strong>Critical / Important / Nice-to-have</strong> tag। "Publish করার আগে শুধু Critical গুলো দেখাও" filter। Time pressure-এ কোনটা must-do সেটা instantly clear হবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📅</div>
+    <div class="fi-body">
+      <h4>Checklist History (Per Project)</h4>
+      <p>প্রতিবার project complete করলে checklist snapshot save হবে। "এই project-এ কতগুলো critical item miss করেছিলাম?" দেখা যাবে। Pattern চেনা যাবে — "আমি সবসময় mobile check miss করি।"</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🌐</div>
+    <div class="fi-body">
+      <h4>Project Type Specific Checklists</h4>
+      <p>এখন generic checklist আছে। আরও specific করো: <strong>WooCommerce Store / Local Business / Portfolio / SaaS Landing / Restaurant / Doctor/Clinic</strong> — প্রতিটি type-এর জন্য আলাদা curated checklist। User type select করলে relevant items auto-load হবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">⏱️</div>
+    <div class="fi-body">
+      <h4>Time Estimate Per Item</h4>
+      <p>প্রতিটি checklist item-এ rough time estimate (যেমন "Mobile QA: ~20 min", "Compress images: ~10 min")। Total remaining time estimate দেখাবে। Deadline planning-এ সাহায্য করবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 3: COLOR PALETTE -->
+<h2>৩. Color Palette</h2>
+<div class="module-header"><h3>🎨 Color Palette</h3><div class="mh-meta">Current: groups, roles, CSS vars export, Elementor push, contrast checker</div></div>
+<div class="module-body">
+  <div class="feature-item">
+    <div class="fi-icon">🌓</div>
+    <div class="fi-body">
+      <h4>Dark Mode Palette Generator</h4>
+      <p>Light palette থেকে automatically dark mode equivalent generate করবে। User-কে manually dark variant বানাতে হবে না। CSS variables দুটোই export হবে: <code>:root</code> আর <code>[data-theme="dark"]</code>।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🎯</div>
+    <div class="fi-body">
+      <h4>Color Harmony Suggestions</h4>
+      <p>Primary color দিলে complementary, analogous, triadic suggestions দেবে। "এই blue-এর সাথে কোন accent মানাবে?" — এই question-এর answer instantly পাবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📦</div>
+    <div class="fi-body">
+      <h4>Palette Presets Library</h4>
+      <p>10-15টি curated brand palette: Corporate Blue, Warm Agency, Modern SaaS, Medical Trust, Creative Studio, etc. One-click import করে নিজের project-এ customize করা যাবে। Client-কে দ্রুত color options দেখানো যাবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🔍</div>
+    <div class="fi-body">
+      <h4>Used-in-Page Color Scanner</h4>
+      <p>Elementor page-এ কোন colors actually use হচ্ছে সেটা scan করবে। "এই 3টি color আমার palette-এ নেই কিন্তু page-এ আছে" — warning দেবে। Color consistency enforce করা সহজ হবে।</p>
+      <div class="tags"><span class="tag hard">Hard</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 4: FONT PAIRING -->
+<h2>৪. Font Pairing</h2>
+<div class="module-header"><h3>🔤 Font Pairing</h3><div class="mh-meta">Current: Bengali/Arabic presets, weight/line-height rec, CSS export, Google Fonts link</div></div>
+<div class="module-body">
+  <div class="feature-item">
+    <div class="fi-icon">👁️</div>
+    <div class="fi-body">
+      <h4>Real Content Preview</h4>
+      <p>Generic "Lorem Ipsum" এর বদলে user নিজের headline আর body text লিখে preview দেখবে। "Sekkei — Design. Ship. Repeat." দিয়ে font টা কেমন দেখাবে সেটা আসল content দিয়ে দেখা যাবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📐</div>
+    <div class="fi-body">
+      <h4>Type Scale Generator</h4>
+      <p>Base size + scale ratio (Major Third, Perfect Fourth, Golden Ratio) দিলে H1→H6 + body + small size automatically calculate করবে। CSS variables হিসেবে export করা যাবে। Typography hierarchy visually preview হবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🏢</div>
+    <div class="fi-body">
+      <h4>Industry-Based Pairing Suggestions</h4>
+      <p>Filter by industry: Healthcare, Legal, Tech Startup, Restaurant, Fashion, Education — প্রতিটি industry-তে proven font pairs suggest করবে। Client brief পেলে তাদের industry select করে appropriate options দেখানো যাবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 5: PRE-PUBLISH AUDIT -->
+<h2>৫. Pre-Publish Audit — সবচেয়ে বড় opportunity</h2>
+<div class="alert">এটাই Sekkei-এর #1 marketing hook। "Publish করার আগে Sekkei চালাও" — এই একটা sentence product বিক্রি করবে। এখানে সবচেয়ে বেশি invest করো।</div>
+
+<div class="module-header"><h3>🔍 Pre-Publish Audit</h3><div class="mh-meta">Current: heading seq, oversized images, SEO meta, alt text, noopener, social placeholders, inherited contrast, scan history</div></div>
+<div class="module-body">
+  <div class="feature-item">
+    <div class="fi-icon">⚡</div>
+    <div class="fi-body">
+      <h4>Performance Impact Score</h4>
+      <p>Widget count, total images, video embeds, custom fonts count, estimated DOM size — সব মিলিয়ে একটি <strong>Performance Risk Score (A→F)</strong>। "তোমার page-এ 47টি widget আছে, এটা load slow করবে।" Concrete, actionable।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📱</div>
+    <div class="fi-body">
+      <h4>Mobile-Specific Audit</h4>
+      <p>Font size 16px-এর নিচে কিনা, buttons minimum 44px touch target কিনা, horizontal overflow আছে কিনা, sticky header page-এর কতটুকু ঢাকছে — mobile-only issues আলাদা করে report করবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🔗</div>
+    <div class="fi-body">
+      <h4>Broken Link Scanner</h4>
+      <p>Page-এর সব internal link check করবে — 404, empty href, javascript:void। External link check optional। "৩টি link broken আছে" — publish-এর আগে জানা যাবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📋</div>
+    <div class="fi-body">
+      <h4>Schema Markup Checker</h4>
+      <p>Page type অনুযায়ী recommended schema আছে কিনা: FAQ page → FAQ schema, Product page → Product schema, About page → Person/Organization schema। Missing হলে suggestion দেবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📊</div>
+    <div class="fi-body">
+      <h4>Audit Score Card (100-point)</h4>
+      <p>প্রতিটি issue-এ deduction: Critical (-10), Important (-5), Warning (-2)। Total score 0-100। "তোমার page score: 74/100 — Publish করার আগে ৩টি critical issue fix করো।" Client-কে দেখানোর জন্য একটি clean scorecard।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">💬</div>
+    <div class="fi-body">
+      <h4>Issue Fix Suggestions</h4>
+      <p>শুধু "এই issue আছে" বলা না — "কীভাবে fix করবে" সেটাও বলবে। "H1 missing → Elementor-এ Heading widget add করো, HTML Tag H1 set করো।" User-কে শেখাবে, return আসবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 6: CSS GENERATOR -->
+<h2>৬. CSS Generator</h2>
+<div class="module-header"><h3>💻 CSS Generator</h3><div class="mh-meta">Current: 6 presets, device target, risk level, snippet library, selector helper</div></div>
+<div class="module-body">
+  <div class="feature-item">
+    <div class="fi-icon">🔧</div>
+    <div class="fi-body">
+      <h4>Common Fix Snippets Pack</h4>
+      <p>Elementor-এ সবচেয়ে বেশি যে CSS problems হয় সেগুলোর ready-made fix: sticky header z-index, popup overlay issue, flex gap IE fix, container max-width override, section padding mobile — 20+ common fixes one-click copy।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🎯</div>
+    <div class="fi-body">
+      <h4>Selector Confidence Indicator</h4>
+      <p>User যে selector লিখবে সেটা কতটা specific/safe সেটা দেখাবে। "!important overuse warning", "overly broad selector warning" — CSS-এর quality guide করবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📱</div>
+    <div class="fi-body">
+      <h4>Responsive Snippet Builder</h4>
+      <p>Desktop value দিলে tablet আর mobile breakpoint automatically suggest করবে। Elementor-এর exact breakpoints (1025px, 768px) use করবে। One-click করলে সব তিন breakpoint-এর CSS generate হবে।</p>
+      <div class="tags"><span class="tag medium">Medium</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 7: PROJECT NOTES -->
+<h2>৭. Project Notes</h2>
+<div class="module-header"><h3>📝 Project Notes</h3><div class="mh-meta">Current: notes, quick tags, date stamp, revision log, client feedback</div></div>
+<div class="module-body">
+  <div class="feature-item">
+    <div class="fi-icon">🔖</div>
+    <div class="fi-body">
+      <h4>Smart Templates</h4>
+      <p>Note নেওয়ার সময় template select করার option: Client Meeting Notes, Design Decision Log, Bug Report, Scope Change Request, Client Approval Record। Structure থাকলে later reference করা সহজ।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">🔍</div>
+    <div class="fi-body">
+      <h4>Note Search</h4>
+      <p>Project-এর ভেতরে notes search করার ability। "Client বলেছিল font কী?" — search করলে instantly পাওয়া যাবে। বড় project-এ অনেক কাজে আসবে।</p>
+      <div class="tags"><span class="tag easy">Easy</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 8: DESIGN TOKENS -->
+<h2>৮. Design Tokens</h2>
+<div class="module-header"><h3>🪙 Design Tokens</h3><div class="mh-meta">Current: typography scale, spacing, radius, shadow, Elementor Kit sync</div></div>
+<div class="module-body">
+  <div class="feature-item">
+    <div class="fi-icon">🔄</div>
+    <div class="fi-body">
+      <h4>Two-Way Elementor Sync</h4>
+      <p>Elementor Global Colors/Fonts → Sekkei-তে import করো। Sekkei tokens → Elementor Kit-এ push করো। দুই direction-এই কাজ করবে। Elementor-এ change করলে Sekkei-তেও reflect করবে।</p>
+      <div class="tags"><span class="tag hard">Hard</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="fi-icon">📦</div>
+    <div class="fi-body">
+      <h4>Token Preset Packs</h4>
+      <p>Minimal, Corporate, Bold Agency, Soft & Friendly, Technical/SaaS — 5টি ready token packs। সব size, spacing, radius, shadow একসাথে set হয়ে যাবে। New project শুরুতে ১ click।</p>
+      <div class="tags"><span class="tag easy">Easy</span><span class="tag high-impact">High Impact</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- UX IMPROVEMENTS -->
+<h2>৯. Cross-Module UX Improvements</h2>
+<div class="grid g2">
+  <div class="card blue-accent">
+    <div class="badge blue">Global UX</div>
+    <h3>Quick Command Palette (Ctrl+K)</h3>
+    <p>Panel-এর যেকোনো জায়গা থেকে Ctrl+K দিয়ে সব feature search করা যাবে। "audit" লিখলে Pre-Publish Audit যাবে। "font" লিখলে Font Pairing যাবে। Power user-দের জন্য game-changer।</p>
+  </div>
+  <div class="card blue-accent">
+    <div class="badge blue">Global UX</div>
+    <h3>Project Dashboard (Overview)</h3>
+    <p>সব module-এর summary একটি page-এ: Section completion %, checklist progress, audit score, last backup date, pending client feedback count। Project open করলে এটাই প্রথমে দেখাবে।</p>
+  </div>
+  <div class="card blue-accent">
+    <div class="badge blue">Global UX</div>
+    <h3>Undo/Redo Support</h3>
+    <p>Section delete করলে, checklist item remove করলে — Ctrl+Z দিয়ে undo করা যাবে। Data loss-এর fear দূর হবে। Users আরও confidently কাজ করবে।</p>
+  </div>
+  <div class="card blue-accent">
+    <div class="badge blue">Global UX</div>
+    <h3>Project Duplication</h3>
+    <p>Similar project শুরু করার সময় পুরনো project template হিসেবে duplicate করার option। Agency যারা same type-এর projects করে তাদের জন্য huge time saver।</p>
+  </div>
+  <div class="card blue-accent">
+    <div class="badge blue">Global UX</div>
+    <h3>Onboarding v2 — Interactive</h3>
+    <p>First-run-এ শুধু card দেখানো না — একটি interactive mini-tutorial: "এখন একটি section add করো → চেষ্টা করো।" User actually করলে celebrate করবে। Activation rate বাড়বে।</p>
+  </div>
+  <div class="card blue-accent">
+    <div class="badge blue">Global UX</div>
+    <h3>Panel Resize Handle</h3>
+    <p>Floating panel-এর width user drag করে adjust করতে পারবে। Narrow screen-এ ছোট করবে, wide monitor-এ বড় করবে। Position মনে রাখবে।</p>
+  </div>
+</div>
+
+<!-- PRIORITY TABLE -->
+<h2>১০. Priority Matrix — কোনটা আগে করবে</h2>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Feature</th><th>User Impact</th><th>Dev Effort</th><th>Priority</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Section Completion Tracker</td><td>⭐⭐⭐⭐⭐</td><td>🟢 Easy (1-2 days)</td><td><span style="color:var(--green);font-weight:700">করো এখনই</span></td></tr>
+      <tr><td>Audit Score Card (100-point)</td><td>⭐⭐⭐⭐⭐</td><td>🟡 Medium (3-4 days)</td><td><span style="color:var(--green);font-weight:700">করো এখনই</span></td></tr>
+      <tr><td>Issue Fix Suggestions in Audit</td><td>⭐⭐⭐⭐⭐</td><td>🟢 Easy (2 days)</td><td><span style="color:var(--green);font-weight:700">করো এখনই</span></td></tr>
+      <tr><td>Common CSS Fix Snippets Pack</td><td>⭐⭐⭐⭐⭐</td><td>🟢 Easy (1 day)</td><td><span style="color:var(--green);font-weight:700">করো এখনই</span></td></tr>
+      <tr><td>Project Type Specific Checklists</td><td>⭐⭐⭐⭐⭐</td><td>🟡 Medium (3 days)</td><td><span style="color:var(--green);font-weight:700">করো এখনই</span></td></tr>
+      <tr><td>Client-Ready Page Brief Export</td><td>⭐⭐⭐⭐</td><td>🟢 Easy (1 day)</td><td><span style="color:var(--green);font-weight:700">করো এখনই</span></td></tr>
+      <tr><td>Color Palette Presets Library</td><td>⭐⭐⭐⭐</td><td>🟢 Easy (1 day)</td><td>পরের version</td></tr>
+      <tr><td>Quick Command Palette (Ctrl+K)</td><td>⭐⭐⭐⭐</td><td>🟡 Medium (3 days)</td><td>পরের version</td></tr>
+      <tr><td>Type Scale Generator</td><td>⭐⭐⭐⭐</td><td>🟡 Medium (2 days)</td><td>পরের version</td></tr>
+      <tr><td>Dark Mode Palette Generator</td><td>⭐⭐⭐⭐</td><td>🟡 Medium (3 days)</td><td>পরের version</td></tr>
+      <tr><td>Broken Link Scanner</td><td>⭐⭐⭐⭐</td><td>🟡 Medium (3 days)</td><td>পরের version</td></tr>
+      <tr><td>Mobile-Specific Audit</td><td>⭐⭐⭐⭐</td><td>🟡 Medium (4 days)</td><td>পরের version</td></tr>
+      <tr><td>Project Dashboard Overview</td><td>⭐⭐⭐⭐</td><td>🟡 Medium (4 days)</td><td>পরের version</td></tr>
+      <tr><td>Undo/Redo Support</td><td>⭐⭐⭐</td><td>🔴 Hard (1 week)</td><td>v2.0</td></tr>
+      <tr><td>Two-Way Elementor Token Sync</td><td>⭐⭐⭐⭐⭐</td><td>🔴 Hard (1 week)</td><td>v2.0</td></tr>
+      <tr><td>Used-in-Page Color Scanner</td><td>⭐⭐⭐⭐</td><td>🔴 Hard (1 week)</td><td>v2.0</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- EXECUTION TIMELINE -->
+<h2>১১. Execution Timeline</h2>
+<div class="tl">
+  <div class="tl-item now">
+    <div class="tl-phase">v1.9.0 — এখনই শুরু করো</div>
+    <div class="tl-title">Quick Wins Pack</div>
+    <div class="tl-desc">Section Completion Tracker, Audit Score Card + Fix Suggestions, Common CSS Snippets Pack, Project Type Checklists (WooCommerce/Portfolio/Local Business), Client Page Brief Export। এগুলো সব easy-to-medium, কিন্তু user-দের daily workflow-এ massive impact।</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-phase">v1.9.x</div>
+    <div class="tl-title">Design System Pack</div>
+    <div class="tl-desc">Color Palette Presets, Dark Mode Generator, Type Scale Generator, Color Harmony Suggestions, Token Preset Packs। Design-focused users-দের জন্য Sekkei আরও indispensable হবে।</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-phase">v2.0.0</div>
+    <div class="tl-title">Power User Pack</div>
+    <div class="tl-desc">Command Palette (Ctrl+K), Project Dashboard Overview, Mobile-Specific Audit, Broken Link Scanner, Responsive CSS Builder, Panel Resize Handle। এই version-এ Sekkei "must-have" থেকে "irreplaceable" হবে।</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-phase">v2.x</div>
+    <div class="tl-title">Deep Integration Pack</div>
+    <div class="tl-desc">Two-Way Elementor Token Sync, Used-in-Page Color Scanner, Schema Checker, Undo/Redo। এগুলো technically hard কিন্তু differentiation এতটাই strong যে কেউ compete করতে পারবে না।</div>
+  </div>
+</div>
+
+<!-- SUCCESS METRICS -->
+<h2>১২. কীভাবে বুঝবে Rich হচ্ছে</h2>
+<div class="grid g4">
+  <div class="card">
+    <div class="kpi-num">5★</div>
+    <div class="kpi-label">WP.org-এ genuine reviews আসছে</div>
+  </div>
+  <div class="card">
+    <div class="kpi-num">500+</div>
+    <div class="kpi-label">Active installs (6 মাসের target)</div>
+  </div>
+  <div class="card">
+    <div class="kpi-num">Daily</div>
+    <div class="kpi-label">User session — একবার না, প্রতি project-এ</div>
+  </div>
+  <div class="card">
+    <div class="kpi-num">0</div>
+    <div class="kpi-label">Support thread: "আমি বুঝলাম না কীভাবে use করবো"</div>
+  </div>
+</div>
+
+<div class="note" style="margin-top:20px">
+  <strong>সবচেয়ে important signal:</strong>
+  User যদি Sekkei ছাড়া project শুরু করতে না চায় — section planner খুলে plan করার আগে Elementor open না করে — তাহলে তুমি জিতে গেছ। সেটাই লক্ষ্য।
+</div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">Sek<span>kei</span> 設計 · Free Plugin Rich করার Deep Plan · itsmanzur · জুলাই ২০২৬</div>
+</footer>
+</body>
+</html>

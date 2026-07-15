@@ -456,7 +456,7 @@ input[type=color]:hover{transform:scale(1.08)}
 
 /* ===== EMPTY STATE ===== */
 .empty{text-align:center;padding:40px 20px;color:var(--text3)}
-.empty i{font-size:36px;margin-bottom:10px;display:block;color:var(--text3);animation:emptyPulse 2.5s ease-in-out infinite}
+.empty > i{font-size:36px;margin-bottom:10px;display:block;color:var(--text3);animation:emptyPulse 2.5s ease-in-out infinite}
 .empty p{font-size:13px;line-height:1.6}
 .empty h3{color:var(--text2)}
 
