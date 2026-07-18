@@ -1344,6 +1344,38 @@
                         previewText: totalWidgets + ' widgets'
                     });
                 }
+                // Calculate 100-point Audit Score Card & Assign Fix Suggestions
+                var critCount = 0, impCount = 0, warnCount = 0;
+                results.forEach(function(item) {
+                    var titleLower = (item.title || '').toLowerCase();
+                    if (item.type === 'link' || item.type === 'contrast' || item.type === 'accessibility' || titleLower.indexOf('noopener') !== -1 || titleLower.indexOf('h1') !== -1) {
+                        item.severity = 'critical';
+                        critCount++;
+                    } else if (item.type === 'alt' || item.type === 'oversized' || item.type === 'seo') {
+                        item.severity = 'important';
+                        impCount++;
+                    } else {
+                        item.severity = 'warning';
+                        warnCount++;
+                    }
+
+                    // Map issue types to fix text
+                    item.fixHint = 'Review the Elementor widget settings to resolve this issue';
+                    if (titleLower.indexOf('missing h1') !== -1) {
+                        item.fixHint = "Add a Heading widget, set HTML Tag to H1 in Elementor widget settings";
+                    } else if (item.type === 'alt' || titleLower.indexOf('missing alt') !== -1) {
+                        item.fixHint = "Click the image in Elementor, go to Style tab, add Alt Text";
+                    } else if (item.type === 'link' || titleLower.indexOf('broken link') !== -1) {
+                        item.fixHint = "Go to the element with this link and update or remove the URL";
+                    } else if (titleLower.indexOf('meta description') !== -1) {
+                        item.fixHint = "Install Yoast SEO or Rank Math and set a meta description";
+                    } else if (titleLower.indexOf('noopener') !== -1) {
+                        item.fixHint = "Add rel='noopener noreferrer' to any link opening in a new tab";
+                    }
+                });
+
+                var deduction = Math.min(40, critCount * 10) + Math.min(30, impCount * 5) + Math.min(20, warnCount * 2);
+                var healthScore = Math.max(0, 100 - deduction);
 
                 // Send results back to Sekkei tool iframe
                 var iframeEl = document.getElementById('itspc-panel-iframe');
@@ -1351,6 +1383,7 @@
                     iframeEl.contentWindow.postMessage({
                         type: 'itspc_audit_results',
                         results: results,
+                        score: healthScore,
                         widgetCounts: widgetCounts
                     }, window.location.origin);
                 }

@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.8.0
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,19 @@ From the Design Tokens panel, you can sync your design tokens and color palette 
 
 == Changelog ==
 
+= 1.9.0 =
+* Added Color Palette Presets Library with 6 curated high-quality presets
+* Added Smart Dark Mode Palette Generator based on luminosity logic
+* Added Color Harmony Generator for Analogous, Monochromatic, Complementary, Split, Triadic, and Tetradic swatches
+* Added Visual Typography Scale Preview mapping H1-H6 sizes visually
+* Added Design Token Presets Loader with 5 pre-configured styling templates (Minimal, Corporate, Bold, Soft, SaaS)
+* Added Section Completion Tracker with live progress bar in planner
+* Upgraded Pre-Publish Scan with 100-point Audit Score Card and weighted deductions
+* Added Actionable Issue Fix Suggestions for detected audit violations
+* Added Common CSS Fix Snippets Pack with 20 one-click Elementor CSS solutions
+* Added Project Type Specific SOP Checklists (Local Business, SaaS, Restaurant, Portfolio, Clinic)
+* Added Checklist Item Priority Tags (Critical, Important, Nice) with filtering logic
+* Added Client-Ready Page Brief Export Modal with formatting and size estimates
 = 1.8.0 =
 * Added Scattered Custom CSS Hub for centralized scanning and two-way inline CSS updates in Elementor
 * Added Widget & Asset Bloat Audit scanner for high widget counts and active element frequency map

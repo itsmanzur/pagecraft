@@ -1147,6 +1147,9 @@ function renderSections() {
     return;
   }
   list.innerHTML = secs.map((s, i) => {
+    const isDesignDone = s.done_design ? true : false;
+    const isCopyDone = s.done_copy ? true : false;
+    const isResponsiveDone = s.done_responsive ? true : false;
     const health = getSectionHealth(s, secs);
     const healthHtml = displaySettings.plannerShowBadges
       ? (health.length ? '<div class="section-health">' + health.map(item => '<span class="health-pill ' + item.level + '">' + esc(item.label) + '</span>').join('') + '</div>' : '<div class="section-health"><span class="health-pill ok">Healthy</span></div>')
@@ -1165,6 +1168,11 @@ function renderSections() {
         <div class="section-name">
           ${esc(s.name)}
           ${(s.elementorId || s.elementorCid) ? ` <span class="sync-badge" title="Linked with Elementor element"><i class="ti ti-link" style="font-size:11px;color:var(--teal)"></i></span>` : ''}
+          <div style="display:inline-flex; gap:2px; margin-left:8px; align-items:center;">
+            <button onclick="event.stopPropagation(); toggleSectionDone('${s.id}', 'design')" title="Design done" style="background:none;border:none;cursor:pointer;font-size:12px;opacity:${isDesignDone ? 1 : 0.3};filter:${isDesignDone ? 'grayscale(0)' : 'grayscale(1)'}">🎨</button>
+            <button onclick="event.stopPropagation(); toggleSectionDone('${s.id}', 'copy')" title="Copy done" style="background:none;border:none;cursor:pointer;font-size:12px;opacity:${isCopyDone ? 1 : 0.3};filter:${isCopyDone ? 'grayscale(0)' : 'grayscale(1)'}">📝</button>
+            <button onclick="event.stopPropagation(); toggleSectionDone('${s.id}', 'responsive')" title="Responsive done" style="background:none;border:none;cursor:pointer;font-size:12px;opacity:${isResponsiveDone ? 1 : 0.3};filter:${isResponsiveDone ? 'grayscale(0)' : 'grayscale(1)'}">📱</button>
+          </div>
         </div>
         ${displaySettings.plannerShowNotes && s.note ? `<div class="section-note">${esc(s.note)}</div>` : ''}
         ${displaySettings.plannerShowCss && s.css ? `<div class="section-css">${esc(s.css)}</div>` : ''}
@@ -1188,6 +1196,39 @@ function renderSections() {
       </div>
     </div>`;
   }).join('');
+  
+  // Update Completion Bar
+  let fullyDoneCount = 0;
+  secs.forEach(s => {
+    if (s.done_design && s.done_copy && s.done_responsive) {
+      fullyDoneCount++;
+    }
+  });
+  const totalSecs = secs.length;
+  const pct = totalSecs > 0 ? Math.round((fullyDoneCount / totalSecs) * 100) : 0;
+  const barContainer = document.getElementById('planner-completion-bar-container');
+  if (barContainer) {
+    barContainer.innerHTML = `
+      <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text3); margin-bottom:2px;">
+        <span>Page Completion</span>
+        <span>${fullyDoneCount} / ${totalSecs} (${pct}%)</span>
+      </div>
+      <div style="width:100%; height:4px; background:var(--border); border-radius:2px; overflow:hidden;">
+        <div style="width:${pct}%; height:100%; background:var(--teal); transition:width 0.3s ease;"></div>
+      </div>
+    `;
+  }
+}
+
+function toggleSectionDone(id, field) {
+  const s = proj().sections.find(x => x.id === id);
+  if (s) {
+    if (field === 'design') s.done_design = !s.done_design;
+    if (field === 'copy') s.done_copy = !s.done_copy;
+    if (field === 'responsive') s.done_responsive = !s.done_responsive;
+    saveState();
+    renderSections();
+  }
 }
 
 function getQAColor(status) {
@@ -1728,6 +1769,272 @@ function deleteColor(id) {
   updateBadges();
 }
 
+const COLOR_PRESETS = {
+  minimalist: [
+    { hex: '#111827', name: 'Charcoal Dark', role: 'primary', group: 'Brand Palette' },
+    { hex: '#f9fafb', name: 'Off-White Light', role: 'secondary', group: 'Brand Palette' },
+    { hex: '#6b7280', name: 'Slate Gray', role: 'accent', group: 'Brand Palette' },
+    { hex: '#ffffff', name: 'Pure White bg', role: 'custom', group: 'Brand Palette' }
+  ],
+  oceanic: [
+    { hex: '#0f172a', name: 'Deep Navy', role: 'primary', group: 'Brand Palette' },
+    { hex: '#0ea5e9', name: 'Sky Blue', role: 'secondary', group: 'Brand Palette' },
+    { hex: '#38bdf8', name: 'Teal Spark', role: 'accent', group: 'Brand Palette' },
+    { hex: '#f0f9ff', name: 'Ice Water bg', role: 'custom', group: 'Brand Palette' }
+  ],
+  corporate: [
+    { hex: '#1e3a8a', name: 'Classic Blue', role: 'primary', group: 'Brand Palette' },
+    { hex: '#3b82f6', name: 'Mid Blue', role: 'secondary', group: 'Brand Palette' },
+    { hex: '#10b981', name: 'Green Accent', role: 'accent', group: 'Brand Palette' },
+    { hex: '#ffffff', name: 'Corporate bg', role: 'custom', group: 'Brand Palette' }
+  ],
+  cyber: [
+    { hex: '#000000', name: 'Cyber Pitch Black', role: 'primary', group: 'Brand Palette' },
+    { hex: '#ff007f', name: 'Neon Pink', role: 'secondary', group: 'Brand Palette' },
+    { hex: '#00ffff', name: 'Electric Cyan', role: 'accent', group: 'Brand Palette' },
+    { hex: '#1a1a2e', name: 'Deep Space bg', role: 'custom', group: 'Brand Palette' }
+  ],
+  forest: [
+    { hex: '#14532d', name: 'Forest Green', role: 'primary', group: 'Brand Palette' },
+    { hex: '#b45309', name: 'Warm Amber', role: 'secondary', group: 'Brand Palette' },
+    { hex: '#f59e0b', name: 'Gold Accent', role: 'accent', group: 'Brand Palette' },
+    { hex: '#fefcbf', name: 'Cream bg', role: 'custom', group: 'Brand Palette' }
+  ],
+  sunset: [
+    { hex: '#7c2d12', name: 'Burnt Terracotta', role: 'primary', group: 'Brand Palette' },
+    { hex: '#ea580c', name: 'Sunset Orange', role: 'secondary', group: 'Brand Palette' },
+    { hex: '#facc15', name: 'Bright Yellow', role: 'accent', group: 'Brand Palette' },
+    { hex: '#fff7ed', name: 'Warm Mist bg', role: 'custom', group: 'Brand Palette' }
+  ]
+};
+
+function loadColorPreset(appendMode) {
+  const select = document.getElementById('color-preset-select');
+  if (!select) return;
+  const val = select.value;
+  if (!val || !COLOR_PRESETS[val]) {
+    toast('Select a valid color preset first.');
+    return;
+  }
+  
+  const preset = JSON.parse(JSON.stringify(COLOR_PRESETS[val]));
+  
+  if (appendMode) {
+    preset.forEach(p => {
+      if (!proj().colors.some(c => c.hex.toLowerCase() === p.hex.toLowerCase())) {
+        proj().colors.push({ id: 'c' + (nextId++), ...p });
+      }
+    });
+  } else {
+    if (!confirm('This will replace the current color palette. Continue?')) {
+      return;
+    }
+    proj().colors = preset.map(p => ({ id: 'c' + (nextId++), ...p }));
+  }
+  
+  renderColors();
+  saveState();
+  updateBadges();
+  toast('Color preset loaded!');
+}
+
+function hexToHsl(hex) {
+  let r = 0, g = 0, b = 0;
+  if (hex.length === 4) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (hex.length === 7) {
+    r = parseInt(hex.substring(1, 3), 16);
+    g = parseInt(hex.substring(3, 5), 16);
+    b = parseInt(hex.substring(5, 7), 16);
+  }
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+  
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+  return { h: h * 360, s: s, l: l };
+}
+
+function hslToHex(h, s, l) {
+  h /= 360;
+  let r, g, b;
+  if (s === 0) {
+    r = g = b = l;
+  } else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+  const toHex = x => {
+    const hex = Math.round(x * 255).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function generateDarkModePalette() {
+  const colors = proj().colors || [];
+  if (!colors.length) {
+    toast('Add some colors to your palette first!');
+    return;
+  }
+  
+  const darkGroupColors = [];
+  colors.forEach(c => {
+    if (c.group === 'Dark Mode Counterparts') return;
+    
+    const hsl = hexToHsl(c.hex);
+    let newL = hsl.l;
+    
+    if (hsl.l > 0.75) {
+      newL = 0.1 + (1.0 - hsl.l) * 0.15;
+    } else if (hsl.l < 0.25) {
+      newL = 0.85 + hsl.l * 0.1;
+    } else {
+      if (hsl.l < 0.5) {
+        newL = 0.55;
+      }
+    }
+    
+    const newHex = hslToHex(hsl.h, hsl.s, newL);
+    darkGroupColors.push({
+      id: 'c' + (nextId++),
+      hex: newHex,
+      name: c.name + ' (Dark)',
+      role: c.role,
+      group: 'Dark Mode Counterparts'
+    });
+  });
+  
+  darkGroupColors.forEach(dc => {
+    if (!proj().colors.some(c => c.hex.toLowerCase() === dc.hex.toLowerCase() && c.group === 'Dark Mode Counterparts')) {
+      proj().colors.push(dc);
+    }
+  });
+  
+  renderColors();
+  saveState();
+  updateBadges();
+  toast('Dark Mode counterparts generated!');
+}
+
+function updateHarmonyFromHex(val) {
+  const hex = cleanHex(val);
+  if (hex && (hex.length === 4 || hex.length === 7)) {
+    const picker = document.getElementById('harmony-base-color');
+    if (picker) picker.value = hex;
+    generateColorHarmonies();
+  }
+}
+
+function generateColorHarmonies() {
+  const seedHex = document.getElementById('harmony-base-color').value;
+  const type = document.getElementById('harmony-type').value;
+  const hexInput = document.getElementById('harmony-base-hex');
+  if (hexInput && hexInput.value.toLowerCase() !== seedHex.toLowerCase()) {
+    hexInput.value = seedHex;
+  }
+  
+  const hsl = hexToHsl(seedHex);
+  const swatchesContainer = document.getElementById('harmony-swatches-container');
+  if (!swatchesContainer) return;
+  
+  let colors = [];
+  if (type === 'analogous') {
+    colors = [
+      { hex: hslToHex((hsl.h - 30 + 360) % 360, hsl.s, hsl.l), name: 'Analogous 1' },
+      { hex: seedHex, name: 'Base Seed' },
+      { hex: hslToHex((hsl.h + 30) % 360, hsl.s, hsl.l), name: 'Analogous 2' }
+    ];
+  } else if (type === 'monochromatic') {
+    colors = [
+      { hex: hslToHex(hsl.h, hsl.s, Math.max(0.1, hsl.l - 0.25)), name: 'Monochromatic Dark' },
+      { hex: hslToHex(hsl.h, hsl.s, Math.max(0.2, hsl.l - 0.15)), name: 'Monochromatic Mid-Dark' },
+      { hex: seedHex, name: 'Base Seed' },
+      { hex: hslToHex(hsl.h, hsl.s, Math.min(0.9, hsl.l + 0.15)), name: 'Monochromatic Mid-Light' },
+      { hex: hslToHex(hsl.h, hsl.s, Math.min(0.95, hsl.l + 0.25)), name: 'Monochromatic Light' }
+    ];
+  } else if (type === 'complementary') {
+    colors = [
+      { hex: seedHex, name: 'Base Seed' },
+      { hex: hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l), name: 'Complementary' }
+    ];
+  } else if (type === 'split') {
+    colors = [
+      { hex: seedHex, name: 'Base Seed' },
+      { hex: hslToHex((hsl.h + 150) % 360, hsl.s, hsl.l), name: 'Split Comp 1' },
+      { hex: hslToHex((hsl.h + 210) % 360, hsl.s, hsl.l), name: 'Split Comp 2' }
+    ];
+  } else if (type === 'triadic') {
+    colors = [
+      { hex: seedHex, name: 'Base Seed' },
+      { hex: hslToHex((hsl.h + 120) % 360, hsl.s, hsl.l), name: 'Triadic 1' },
+      { hex: hslToHex((hsl.h + 240) % 360, hsl.s, hsl.l), name: 'Triadic 2' }
+    ];
+  } else if (type === 'tetradic') {
+    colors = [
+      { hex: seedHex, name: 'Base Seed' },
+      { hex: hslToHex((hsl.h + 90) % 360, hsl.s, hsl.l), name: 'Tetradic 1' },
+      { hex: hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l), name: 'Tetradic 2' },
+      { hex: hslToHex((hsl.h + 270) % 360, hsl.s, hsl.l), name: 'Tetradic 3' }
+    ];
+  }
+  
+  let html = `<div style="display:flex; gap:8px; flex-wrap:wrap;">`;
+  colors.forEach(c => {
+    html += `
+      <div style="flex:1; min-width:100px; border:1px solid var(--border); border-radius:var(--r-md); background:var(--bg3); padding:8px; display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div style="width:100%; height:40px; border-radius:4px; background:${c.hex}; border:1px solid rgba(0,0,0,0.05); position:relative;"></div>
+        <div style="font-size:10px; font-weight:600; text-align:center; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%;">${esc(c.name)}</div>
+        <div style="font-size:9.5px; font-family:var(--font-mono); color:var(--text3);">${c.hex}</div>
+        <button class="btn btn-sm btn-accent" style="font-size:10px; padding:2px 6px; height:auto; width:100%;" onclick="addHarmonyColor('${c.hex}', '${esc(c.name)}')"><i class="ti ti-plus"></i> Add</button>
+      </div>
+    `;
+  });
+  html += `</div>`;
+  swatchesContainer.innerHTML = html;
+}
+
+function addHarmonyColor(hex, name) {
+  if (!proj().colors) proj().colors = [];
+  if (proj().colors.some(c => c.hex.toLowerCase() === hex.toLowerCase())) {
+    toast('Color already in palette!');
+    return;
+  }
+  proj().colors.push({
+    id: 'c' + (nextId++),
+    hex: hex,
+    name: name,
+    role: 'custom',
+    group: 'Project Colors'
+  });
+  renderColors();
+  saveState();
+  updateBadges();
+  toast('Added to brand palette!');
+}
+
 function renderColors() {
   const container = document.getElementById('palette-container');
   const colors = proj().colors || [];
@@ -1796,6 +2103,11 @@ function renderColors() {
     }
     
     checkContrast();
+  }
+  
+  const swatchesContainer = document.getElementById('harmony-swatches-container');
+  if (swatchesContainer && swatchesContainer.innerHTML === '') {
+    generateColorHarmonies();
   }
 }
 
@@ -3130,7 +3442,22 @@ window.addEventListener('message', function(event) {
       exportBtn.style.display = 'inline-flex';
     }
 
-    const score = Math.max(0, 100 - (auditResults.length * 5));
+    let critCount = 0, impCount = 0, warnCount = 0;
+    auditResults.forEach(item => {
+      let titleLower = (item.title || '').toLowerCase();
+      if (item.type === 'link' || item.type === 'contrast' || item.type === 'accessibility' || titleLower.includes('noopener') || titleLower.includes('h1')) {
+        critCount++;
+      } else if (item.type === 'alt' || item.type === 'oversized' || item.type === 'seo') {
+        impCount++;
+      } else {
+        warnCount++;
+      }
+    });
+    
+    let deduction = Math.min(40, critCount * 10) + Math.min(30, impCount * 5) + Math.min(20, warnCount * 2);
+    // Use the score computed in itspc-editor.js if available
+    const score = event.data.score !== undefined ? event.data.score : Math.max(0, 100 - deduction);
+
     if (!proj().auditHistory) proj().auditHistory = [];
     proj().auditHistory.unshift({
       date: new Date().toLocaleString(),
@@ -3161,6 +3488,21 @@ window.addEventListener('message', function(event) {
     badge.textContent = auditResults.length + ' Issues';
     badge.style.background = 'rgba(255, 77, 77, 0.1)';
     badge.style.color = 'var(--red)';
+    
+    let scoreColor = 'var(--teal)';
+    if (score < 50) scoreColor = 'var(--red)';
+    else if (score < 80) scoreColor = 'var(--amber)';
+
+    const scoreCard = document.createElement('div');
+    scoreCard.style.cssText = 'display:flex; align-items:center; gap:16px; padding:16px; background:var(--bg3); border:1px solid var(--border); border-radius:var(--r-lg); margin-bottom:16px;';
+    scoreCard.innerHTML = `
+      <div style="font-size: 32px; font-weight: 800; color: ${scoreColor}; line-height: 1;">${score}</div>
+      <div>
+        <div style="font-size: 14px; font-weight: 600; color: var(--text);">Page Health Score</div>
+        <div style="font-size: 11px; color: var(--text2);">Based on ${auditResults.length} issues found</div>
+      </div>
+    `;
+    resultsList.appendChild(scoreCard);
     
     auditResults.forEach(item => {
       let icon = 'ti-alert-triangle';
@@ -3227,6 +3569,43 @@ window.addEventListener('message', function(event) {
       auditDesc.textContent = cleanText(item.description, 240);
       auditBody.appendChild(auditTitleRow);
       auditBody.appendChild(auditDesc);
+
+      const auditFixContainer = document.createElement('div');
+      auditFixContainer.style.cssText = 'margin-top: 8px; font-size: 11px;';
+      const toggleBtn = document.createElement('button');
+      toggleBtn.innerHTML = '▶ How to fix';
+      toggleBtn.style.cssText = 'background:none; border:none; color:var(--accent); font-size:11px; font-weight:600; cursor:pointer; padding:0; display:flex; align-items:center; gap:4px; margin-top: 6px;';
+      const hintText = document.createElement('div');
+      hintText.style.cssText = 'display:none; margin-top:4px; padding:8px; background:var(--bg2); border-left:2px solid var(--accent); border-radius:0 4px 4px 0; color:var(--text2); line-height:1.4;';
+      
+      // Use the fixHint assigned in itspc-editor.js if available
+      let hintContent = item.fixHint || 'Review the Elementor widget settings to resolve this issue';
+      if (!item.fixHint) {
+          const tLower = (item.title || '').toLowerCase();
+          if (tLower.includes('missing h1')) {
+              hintContent = "Add a Heading widget, set HTML Tag to H1 in Elementor widget settings";
+          } else if (item.type === 'alt' || tLower.includes('missing alt')) {
+              hintContent = "Click the image in Elementor, go to Style tab, add Alt Text";
+          } else if (item.type === 'link' || tLower.includes('broken link')) {
+              hintContent = "Go to the element with this link and update or remove the URL";
+          } else if (tLower.includes('meta description')) {
+              hintContent = "Install Yoast SEO or Rank Math and set a meta description";
+          } else if (tLower.includes('noopener')) {
+              hintContent = "Add rel='noopener noreferrer' to any link opening in a new tab";
+          }
+      }
+      
+      hintText.textContent = hintContent;
+      toggleBtn.onclick = (e) => {
+          e.stopPropagation();
+          const isHidden = hintText.style.display === 'none';
+          hintText.style.display = isHidden ? 'block' : 'none';
+          toggleBtn.innerHTML = isHidden ? '▼ How to fix' : '▶ How to fix';
+      };
+      
+      auditFixContainer.appendChild(toggleBtn);
+      auditFixContainer.appendChild(hintText);
+      auditBody.appendChild(auditFixContainer);
 
       const locateBtn = document.createElement('div');
       locateBtn.className = 'audit-locate-btn';
@@ -3426,6 +3805,19 @@ function updateTypoScale() {
   html += `--font-size-h1: ${h1}px;\n`;
 
   document.getElementById('typo-scale-preview').innerText = html;
+
+  const visualPreview = document.getElementById('typo-visual-preview');
+  if (visualPreview) {
+    visualPreview.innerHTML = `
+      <div style="font-size: ${h1}px; font-weight: 700; line-height: 1.2; color: var(--text)">H1 Heading (${h1}px)</div>
+      <div style="font-size: ${h2}px; font-weight: 700; line-height: 1.2; color: var(--text)">H2 Heading (${h2}px)</div>
+      <div style="font-size: ${h3}px; font-weight: 600; line-height: 1.25; color: var(--text)">H3 Heading (${h3}px)</div>
+      <div style="font-size: ${h4}px; font-weight: 600; line-height: 1.3; color: var(--text)">H4 Heading (${h4}px)</div>
+      <div style="font-size: ${h5}px; font-weight: 500; line-height: 1.4; color: var(--text)">H5 Heading (${h5}px)</div>
+      <div style="font-size: ${h6}px; font-weight: 500; line-height: 1.45; color: var(--text)">H6 Heading (${h6}px)</div>
+      <div style="font-size: ${base}px; font-weight: 400; line-height: 1.5; color: var(--text2)">Body Text / Paragraph (${base}px)</div>
+    `;
+  }
   
   if (!proj().designTokens) proj().designTokens = normalizeDesignTokens({});
   proj().designTokens.typography.base = base;
@@ -3470,6 +3862,76 @@ function updateRadiusShadows() {
   proj().designTokens.radius = { sm, md, lg, xl };
   proj().designTokens.shadows = { soft, medium, hard };
   saveState();
+}
+
+const TOKEN_PRESETS = {
+  minimal: {
+    typoBase: 15,
+    typoRatio: 1.125,
+    spaceBase: 6,
+    radiusSm: 2, radiusMd: 4, radiusLg: 6, radiusXl: 8,
+    shadowSoft: '0 1px 3px rgba(0,0,0,0.02)',
+    shadowMedium: '0 2px 6px rgba(0,0,0,0.04)',
+    shadowHard: '0 4px 12px rgba(0,0,0,0.06)'
+  },
+  corporate: {
+    typoBase: 16,
+    typoRatio: 1.200,
+    spaceBase: 8,
+    radiusSm: 4, radiusMd: 6, radiusLg: 8, radiusXl: 12,
+    shadowSoft: '0 1px 3px rgba(0,0,0,0.05)',
+    shadowMedium: '0 4px 12px rgba(0,0,0,0.08)',
+    shadowHard: '0 12px 28px rgba(0,0,0,0.12)'
+  },
+  bold: {
+    typoBase: 18,
+    typoRatio: 1.333,
+    spaceBase: 10,
+    radiusSm: 8, radiusMd: 16, radiusLg: 24, radiusXl: 32,
+    shadowSoft: '0 4px 0 rgba(0,0,0,1)',
+    shadowMedium: '0 8px 0 rgba(0,0,0,1)',
+    shadowHard: '0 16px 0 rgba(0,0,0,1)'
+  },
+  soft: {
+    typoBase: 16,
+    typoRatio: 1.250,
+    spaceBase: 8,
+    radiusSm: 8, radiusMd: 14, radiusLg: 20, radiusXl: 28,
+    shadowSoft: '0 2px 10px rgba(0,0,0,0.03)',
+    shadowMedium: '0 6px 20px rgba(0,0,0,0.05)',
+    shadowHard: '0 12px 36px rgba(0,0,0,0.08)'
+  },
+  saas: {
+    typoBase: 14,
+    typoRatio: 1.200,
+    spaceBase: 8,
+    radiusSm: 4, radiusMd: 8, radiusLg: 12, radiusXl: 16,
+    shadowSoft: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    shadowMedium: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    shadowHard: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+  }
+};
+
+function loadTokenPreset(key) {
+  if (!key || !TOKEN_PRESETS[key]) return;
+  const p = TOKEN_PRESETS[key];
+  
+  document.getElementById('token-typo-base').value = p.typoBase;
+  document.getElementById('token-typo-ratio').value = p.typoRatio;
+  document.getElementById('token-space-base').value = p.spaceBase;
+  document.getElementById('token-radius-sm').value = p.radiusSm;
+  document.getElementById('token-radius-md').value = p.radiusMd;
+  document.getElementById('token-radius-lg').value = p.radiusLg;
+  document.getElementById('token-radius-xl').value = p.radiusXl;
+  document.getElementById('token-shadow-soft').value = p.shadowSoft;
+  document.getElementById('token-shadow-medium').value = p.shadowMedium;
+  document.getElementById('token-shadow-hard').value = p.shadowHard;
+  
+  updateTypoScale();
+  updateSpacingScale();
+  updateRadiusShadows();
+  
+  toast(`Token Preset "${key.toUpperCase()}" loaded!`);
 }
 
 function copyCSSVariables() {
