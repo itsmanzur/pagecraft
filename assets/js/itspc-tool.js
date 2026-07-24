@@ -2873,6 +2873,69 @@ function deleteProject(id) {
 const VALID_STATUSES = ['Draft', 'Design', 'Review', 'Revision', 'Approved', 'Published'];
 
 function renderDashboard() {
+  // === Project Overview Metrics ===
+  const overviewGrid = document.getElementById('dashboard-overview-grid');
+  if (overviewGrid) {
+    const p = proj();
+    // Section completion
+    const sections = p.sections || [];
+    const totalSec = sections.length;
+    const doneSec = sections.filter(s => s.done_design && s.done_copy && s.done_responsive).length;
+    const secPct = totalSec ? Math.round(doneSec / totalSec * 100) : 0;
+    const secColor = secPct === 100 ? 'var(--accent)' : secPct >= 50 ? '#f59e0b' : 'var(--text2)';
+
+    // Checklist completion
+    const checks = p.checks || {};
+    let totalChecks = 0, doneChecks = 0;
+    Object.values(checks).forEach(items => items.forEach(item => { totalChecks++; if (item.done) doneChecks++; }));
+    const chkPct = totalChecks ? Math.round(doneChecks / totalChecks * 100) : 0;
+    const chkColor = chkPct === 100 ? 'var(--accent)' : chkPct >= 50 ? '#f59e0b' : 'var(--text2)';
+
+    // Audit Score
+    const auditHistory = p.auditHistory || [];
+    const latestAudit = auditHistory[0];
+    const auditScore = latestAudit ? latestAudit.score : null;
+    const auditLabel = auditScore !== null ? auditScore + '/100' : 'Not Run';
+    const auditColor = auditScore === null ? 'var(--text3)' : auditScore >= 80 ? 'var(--accent)' : auditScore >= 60 ? '#f59e0b' : '#ef4444';
+
+    // Backup status
+    const lastExport = p.lastExportDate;
+    let backupLabel = 'Never';
+    let backupColor = '#ef4444';
+    if (lastExport) {
+      const daysSince = Math.floor((Date.now() - new Date(lastExport).getTime()) / 86400000);
+      backupLabel = daysSince === 0 ? 'Today' : daysSince === 1 ? 'Yesterday' : daysSince + 'd ago';
+      backupColor = daysSince <= 3 ? 'var(--accent)' : daysSince <= 7 ? '#f59e0b' : '#ef4444';
+    }
+
+    // Client feedback
+    const comments = p.comments || [];
+    const openFeedback = comments.filter(c => c.status !== 'resolved').length;
+    const feedbackColor = openFeedback === 0 ? 'var(--accent)' : '#f59e0b';
+
+    // Blockers
+    const blocker = (p.blockers || '').trim();
+    const blockerLabel = blocker ? blocker.substring(0, 30) + (blocker.length > 30 ? '…' : '') : 'None';
+    const blockerColor = blocker ? '#ef4444' : 'var(--accent)';
+
+    const metricCard = (icon, label, value, valueColor, sub) => `
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 10px;display:flex;flex-direction:column;gap:6px;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;">
+          <i class="ti ${icon}" style="font-size:13px;"></i>${label}
+        </div>
+        <div style="font-size:20px;font-weight:800;color:${valueColor};line-height:1.1;">${value}</div>
+        ${sub ? `<div style="font-size:11px;color:var(--text3);">${sub}</div>` : ''}
+      </div>`;
+
+    overviewGrid.innerHTML =
+      metricCard('ti-layout-rows', 'Sections Done', doneSec + '/' + totalSec, secColor, secPct + '% complete') +
+      metricCard('ti-checklist', 'Checklist', doneChecks + '/' + totalChecks, chkColor, chkPct + '% done') +
+      metricCard('ti-shield-check', 'Health Score', auditLabel, auditColor, latestAudit ? new Date(latestAudit.date).toLocaleDateString() : 'Run audit first') +
+      metricCard('ti-database-export', 'Last Backup', backupLabel, backupColor, lastExport ? '' : 'Export JSON to back up') +
+      metricCard('ti-message-2', 'Feedback', openFeedback + ' open', feedbackColor, comments.length + ' total') +
+      metricCard('ti-alert-triangle', 'Blockers', blocker ? '⚠ Active' : '✓ Clear', blockerColor, blocker ? blockerLabel : 'No active blockers');
+  }
+
   const columns = {};
   VALID_STATUSES.forEach(status => {
     columns[status] = [];
@@ -3388,6 +3451,10 @@ function runAudit() {
 window.addEventListener('message', function(event) {
   if (event.origin !== window.location.origin) return;
   if (!event.data) return;
+
+  if (event.data.type === 'ITSPC_OPEN_PALETTE') {
+    openCmdPalette();
+  }
 
   if (event.data.type === 'itspc_sync_success') {
     toast(event.data.message || 'Synced successfully!');
@@ -5453,7 +5520,7 @@ function generateStyleGuide() {
         </div>
 
         <div>
-          <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">UI Container Card</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">UI Container Card</div>
           <div class="ui-card">
             <div style="height:100px;background:#CBD5E1;display:flex;align-items:center;justify-content:center;color:#475569;font-weight:500;font-size:13px">Cover Placeholder</div>
             <div class="ui-card-body">
@@ -5474,4 +5541,157 @@ function generateStyleGuide() {
   win.document.open();
   win.document.write(html);
   win.document.close();
+}
+
+// ============================================================
+// COMMAND PALETTE  (Ctrl+K / Cmd+K)
+// ============================================================
+var CMD_PALETTE_COMMANDS = [
+  { label: 'Go to Dashboard',       icon: 'ti-layout-dashboard',   cat: 'Navigate',  action: function(){ switchPanel('dashboard'); } },
+  { label: 'Go to Planner',         icon: 'ti-list-details',        cat: 'Navigate',  action: function(){ switchPanel('planner'); } },
+  { label: 'Go to Checklist',       icon: 'ti-checklist',           cat: 'Navigate',  action: function(){ switchPanel('checklist'); } },
+  { label: 'Go to CSS Generator',   icon: 'ti-code',                cat: 'Navigate',  action: function(){ switchPanel('css'); } },
+  { label: 'Go to Audit',           icon: 'ti-shield-check',        cat: 'Navigate',  action: function(){ switchPanel('audit'); } },
+  { label: 'Go to Notes',           icon: 'ti-notes',               cat: 'Navigate',  action: function(){ switchPanel('notes'); } },
+  { label: 'Go to Revisions',       icon: 'ti-history',             cat: 'Navigate',  action: function(){ switchPanel('revisions'); } },
+  { label: 'Go to Colors',          icon: 'ti-palette',             cat: 'Navigate',  action: function(){ switchPanel('colors'); } },
+  { label: 'Go to Typography',      icon: 'ti-letter-t',            cat: 'Navigate',  action: function(){ switchPanel('typography'); } },
+  { label: 'Add New Section',       icon: 'ti-plus',                cat: 'Actions',   action: function(){ switchPanel('planner'); setTimeout(function(){ addSection(); }, 200); } },
+  { label: 'Run Page Audit',        icon: 'ti-radar',               cat: 'Actions',   action: function(){ sendMsgToHost({ type: 'ITSPC_RUN_AUDIT' }); } },
+  { label: 'Export JSON Backup',    icon: 'ti-database-export',     cat: 'Actions',   action: function(){ exportProject(); } },
+  { label: 'Toggle Dark Mode',      icon: 'ti-moon',                cat: 'Actions',   action: function(){ var d = document.documentElement; d.dataset.theme = d.dataset.theme === 'dark' ? 'light' : 'dark'; } },
+  { label: 'Build Responsive CSS',  icon: 'ti-device-mobile-code',  cat: 'Actions',   action: function(){ switchPanel('css'); setTimeout(function(){ var el = document.getElementById('rcb-selector'); if(el) el.focus(); }, 300); } },
+];
+
+var cmdPaletteActive = false;
+var cmdActiveIndex = -1;
+var cmdFiltered = [];
+
+function openCmdPalette() {
+  var overlay = document.getElementById('cmd-palette-overlay');
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+  cmdPaletteActive = true;
+  cmdActiveIndex = -1;
+  document.getElementById('cmd-palette-input').value = '';
+  filterCmdPalette();
+  setTimeout(function(){ var el = document.getElementById('cmd-palette-input'); if(el) el.focus(); }, 50);
+}
+
+function closeCmdPalette() {
+  var overlay = document.getElementById('cmd-palette-overlay');
+  if (overlay) overlay.style.display = 'none';
+  cmdPaletteActive = false;
+}
+
+function filterCmdPalette() {
+  var inp = document.getElementById('cmd-palette-input');
+  var q = inp ? inp.value.toLowerCase() : '';
+  var dynamicCommands = CMD_PALETTE_COMMANDS.slice();
+  try {
+    var p = proj();
+    (p.notes || []).forEach(function(n) {
+      dynamicCommands.push({ label: 'Note: ' + (n.text || '').substring(0, 50), icon: 'ti-notes', cat: 'Notes', action: function(){ switchPanel('notes'); } });
+    });
+  } catch(e) {}
+  cmdFiltered = q ? dynamicCommands.filter(function(c){ return c.label.toLowerCase().indexOf(q) !== -1 || c.cat.toLowerCase().indexOf(q) !== -1; }) : dynamicCommands;
+  cmdActiveIndex = cmdFiltered.length > 0 ? 0 : -1;
+  renderCmdResults();
+}
+
+function renderCmdResults() {
+  var container = document.getElementById('cmd-palette-results');
+  if (!container) return;
+  if (!cmdFiltered.length) {
+    container.innerHTML = '<div style="padding:20px;text-align:center;font-size:13px;">No commands found</div>';
+    return;
+  }
+  var lastCat = null;
+  var html = '';
+  cmdFiltered.forEach(function(cmd, i) {
+    if (cmd.cat !== lastCat) {
+      html += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:8px 10px 3px;opacity:.6;">' + cmd.cat + '</div>';
+      lastCat = cmd.cat;
+    }
+    var bg = i === cmdActiveIndex ? 'var(--accent)' : 'transparent';
+    var fg = i === cmdActiveIndex ? '#fff' : 'inherit';
+    html += '<div class="cmd-item" onclick="execCmdItem(' + i + ')" onmouseenter="cmdActiveIndex=' + i + ';renderCmdResults()" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;cursor:pointer;background:' + bg + ';color:' + fg + ';">' +
+            '<i class="ti ' + cmd.icon + '" style="font-size:15px;flex-shrink:0;"></i>' +
+            '<span style="font-size:13px;">' + cmd.label + '</span>' +
+            '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function execCmdItem(idx) {
+  if (cmdFiltered[idx]) {
+    closeCmdPalette();
+    setTimeout(function(){ cmdFiltered[idx].action(); }, 50);
+  }
+}
+
+function handleCmdKey(e) {
+  if (e.key === 'Escape') { closeCmdPalette(); return; }
+  if (e.key === 'ArrowDown') { e.preventDefault(); cmdActiveIndex = Math.min(cmdActiveIndex + 1, cmdFiltered.length - 1); renderCmdResults(); return; }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); cmdActiveIndex = Math.max(cmdActiveIndex - 1, 0); renderCmdResults(); return; }
+  if (e.key === 'Enter')     { e.preventDefault(); execCmdItem(cmdActiveIndex); return; }
+}
+
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    if (cmdPaletteActive) closeCmdPalette();
+    else openCmdPalette();
+  }
+  if (e.key === 'Escape' && cmdPaletteActive) closeCmdPalette();
+});
+
+// ============================================================
+// RESPONSIVE CSS BUILDER
+// ============================================================
+function buildResponsiveCSS() {
+  var selEl  = document.getElementById('rcb-selector');
+  var propEl = document.getElementById('rcb-property');
+  var deskEl = document.getElementById('rcb-desktop');
+  var tabEl  = document.getElementById('rcb-tablet');
+  var mobEl  = document.getElementById('rcb-mobile');
+  var sel  = selEl  ? selEl.value.trim()  : '';
+  var prop = propEl ? propEl.value.trim() : '';
+  var desk = deskEl ? deskEl.value.trim() : '';
+  var tab  = tabEl  ? tabEl.value.trim()  : '';
+  var mob  = mobEl  ? mobEl.value.trim()  : '';
+  if (!sel || !prop) { showToast('Enter selector and property'); return; }
+  var css = '';
+  if (desk) css += '/* Desktop (all screens) */\n' + sel + ' {\n  ' + prop + ': ' + desk + ';\n}\n\n';
+  if (tab)  css += '/* Tablet (Elementor: <= 1024px) */\n@media (max-width: 1024px) {\n  ' + sel + ' {\n    ' + prop + ': ' + tab + ';\n  }\n}\n\n';
+  if (mob)  css += '/* Mobile (Elementor: <= 767px) */\n@media (max-width: 767px) {\n  ' + sel + ' {\n    ' + prop + ': ' + mob + ';\n  }\n}';
+  if (!css) { showToast('Enter at least one value'); return; }
+  var codeEl = document.getElementById('rcb-code');
+  var outEl  = document.getElementById('rcb-output');
+  if (codeEl) codeEl.textContent = css.trim();
+  if (outEl)  outEl.style.display = 'block';
+}
+
+function copyRCBOutput() {
+  var codeEl = document.getElementById('rcb-code');
+  var code = codeEl ? codeEl.textContent : '';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code).then(function(){ showToast('CSS copied!'); });
+  } else {
+    showToast('Copy not supported in this context');
+  }
+}
+
+function saveRCBAsSnippet() {
+  var p = proj();
+  var selEl = document.getElementById('rcb-selector');
+  var codeEl = document.getElementById('rcb-code');
+  var sel  = selEl  ? selEl.value.trim()  : '';
+  var code = codeEl ? codeEl.textContent  : '';
+  if (!code) return;
+  if (!p.snippets) p.snippets = [];
+  p.snippets.unshift({ id: 'snip_' + Date.now(), selector: sel, css: code, device: 'responsive', risk: 'low', date: new Date().toISOString() });
+  saveState();
+  renderSnippets();
+  showToast('Saved as snippet!');
 }

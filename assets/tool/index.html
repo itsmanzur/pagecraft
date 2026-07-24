@@ -671,6 +671,51 @@
         <div id="snippets-list"><div style="font-size:12px;color:var(--text3)">No saved snippets yet.</div></div>
       </div>
 
+
+      <!-- Responsive CSS Builder -->
+      <div class="card" style="margin-top:12px" id="responsive-css-builder">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="card-title" style="margin:0;display:flex;align-items:center;gap:6px;"><i class="ti ti-device-mobile-code"></i> Responsive CSS Builder</div>
+          <span style="font-size:11px;color:var(--text3);">Auto-generates Elementor breakpoints</span>
+        </div>
+        <p style="font-size:12px;color:var(--text3);margin-bottom:12px;">Enter a CSS selector + property/value pair. The builder generates desktop, tablet (≤ 1024px), and mobile (≤ 767px) media query blocks ready to paste into Elementor Custom CSS.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Selector (e.g. .my-section)</div>
+            <input id="rcb-selector" type="text" placeholder=".elementor-section" style="width:100%;font-size:12px;" />
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Property (e.g. padding)</div>
+            <input id="rcb-property" type="text" placeholder="padding" style="width:100%;font-size:12px;" />
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Desktop value</div>
+            <input id="rcb-desktop" type="text" placeholder="60px 0" style="width:100%;font-size:12px;" />
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Tablet value (≤ 1024px)</div>
+            <input id="rcb-tablet" type="text" placeholder="40px 0" style="width:100%;font-size:12px;" />
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Mobile value (≤ 767px)</div>
+            <input id="rcb-mobile" type="text" placeholder="24px 0" style="width:100%;font-size:12px;" />
+          </div>
+          <div style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" style="width:100%" onclick="buildResponsiveCSS()"><i class="ti ti-wand"></i> Generate</button>
+          </div>
+        </div>
+        <div id="rcb-output" style="display:none;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;">
+            <span>Generated CSS</span>
+            <button class="btn btn-sm" onclick="copyRCBOutput()"><i class="ti ti-copy"></i> Copy</button>
+          </div>
+          <pre id="rcb-code" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px;font-size:11px;font-family:monospace;white-space:pre;overflow-x:auto;color:var(--text);margin:0;"></pre>
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="btn btn-sm" onclick="saveRCBAsSnippet()"><i class="ti ti-device-floppy"></i> Save as Snippet</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Scattered CSS Hub Card -->
       <div class="card" style="margin-top:12px" id="scattered-css-card">
         <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -966,6 +1011,9 @@
           <i class="ti ti-plus"></i> Add Project
         </button>
       </div>
+
+      <!-- Dashboard Overview Metrics Grid -->
+      <div id="dashboard-overview-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px;"></div>
 
       <!-- Kanban Board Columns -->
       <div class="kanban-board-container" style="display: grid; grid-template-columns: repeat(6, minmax(180px, 1fr)); gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 20px;">
@@ -1298,6 +1346,18 @@
       <button class="btn" onclick="closeBriefModal()">Close</button>
       <button class="btn btn-accent" onclick="copyBriefText()"><i class="ti ti-copy"></i> Copy Brief</button>
     </div>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE (Ctrl+K) -->
+<div id="cmd-palette-overlay" onclick="if(event.target===this)closeCmdPalette()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;backdrop-filter:blur(4px);align-items:flex-start;justify-content:center;padding-top:80px;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:520px;box-shadow:0 24px 64px rgba(0,0,0,.45);overflow:hidden;">
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);">
+      <i class="ti ti-search" style="color:var(--text3);font-size:16px;flex-shrink:0;"></i>
+      <input id="cmd-palette-input" type="text" placeholder="Search commands or panels…" autocomplete="off" oninput="filterCmdPalette()" onkeydown="handleCmdKey(event)" style="flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--text);font-family:var(--font);" />
+      <kbd style="font-size:10px;color:var(--text3);border:1px solid var(--border);border-radius:4px;padding:2px 6px;background:var(--bg3);">Esc</kbd>
+    </div>
+    <div id="cmd-palette-results" style="max-height:360px;overflow-y:auto;padding:6px;"></div>
   </div>
 </div>
 

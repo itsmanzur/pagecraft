@@ -4,7 +4,7 @@ Tags: elementor, page builder, elementor addons, workflow, css generator
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.9.0
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,15 @@ From the Design Tokens panel, you can sync your design tokens and color palette 
 8. Export & Handoff — White-label client reports, database backup, and JSON export
 
 == Changelog ==
+
+= 1.10.0 =
+* Added Quick Command Palette (Ctrl+K / Cmd+K) for global search, instant panel switching, audit triggers, and notes lookup
+* Added Project Dashboard Overview Metrics Grid featuring live section, checklist, health score, backup, feedback, and blocker stats
+* Added Mobile-Specific Audit Checks for small text sizes (< 16px), touch target bounds (< 44px), horizontal scroll overflows, and sticky header screen height
+* Added Broken Link Scanner detecting javascript:void links and validating #hash anchor references against DOM element IDs
+* Added Responsive CSS Builder generating Elementor tablet/mobile breakpoint media query blocks with one-click copy & snippet saving
+* Added Section Completion Tracker with toggle buttons (Design 🎨, Copy 📝, Responsive 📱) and live page progress bar in Planner
+* Added Panel Resize Width persistence using localStorage and double-click redock functionality
 
 = 1.9.0 =
 * Added Color Palette Presets Library with 6 curated high-quality presets

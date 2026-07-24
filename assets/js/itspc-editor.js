@@ -270,6 +270,12 @@
             if (savedPanelHeight !== null) panel.style.height = savedPanelHeight;
         }
 
+        // Restore saved panel width on load if available
+        var savedPanelWidth = localStorage.getItem('itspc_panel_width');
+        if (savedPanelWidth !== null && panel) {
+            panel.style.width = savedPanelWidth;
+        }
+
         function updateToggleBtnPosition() {
             if (localStorage.getItem('itspc_btn_top') !== null) {
                 return;
@@ -691,10 +697,12 @@
                 panel.style.left = '';
                 panel.style.top = '';
                 panel.style.height = '';
+                panel.style.width = '';
                 localStorage.removeItem('itspc_panel_floating');
                 localStorage.removeItem('itspc_panel_left');
                 localStorage.removeItem('itspc_panel_top');
                 localStorage.removeItem('itspc_panel_height');
+                localStorage.removeItem('itspc_panel_width');
                 return;
             }
 
@@ -950,6 +958,33 @@
                     }
 
                     var hrefLower = href.toLowerCase().trim();
+
+                    // Check B1: JS Void Link (Placeholder)
+                    if (hrefLower.indexOf('javascript:void') === 0 || hrefLower === 'javascript:;') {
+                        results.push({
+                            type: 'link',
+                            title: 'Broken Link (Placeholder)',
+                            description: 'Link in "' + info.title + '" has a javascript placeholder ("' + href + '"). Replace with actual URL.',
+                            elementId: info.id,
+                            previewText: linkText.substring(0, 30)
+                        });
+                        return;
+                    }
+
+                    // Check B2: Broken Anchor Target Link
+                    if (hrefLower.charAt(0) === '#' && hrefLower.length > 1) {
+                        var targetId = href.substring(1);
+                        var targetElement = previewDoc.getElementById(targetId) || previewDoc.querySelector('[name="' + targetId + '"]');
+                        if (!targetElement) {
+                            results.push({
+                                type: 'link',
+                                title: 'Broken Anchor Link',
+                                description: 'Anchor link target "' + href + '" in "' + info.title + '" does not exist on this page.',
+                                elementId: info.id,
+                                previewText: href.substring(0, 30)
+                            });
+                        }
+                    }
 
                     // Check B: Template Social Links Left Unchanged
                     var templateSocialRegex = /facebook\.com\/(yourpage|pages\/|$)|twitter\.com\/(yourpage|$)|instagram\.com\/(yourpage|$)|linkedin\.com\/(yourpage|company\/yourpage|$)|youtube\.com\/(yourpage|channel\/yourpage|$)/i;
@@ -1281,6 +1316,104 @@
                     }
                 });
 
+                // 8b. Mobile-Specific Accessibility & Target Audits
+                // Check A: Font size under 16px
+                textElements.forEach(function(el) {
+                    if (el.closest('.elementor-editor-element-setting')) return;
+                    var textContent = (el.textContent || '').trim();
+                    if (!textContent || textContent.length < 2) return;
+
+                    var style = window.getComputedStyle(el);
+                    var fontSize = parseFloat(style.fontSize) || 16;
+                    if (fontSize < 16) {
+                        var info = getElementInfo(el);
+                        var alreadyFlagged = results.some(function(r) {
+                            return r.elementId === info.id && r.title === 'Small Font Size (Mobile)';
+                        });
+                        if (!alreadyFlagged && info.id) {
+                            results.push({
+                                type: 'accessibility',
+                                title: 'Small Font Size (Mobile)',
+                                description: 'Text element ("' + textContent.substring(0, 15) + '...") has a font size of ' + fontSize + 'px. Minimum recommended is 16px for mobile readability.',
+                                elementId: info.id,
+                                previewText: fontSize + 'px'
+                            });
+                        }
+                    }
+                });
+
+                // Check B: Touch target under 44px
+                var clickableElements = previewDoc.querySelectorAll('a, button, input[type="button"], input[type="submit"], select');
+                clickableElements.forEach(function(el) {
+                    if (el.closest('.elementor-editor-element-setting')) return;
+                    var rect = el.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0 && (rect.width < 44 || rect.height < 44)) {
+                        var info = getElementInfo(el);
+                        var alreadyFlagged = results.some(function(r) {
+                            return r.elementId === info.id && r.title === 'Small Touch Target (Mobile)';
+                        });
+                        if (!alreadyFlagged && info.id) {
+                            var textContent = (el.textContent || '').trim() || el.getAttribute('title') || el.value || 'Clickable';
+                            results.push({
+                                type: 'accessibility',
+                                title: 'Small Touch Target (Mobile)',
+                                description: 'Interactive element "' + textContent.substring(0, 15) + '" is ' + Math.round(rect.width) + 'x' + Math.round(rect.height) + 'px. Minimum recommended size is 44x44px for touch readability.',
+                                elementId: info.id,
+                                previewText: Math.round(rect.width) + 'x' + Math.round(rect.height) + 'px'
+                            });
+                        }
+                    }
+                });
+
+                // Check C: Horizontal Overflow
+                var bodyWidth = previewDoc.body.clientWidth || window.innerWidth;
+                var allNodes = previewDoc.querySelectorAll('p, span, div, a, h1, h2, h3, h4, h5, h6, button, img, section, .elementor-widget');
+                allNodes.forEach(function(node) {
+                    if (node.closest('.elementor-editor-element-setting')) return;
+                    var rect = node.getBoundingClientRect();
+                    if (rect.width > bodyWidth + 1) { // 1px tolerance
+                        var info = getElementInfo(node);
+                        var alreadyFlagged = results.some(function(r) {
+                            return r.elementId === info.id && r.title === 'Horizontal Page Overflow';
+                        });
+                        if (!alreadyFlagged && info.id) {
+                            results.push({
+                                type: 'empty', // Show as warning
+                                title: 'Horizontal Page Overflow',
+                                description: 'Element "' + info.title + '" width (' + Math.round(rect.width) + 'px) is wider than mobile viewport (' + Math.round(bodyWidth) + 'px). This causes horizontal scrolling.',
+                                elementId: info.id,
+                                previewText: Math.round(rect.width) + 'px'
+                            });
+                        }
+                    }
+                });
+
+                // Check D: Sticky Header overlay size
+                var viewportHeight = window.innerHeight;
+                var allElements = previewDoc.querySelectorAll('*');
+                allElements.forEach(function(el) {
+                    if (el.closest('.elementor-editor-element-setting')) return;
+                    var style = window.getComputedStyle(el);
+                    if (style.position === 'fixed' || style.position === 'sticky') {
+                        var rect = el.getBoundingClientRect();
+                        if (rect.height > 0 && rect.top <= 10 && rect.height > viewportHeight * 0.2) {
+                            var info = getElementInfo(el);
+                            var alreadyFlagged = results.some(function(r) {
+                                return r.elementId === info.id && r.title === 'Large Sticky Header (Mobile)';
+                            });
+                            if (!alreadyFlagged && info.id) {
+                                results.push({
+                                    type: 'accessibility',
+                                    title: 'Large Sticky Header (Mobile)',
+                                    description: 'Sticky/Fixed element "' + info.title + '" covers ' + Math.round(rect.height) + 'px (' + Math.round((rect.height / viewportHeight) * 100) + '% of viewport height). Consider reducing size for mobile views.',
+                                    elementId: info.id,
+                                    previewText: Math.round((rect.height / viewportHeight) * 100) + '%'
+                                });
+                            }
+                        }
+                    }
+                });
+
                 // 9. Widget & Asset Bloat Audit (Total widgets count, empty text/heading, widget usage map)
                 var widgetList = previewDoc.querySelectorAll('.elementor-widget');
                 var totalWidgets = widgetList.length;
@@ -1371,6 +1504,16 @@
                         item.fixHint = "Install Yoast SEO or Rank Math and set a meta description";
                     } else if (titleLower.indexOf('noopener') !== -1) {
                         item.fixHint = "Add rel='noopener noreferrer' to any link opening in a new tab";
+                    } else if (titleLower.indexOf('small font size') !== -1) {
+                        item.fixHint = "Increase font size to 16px or larger under Style > Typography in Elementor";
+                    } else if (titleLower.indexOf('small touch target') !== -1) {
+                        item.fixHint = "Increase button padding, width, or height to at least 44px for easy mobile clicking";
+                    } else if (titleLower.indexOf('horizontal page overflow') !== -1) {
+                        item.fixHint = "Set max-width to 100% or adjust margin/padding to prevent horizontal scrolling on mobile";
+                    } else if (titleLower.indexOf('large sticky header') !== -1) {
+                        item.fixHint = "Reduce header height or make it non-sticky/scrollable on mobile screens";
+                    } else if (titleLower.indexOf('broken anchor link') !== -1) {
+                        item.fixHint = "Verify that the target section/column exists and has the corresponding ID or CSS Name ID matching the anchor hash";
                     }
                 });
 
@@ -1587,6 +1730,7 @@
                 document.body.style.userSelect = '';
                 iframe.style.pointerEvents = 'auto';
                 btn.style.transition = ''; // Restore CSS transition
+                localStorage.setItem('itspc_panel_width', panel.style.width);
             }
         });
 
@@ -1715,10 +1859,12 @@
                 panel.style.left = '';
                 panel.style.top = '';
                 panel.style.height = '';
+                panel.style.width = '';
                 localStorage.removeItem('itspc_panel_floating');
                 localStorage.removeItem('itspc_panel_left');
                 localStorage.removeItem('itspc_panel_top');
                 localStorage.removeItem('itspc_panel_height');
+                localStorage.removeItem('itspc_panel_width');
             });
         }
     }
@@ -1735,5 +1881,20 @@
         });
     }
 
+})();
+
+// ============================================================
+// Ctrl+K forwarder — opens Command Palette inside the tool iframe
+// ============================================================
+(function() {
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            var iframe = document.getElementById('itspc-tool-frame');
+            if (iframe && iframe.contentWindow) {
+                e.preventDefault();
+                iframe.contentWindow.postMessage({ type: 'ITSPC_OPEN_PALETTE' }, '*');
+            }
+        }
+    });
 })();
 
